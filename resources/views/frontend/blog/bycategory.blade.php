@@ -119,7 +119,7 @@
                                         {!! $blog->excerpt !!}
                                     </span>
                                     <div class="read-more">
-                                        <a href="{{ route('blog-single', $blog->id) }}">Read Moree</a>
+                                        <a href="{{ route('blog-single', $blog->id) }}">Read More</a>
                                     </div>
                                 </div>
                             </article>
