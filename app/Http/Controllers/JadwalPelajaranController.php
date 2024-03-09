@@ -304,6 +304,15 @@ class JadwalPelajaranController extends Controller
         $jadwal_pelajaran->id_jam_for_jadwal = $request->jam_ke;
         // get tahun ajaran dengan status aktif
         $tahun_ajaran = TahunAjaran::where('status', 'Aktif')->first();
+
+        // cek jika $tahun_ajaran tidak ada
+        if (!$tahun_ajaran) {
+            return response()->json([
+                'status' => 'error2',
+                'message' => 'Tahun Ajaran Aktif tidak ditemukan'
+            ]);
+        }
+
         $jadwal_pelajaran->id_tahun_ajaran_for_jadwal = $tahun_ajaran->id;
         $jadwal_pelajaran->tipe_jadwal = $request->tipe_jadwal;
 
@@ -334,6 +343,7 @@ class JadwalPelajaranController extends Controller
             ]);
         }
 
+        
 
         // jika berhasil disimpan
         if ($jadwal_pelajaran->save()) {
