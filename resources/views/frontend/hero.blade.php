@@ -4,13 +4,30 @@
         <div class="carousel-inner" role="listbox">
 
             <!-- Slide 1 -->
-            @if ($blog_1->blog_image)
+            @if($blog_1 != null)
+                @if ($blog_1->blog_image)
+                    <div class="carousel-item active" style="background-image: url({{ asset($blog_1->blog_image) }});">
+                    @else
+                        <div class="carousel-item active"
+                            style="background-image: url(https://source.unsplash.com/random/?quote);">
+                @endif
+                <div class="carousel-container">
+                    <div class="carousel-content animate__animated animate__fadeInUp">
+                        <h2>{{ $blog_1->blog_title }}</h2>
+                        <p>
+                            {{ $blog_1->excerpt }}
+                        </p>
+                        <div class="text-center"><a href="{{ route('blog-single', $blog_1->id) }}"
+                                class="btn-get-started">Read More</a></div>
+                    </div>
+                </div>
+            @endif
+            {{-- @if ($blog_1->blog_image)
                 <div class="carousel-item active" style="background-image: url({{ asset($blog_1->blog_image) }});">
                 @else
                     <div class="carousel-item active"
                         style="background-image: url(https://source.unsplash.com/random/?quote);">
             @endif
-            {{-- <div class="carousel-item active" style="background-image: url({{ asset($blog_1->blog_image) }});"> --}}
             <div class="carousel-container">
                 <div class="carousel-content animate__animated animate__fadeInUp">
                     <h2>{{ $blog_1->blog_title }}</h2>
@@ -20,7 +37,7 @@
                     <div class="text-center"><a href="{{ route('blog-single', $blog_1->id) }}"
                             class="btn-get-started">Read More</a></div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
         <!-- Slide 2 -->
