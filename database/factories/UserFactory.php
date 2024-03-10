@@ -17,18 +17,35 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        // return [
+        //     'name' => $this->faker->name(),
+        //     'email' => $this->faker->unique()->safeEmail,
+        //     'password' => bcrypt('12345678'), // password
+        //     // 'id_role' => 5,
+        //     'id_role' => rand(4, 5), // random 4 or 5 (guru or siswa
+        //     // jika id_role 5 (siswa) maka id_kelas diisi random 1-6
+        //     // jika id_role 4 (guru) maka id_kelas diisi null dan id_mapel diisi random 1-8
+        //     // 'id_kelas' => rand(1, 6),
+        //     // 'id_mapel' => null,
+        //     'username' => $this->faker->unique()->userName,
+        // ];
+
         return [
             'name' => $this->faker->name(),
-            // 'email' => $this->faker->unique()->safeEmail(),
-            // 'email_verified_at' => now(),
+            'email' => $this->faker->unique()->safeEmail,
             'password' => bcrypt('12345678'), // password
-            // 'remember_token' => Str::random(10),
-            'id_role' => 5,
-            'id_kelas' => rand(1, 6),
-            'id_mapel' => null,
-            'email' => null,
+            'id_role' => rand(4, 5), // random 4 or 5 (guru or siswa)
+            // jika id_role 5 (siswa) maka id_kelas diisi random 1-6
+            // jika id_role 4 (guru) maka id_kelas diisi null dan id_mapel diisi random 1-8
+            'id_kelas' => function (array $attributes) {
+                return $attributes['id_role'] == 5 ? rand(1, 6) : null;
+            },
+            'id_mapel' => function (array $attributes) {
+                return $attributes['id_role'] == 4 ? rand(1, 8) : null;
+            },
             'username' => $this->faker->unique()->userName,
         ];
+
     }
 
     /**

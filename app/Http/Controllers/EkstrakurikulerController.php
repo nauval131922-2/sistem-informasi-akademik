@@ -56,6 +56,11 @@ class EkstrakurikulerController extends Controller
         $ekstra = new Ekstrakurikuler();
         $ekstra->nama = $request->ekstrakurikuler;
 
+        // jika belum ada folder upload/ekstra, maka buat folder
+        if (!file_exists(public_path('/upload/ekstra'))) {
+            mkdir(public_path('/upload/ekstra'), 0777, true);
+        }
+
         // cek jika gambar diupload
         if ($request->hasFile('gambar')) {
             $judul_tanpa_spasi = str_replace(' ', '-', $request->ekstrakurikuler);

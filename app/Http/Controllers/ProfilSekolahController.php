@@ -59,6 +59,11 @@ class ProfilSekolahController extends Controller
         $profil_sekolah->misi = $request->misi;
         $profil_sekolah->tujuan = $request->tujuan;
 
+        // jika belum ada folder upload/logo_sekolah, maka buat folder
+        if (!file_exists(public_path('/upload/logo_sekolah'))) {
+            mkdir(public_path('/upload/logo_sekolah'), 0777, true);
+        }
+
         if ($request->hasFile('gambar')) {
 
             if ($profil_sekolah->logo) {

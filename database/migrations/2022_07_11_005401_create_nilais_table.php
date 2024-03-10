@@ -16,6 +16,13 @@ return new class extends Migration
         Schema::create('nilais', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            // kolom judul
+            $table->string('judul');
+            // kolom nilai
+            $table->integer('nilai');
+            // kolom tipe nilai
+            $table->enum('tipe_nilai', ['Ulangan Harian', 'TPugas', 'UTS', 'UAS', 'Rapor']);
+            
         });
     }
 

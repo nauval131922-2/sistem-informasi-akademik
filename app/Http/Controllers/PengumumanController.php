@@ -13,6 +13,18 @@ class PengumumanController extends Controller
 {
     public function index(){
         $pengumuman = Pengumuman::where('id_role_for_pengumuman', '1')->first();
+
+        // jika pengumuman belum ada
+        if ($pengumuman == null) {
+            $pengumuman = new Pengumuman();
+            $pengumuman->judul = 'Judul Pengumuman';
+            $pengumuman->isi = 'Isi Pengumuman';
+            $pengumuman->id_role_for_pengumuman = 1;
+            $pengumuman->id_kelas_for_pengumuman = null;
+            $pengumuman->gambar = null;
+            $pengumuman->save();
+        }
+
         $title = 'Data Pengumuman';
 
         return view('backend.pengumuman.index', compact('pengumuman', 'title'));
@@ -20,6 +32,23 @@ class PengumumanController extends Controller
 
     public function index_pengumuman_for_siswa(){
         $pengumuman = Pengumuman::where('id_role_for_pengumuman', '3')->where('id_kelas_for_pengumuman', Auth::user()->id_kelas)->first();
+
+        // jika pengumuman belum ada
+        if ($pengumuman == null) {
+            $pengumuman = new Pengumuman();
+            $pengumuman->judul = 'Judul Pengumuman';
+            $pengumuman->isi = 'Isi Pengumuman';
+            $pengumuman->id_role_for_pengumuman = 3;
+            // jika yang login adalah siswa, maka id_kelas_for_pengumuman diisi dengan id_kelas dari siswa yang login
+            if (Auth::user()->id_role == 5) {
+                $pengumuman->id_kelas_for_pengumuman = Auth::user()->id_kelas;
+            } else {
+                $pengumuman->id_kelas_for_pengumuman = null;
+            }
+            $pengumuman->gambar = null;
+            $pengumuman->save();
+        }
+
         $title = 'Data Pengumuman';
 
         return view('backend.pengumuman_for_siswa.index', compact('pengumuman', 'title'));
@@ -48,6 +77,11 @@ class PengumumanController extends Controller
         $pengumuman = Pengumuman::find($id);
         $pengumuman->judul = $request->judul;
         $pengumuman->isi = $request->isi;
+
+        // jika belum ada folder upload/pengumuman, maka buat folder tersebut
+        if (!file_exists('upload/pengumuman')) {
+            mkdir('upload/pengumuman', 0777, true);
+        }
 
         if ($request->hasFile('gambar')) {
 
@@ -187,5 +221,5 @@ class PengumumanController extends Controller
         ]);
     }
 
-    
+
 }

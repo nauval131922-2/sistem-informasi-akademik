@@ -44,6 +44,11 @@ class SambutanKepalaMadrasahController extends Controller
         $sambutan->isi = $request->isi;
         $sambutan->excerpt = Str::limit(strip_tags($request->isi), 500);
 
+        // jika belum ada folder upload/sambutan, maka buat folder
+        if (!file_exists(public_path('/upload/sambutan'))) {
+            mkdir(public_path('/upload/sambutan'), 0777, true);
+        }
+
         if ($request->hasFile('gambar')) {
 
             if ($sambutan->gambar) {

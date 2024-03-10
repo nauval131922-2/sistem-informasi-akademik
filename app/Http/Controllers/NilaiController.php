@@ -293,6 +293,14 @@ class NilaiController extends Controller
         // get tahun ajaran dengan status aktif
         $tahun_ajaran = TahunAjaran::where('status', 'Aktif')->first();
 
+        // jika tahun ajaran tidak ada yang aktif
+        if ($tahun_ajaran === null) {
+            return response()->json([
+                'status' => 'error2',
+                'message' => 'Tahun Ajaran Aktif Tidak Ditemukan'
+            ]);
+        }
+
         // cek apakah judul nilai sudah ada
         $cek_judul_nilai = Nilai::where('id_kelas_for_nilai', $request->kelas)->where('id_guru_for_nilai', $request->guru)->where('id_mapel_for_nilai', $request->mapel)->where('tipe_nilai', $request->tipe_nilai)->where('judul', $request->judul)->where('id_tahun_ajaran_for_nilai', $tahun_ajaran->id)->count();
 
@@ -313,7 +321,7 @@ class NilaiController extends Controller
                         $guru = Auth::user()->id;
                     }
 
-                    
+
 
                     Nilai::create([
                         'judul' => $request->judul,
@@ -440,7 +448,7 @@ class NilaiController extends Controller
             // $cek_judul_nilai = Nilai::where('id_kelas_for_nilai', $request->kelas)->where('id_guru_for_nilai', $request->guru)->where('id_mapel_for_nilai', $request->mapel)->where('tipe_nilai', $request->tipe_nilai)->where('judul', $request->judul)->where('id', '!=', $request->input('id_nilai' . $i + 1))->count();
 
         // }
-        
+
         // cek judul nilai kecuali semua id_nilai yang sedang diupdate
         $id_nilai = [];
         for ($i = 0; $i < $semua_siswa; $i++) {

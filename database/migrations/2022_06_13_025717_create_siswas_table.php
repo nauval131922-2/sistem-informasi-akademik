@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('siswas', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('id_kelas')->unsigned();
-            $table->string('nama')->nullable();
+            // $table->bigInteger('id_kelas')->unsigned();
+            // $table->string('nama')->nullable();
             $table->string('nis')->nullable();
             $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir')->nullable();
@@ -27,8 +27,11 @@ return new class extends Migration
             $table->string('nama_ibu')->nullable();
             $table->string('asal_sekolah')->nullable();
             $table->date('tanggal_masuk')->nullable();
-            $table->string('foto')->nullable();
+            // $table->string('foto')->nullable();
             $table->timestamps();
+
+            // tambah foreign key id_user_for_siswa di tabel siswas yang merujuk ke id di tabel users dan cascading delete jika id di tabel users dihapus
+            $table->foreignId('id_user_for_siswa')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

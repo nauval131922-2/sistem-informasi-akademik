@@ -270,7 +270,7 @@ $jabatan = App\Models\Jabatan::all();
                             '<td>' + value.role.nama + '</td>' +
                             '<td>' + (value.id_role == '3' || value.id_role == '5' ? value.kelas
                                 .nama : '') + '</td>' +
-                            '<td>' + (value.id_role == '4' && value.mapel != null ? value.mapel
+                            '<td>' + ((value.id_role == '4' || value.id_role == '3') && value.mapel != null ? value.mapel
                                 .mata_pelajaran : '') + '</td>' +
                             // jangan tampikan tombol delete jika user yang login adalah user yang sedang di edit
                             @can('admin')
