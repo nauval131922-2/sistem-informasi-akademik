@@ -18,7 +18,7 @@
           @foreach ($semua_ekstra as $no=>$ekstra)
             <div class="col-lg-4 col-md-6 portfolio-item">
               @if ($ekstra->gambar)
-                <img src="{{ asset($ekstra->gambar) }}" class="img-fluid" alt="">
+                <img src="{{ asset($ekstra->gambar) }}" class="img-fluid rounded" alt="">
               @else
                 <img src="https://source.unsplash.com/random/?quote={{ $no+1 }}" class="img-fluid rounded" alt="">
               @endif

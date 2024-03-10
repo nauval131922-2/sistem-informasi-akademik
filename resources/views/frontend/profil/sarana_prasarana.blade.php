@@ -18,7 +18,7 @@
           @foreach ($semua_sarana_prasarana as $no=>$sarana_prasarana)
             <div class="col-lg-4 col-md-6 portfolio-item">
               @if ($sarana_prasarana->gambar)
-                <img src="{{ asset($sarana_prasarana->gambar) }}" class="img-fluid" alt="">
+                <img src="{{ asset($sarana_prasarana->gambar) }}" class="img-fluid rounded" alt="">
               @else
                 <img src="https://source.unsplash.com/random/?quote={{ $no+1 }}" class="img-fluid rounded" alt="">
               @endif

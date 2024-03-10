@@ -15,7 +15,7 @@ class SaranaPrasaranaController extends Controller
     public function index(){
         $semua_sarana_prasarana = SaranaPrasarana::all();
         $title = 'Data Sarana Prasarana';
-        
+
         return view('backend.sarana_prasarana.index', compact('semua_sarana_prasarana', 'title'));
     }
 
@@ -42,9 +42,14 @@ class SaranaPrasaranaController extends Controller
                 'message' => $validator->errors()->toArray()
             ]);
         }
-        
+
         $sarana_prasarana = new SaranaPrasarana;
         $sarana_prasarana->nama = $request->nama;
+
+        // jika belum ada folder upload/sarana_prasarana
+        if (!file_exists('upload/sarana_prasarana')) {
+            mkdir('upload/sarana_prasarana', 0777, true);
+        }
 
         if ($request->hasFile('gambar')) {
 
@@ -104,7 +109,7 @@ class SaranaPrasaranaController extends Controller
                 'message' => $validator->errors()->toArray()
             ]);
         }
-        
+
         $sarana_prasarana = SaranaPrasarana::find($id);
         $sarana_prasarana->nama = $request->nama;
 
