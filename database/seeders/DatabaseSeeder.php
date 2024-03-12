@@ -90,27 +90,6 @@ class DatabaseSeeder extends Seeder
             'blog_category' => 'Umum',
         ]);
 
-
-
-        // user admin
-        User::factory()->create([
-            'id_role' => 1,
-            'name' => 'Admin',
-            'email' => 'nauvalgunawan5@gmail.com',
-            'password' => bcrypt('12345678'),
-            'username' => 'admin',
-            'id_mapel' => null,
-        ]);
-
-        // user kepala madrasah
-        User::factory()->create([
-            'id_role' => 2,
-            'name' => 'Kepala Madrasah',
-            'email' => '',
-            'password' => bcrypt('12345678'),
-            'username' => 'kepala_madrasah',
-        ]);
-
         // mata pelajaran
         MataPelajaran::factory()->create([
             'id' => 1,
@@ -152,10 +131,28 @@ class DatabaseSeeder extends Seeder
             'mata_pelajaran' => 'Bahasa Inggris',
         ]);
 
-        // user siswa dan guru mapel
+        // user
+        User::factory()->create([
+            'id_role' => 1,
+            'name' => 'Admin',
+            'email' => 'nauvalgunawan5@gmail.com',
+            'password' => bcrypt('12345678'),
+            'username' => 'admin',
+            'id_mapel' => null,
+            'profile_image' => 'upload/profile_picture/default/1.jpg'
+        ]);
+
+        User::factory()->create([
+            'id_role' => 2,
+            'name' => 'Kepala Madrasah',
+            'email' => 'email@gmail.com',
+            'password' => bcrypt('12345678'),
+            'username' => 'kepala_madrasah',
+            'profile_image' => 'upload/profile_picture/default/1.jpg'
+        ]);
+
         User::factory(50)->create();
 
-        // user guru wali kelas 1
         User::factory()->create([
             'id_role' => 3,
             'name' => 'Guru Wali Kelas 1',
@@ -163,9 +160,9 @@ class DatabaseSeeder extends Seeder
             // 'id_mapel' => 1,
             'password' => bcrypt('12345678'),
             'username' => 'guru_wali_kelas_1',
+            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
-        // user guru wali kelas 2
         User::factory()->create([
             'id_role' => 3,
             'name' => 'Guru Wali Kelas 2',
@@ -173,9 +170,9 @@ class DatabaseSeeder extends Seeder
             // 'id_mapel' => 2,
             'password' => bcrypt('12345678'),
             'username' => 'guru_wali_kelas_2',
+            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
-        // user guru wali kelas 3
         User::factory()->create([
             'id_role' => 3,
             'name' => 'Guru Wali Kelas 3',
@@ -183,9 +180,9 @@ class DatabaseSeeder extends Seeder
             // 'id_mapel' => 3,
             'password' => bcrypt('12345678'),
             'username' => 'guru_wali_kelas_3',
+            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
-        // user guru wali kelas 4
         User::factory()->create([
             'id_role' => 3,
             'name' => 'Guru Wali Kelas 4',
@@ -193,9 +190,9 @@ class DatabaseSeeder extends Seeder
             // 'id_mapel' => 4,
             'password' => bcrypt('12345678'),
             'username' => 'guru_wali_kelas_4',
+            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
-        // user guru wali kelas 5
         User::factory()->create([
             'id_role' => 3,
             'name' => 'Guru Wali Kelas 5',
@@ -203,9 +200,9 @@ class DatabaseSeeder extends Seeder
             // 'id_mapel' => 5,
             'password' => bcrypt('12345678'),
             'username' => 'guru_wali_kelas_5',
+            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
-        // user guru wali kelas 6
         User::factory()->create([
             'id_role' => 3,
             'name' => 'Guru Wali Kelas 6',
@@ -213,6 +210,7 @@ class DatabaseSeeder extends Seeder
             // 'id_mapel' => 6,
             'password' => bcrypt('12345678'),
             'username' => 'guru_wali_kelas_6',
+            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
         // blog
@@ -270,79 +268,79 @@ class DatabaseSeeder extends Seeder
             'id' => 1,
             'jam_ke' => '1',
             'jam_mulai' => '07:00:00',
-            'jam_selesai' => '07:29:00',
+            'jam_selesai' => '07:30:00',
             'tipe_jam' => 'Pelajaran',
         ]);
 
         JamPelajaran::factory()->create([
             'id' => 2,
             'jam_ke' => '2',
-            'jam_mulai' => '07:30:00',
-            'jam_selesai' => '07:59:00',
+            'jam_mulai' => '07:31:00',
+            'jam_selesai' => '08:00:00',
             'tipe_jam' => 'Pelajaran',
         ]);
 
         JamPelajaran::factory()->create([
             'id' => 3,
             'jam_ke' => '3',
-            'jam_mulai' => '08:00:00',
-            'jam_selesai' => '08:29:00',
+            'jam_mulai' => '08:01:00',
+            'jam_selesai' => '08:30:00',
             'tipe_jam' => 'Pelajaran',
         ]);
 
         JamPelajaran::factory()->create([
             'id' => 4,
             'jam_ke' => '4',
-            'jam_mulai' => '08:30:00',
-            'jam_selesai' => '08:44:00',
+            'jam_mulai' => '08:31:00',
+            'jam_selesai' => '08:45:00',
             'tipe_jam' => 'Istirahat',
         ]);
 
         JamPelajaran::factory()->create([
             'id' => 5,
             'jam_ke' => '5',
-            'jam_mulai' => '08:45:00',
-            'jam_selesai' => '09:14:00',
+            'jam_mulai' => '08:46:00',
+            'jam_selesai' => '09:15:00',
             'tipe_jam' => 'Pelajaran',
         ]);
 
         JamPelajaran::factory()->create([
             'id' => 6,
             'jam_ke' => '6',
-            'jam_mulai' => '09:15:00',
-            'jam_selesai' => '09:44:00',
+            'jam_mulai' => '09:16:00',
+            'jam_selesai' => '09:45:00',
             'tipe_jam' => 'Pelajaran',
         ]);
 
         JamPelajaran::factory()->create([
             'id' => 7,
             'jam_ke' => '7',
-            'jam_mulai' => '09:45:00',
-            'jam_selesai' => '10:14:00',
+            'jam_mulai' => '09:46:00',
+            'jam_selesai' => '10:15:00',
             'tipe_jam' => 'Pelajaran',
         ]);
 
         JamPelajaran::factory()->create([
             'id' => 8,
             'jam_ke' => '8',
-            'jam_mulai' => '10:15:00',
-            'jam_selesai' => '10:29:00',
+            'jam_mulai' => '10:16:00',
+            'jam_selesai' => '10:30:00',
             'tipe_jam' => 'Istirahat',
         ]);
 
         JamPelajaran::factory()->create([
             'id' => 9,
             'jam_ke' => '9',
-            'jam_mulai' => '10:30:00',
-            'jam_selesai' => '10:59:00',
+            'jam_mulai' => '10:31:00',
+            'jam_selesai' => '11:00:00',
             'tipe_jam' => 'Pelajaran',
         ]);
 
         JamPelajaran::factory()->create([
             'id' => 10,
             'jam_ke' => '10',
-            'jam_mulai' => '11:00:00',
-            'jam_selesai' => '11:29:00',
+            'jam_mulai' => '11:01:00',
+            'jam_selesai' => '11:30:00',
             'tipe_jam' => 'Pelajaran',
         ]);
 

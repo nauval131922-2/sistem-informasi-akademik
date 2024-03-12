@@ -73,7 +73,7 @@ $route = Route::current()->getName();
                                 </div>
                             </div>
                             <div class="row justify-content-start">
-                                @can('kepala_madrasah')
+                                @canany(['kepala_madrasah', 'admin'])
                                     <div class="col-md-4">
                                         <select name="kepemilikan_blog" id="kepemilikan_blog" class="form-select mb-2"
                                             onchange="filterData()">
@@ -81,7 +81,26 @@ $route = Route::current()->getName();
                                             <option value="">Semua Blog</option>
                                         </select>
                                     </div>
-                                @endcan
+                                @endcanany
+
+                                {{-- jika yang login selain kepala_madrasah --}}
+                                {{-- @if (auth()->user()->id_role != 2)
+                                    <div class="col-md-4" style="display: none">
+                                        <select name="kepemilikan_blog" id="kepemilikan_blog" class="form-select mb-2"
+                                            onchange="filterData()">
+                                            <option value="{{ auth()->user()->id }}">Semua Blog</option>
+                                        </select>
+                                    </div>
+                                @else
+                                    <div class="col-md-4">
+                                        <select name="kepemilikan_blog" id="kepemilikan_blog" class="form-select mb-2"
+                                            onchange="filterData()">
+                                            <option value="{{ auth()->user()->id }}">Blog Saya</option>
+                                            <option value="">Semua Blog</option>
+                                        </select>
+                                    </div>
+                                @endif --}}
+
                                 <div class="col-md-4">
                                     <select name="kategori_blog" id="kategori_blog" class="form-select mb-2"
                                         onchange="filterData()">
@@ -90,6 +109,8 @@ $route = Route::current()->getName();
                                             <option value="{{ $kategori_blog->id }}">{{ $kategori_blog->blog_category }}
                                             </option>
                                         @endforeach
+                                        {{-- tambah option uncategorized --}}
+                                        <option value="uncategorized">Uncategorized</option>
 
                                     </select>
                                 </div>
@@ -185,6 +206,12 @@ $route = Route::current()->getName();
             $.ajax({
                 url: '{{ route('blog-filter') }}?kategori_blog=' + $('#kategori_blog').val() +
                     '&kepemilikan_blog=' + $('#kepemilikan_blog').val(),
+
+                // jika #kategori_blog == uncategorized, maka tampilkan semua blog yang tidak memiliki kategori
+                // url: '{{ route('blog-filter') }}?kategori_blog=' + ($('#kategori_blog').val() == 'uncategorized' ? '' :
+                //     $('#kategori_blog').val()) +
+                //     '&kepemilikan_blog=' + $('#kepemilikan_blog').val(),
+
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
@@ -212,12 +239,14 @@ $route = Route::current()->getName();
                             // jika value.user.name == null, maka tampilkan kosong
                             '<td>' + (value.id_user_for_blog == null ? '' : value.user.name) +
                             '</td>' +
-                            '<td>' + value.category.blog_category + '</td>' +
+                            '<td>' + (value.category == null ? '' : value.category.blog_category) +
+                            '</td>' +
                             // jangan tampikan tombol delete jika id = 1
                             @if (Auth::user()->id_role == 1)
                                 '<td>' + editButton + deleteButton + '</td>' +
                             @elseif (Auth::user()->id_role == 2)
-                                '<td>' + (value.id_user_for_blog == '{{ Auth::user()->id }}' ? editButton + deleteButton : '') + '</td>' +
+                                '<td>' + (value.id_user_for_blog == '{{ Auth::user()->id }}' ?
+                                    editButton + deleteButton : '') + '</td>' +
                             @endif
                             '</tr>');
                     });

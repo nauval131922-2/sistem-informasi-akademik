@@ -115,6 +115,8 @@ class UserController extends Controller
             Image::make($request->gambar)->save(public_path('/upload/profile_picture/' . $nama_file));
 
             $user->profile_image = 'upload/profile_picture/' . $nama_file;
+        } else {
+            $user->profile_image = 'upload/profile_picture/default/1.jpg';
         }
 
         // simpan data
@@ -308,7 +310,12 @@ class UserController extends Controller
         // simpan data gambar jika ada gambar yang diupload (oke)
         if ($request->hasFile('gambar')) {
 
-            if ($user->profile_image) {
+            // if ($user->profile_image) {
+            //     unlink($user->profile_image);
+            // }
+
+            // jika menggunakkan gambar default jangan hapus gambar default
+            if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
                 unlink($user->profile_image);
             }
 
@@ -321,9 +328,14 @@ class UserController extends Controller
 
             $user->profile_image = 'upload/profile_picture/' . $nama_file;
         } elseif ($request->gambarPreview == null && $user->profile_image != null) {
-            unlink($user->profile_image);
+            // unlink($user->profile_image);
 
-            $user->profile_image = null;
+            // jika menggunakkan gambar default jangan hapus gambar default
+            if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
+                unlink($user->profile_image);
+            }
+
+            $user->profile_image = 'upload/profile_picture/default/1.jpg';
         } elseif ($request->gambarPreview != null && $user->profile_image != null) {
             // get file extension
             $file_ext = pathinfo($user->profile_image, PATHINFO_EXTENSION);
@@ -343,11 +355,21 @@ class UserController extends Controller
         // jika id_role = 5 (siswa) maka simpan data ke tabel siswa (oke)
         if ($request->id_role == 3 || $request->id_role == 4) {
             $guru = Guru::where('id_user_for_guru', $id)->first();
+            // jika guru belum ada di tabel guru
+            if (!$guru) {
+                $guru = new Guru();
+            }
+
             $guru->id_user_for_guru = $user->id;
 
             $guru->save();
         } else if ($request->id_role == 5) {
             $siswa = Siswa::where('id_user_for_siswa', $id)->first();
+            // jika siswa belum ada di tabel siswa
+            if (!$siswa) {
+                $siswa = new Siswa();
+            }
+
             $siswa->id_user_for_siswa = $user->id;
 
             $siswa->save();

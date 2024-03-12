@@ -337,8 +337,8 @@ Route::controller(SaranaPrasaranaController::class)->group(function () {
 Route::controller(BlogController::class)->group(function () {
     Route::get('/blog-details/{id}', 'blog_single')->name('blog-single');
     Route::get('/blog-by-category/{id}', 'blog_by_category')->name('blog-by-category');
-    Route::get('/kegiatan-sekolah', 'blog_kegiatan_sekolah')->name('blog-kegiatan-sekolah');
-    Route::get('/prestasi', 'blog_prestasi')->name('blog-prestasi');
+    // blog uncategorized
+    Route::get('/blog-uncategorized', 'blog_uncategorized')->name('blog-uncategorized');
     Route::get('/all-blog', 'blog_all')->name('blog-all');
     Route::get('/all-blog/search', 'search')->name('blog-search');
 });

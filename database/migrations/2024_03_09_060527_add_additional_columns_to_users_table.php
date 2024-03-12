@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreignId('id_kelas')->constrained('kelas')->onUpdate('cascade')->onDelete('cascade')->after('id_role');
 
             // tambah foreign key id_mapel ke table mata_pelajarans dan set cascade on delete dan update jika id_mapel di mata_pelajarans dihapus atau diupdate maka id_mapel di users juga akan dihapus atau diupdate juga
-            $table->foreignId('id_mapel')->constrained('mata_pelajarans')->onUpdate('cascade')->onDelete('cascade')->after('id_kelas');
+            $table->foreignId('id_mapel')->nullable()->constrained('mata_pelajarans')->onUpdate('cascade')->onDelete('set null')->after('id_kelas');
         });
     }
 

@@ -16,8 +16,9 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Validator;
 
 class BlogController extends Controller
-{  
-    public function index_all(){
+{
+    public function index_all()
+    {
         $semua_blog = Blog::with('category', 'user')->get();
         // $id = $id;
 
@@ -33,7 +34,8 @@ class BlogController extends Controller
         return view('backend.blog.index', compact('semua_blog', 'title', 'semua_kategori_blog'));
     }
 
-    public function index($id){
+    public function index($id)
+    {
         $semua_blog = Blog::where('blog_category_id', $id)->get();
         $id = $id;
 
@@ -41,12 +43,13 @@ class BlogController extends Controller
         $blog_category = BlogCategory::findOrFail($id);
         $blog_category_name = $blog_category->blog_category;
 
-        $title = 'Data Blog '.$blog_category_name;
+        $title = 'Data Blog ' . $blog_category_name;
 
         return view('backend.blog.index', compact('semua_blog', 'title', 'id', 'blog_category', 'blog_category_name'));
     }
 
-    public function tambah($id){
+    public function tambah($id)
+    {
         $id = $id;
         $blog_category = BlogCategory::findOrFail($id);
         $blog_category_name = $blog_category->blog_category;
@@ -59,7 +62,8 @@ class BlogController extends Controller
         return view('backend.blog.tambah', compact('title', 'blog_category', 'id', 'blog_category_id'));
     }
 
-    public function simpan(Request $request, $blog_category_id){
+    public function simpan(Request $request, $blog_category_id)
+    {
         // $request->validate([
         //     'judul' => 'required',
         //     'isi' => 'required',
@@ -85,17 +89,17 @@ class BlogController extends Controller
         $blog->excerpt = Str::limit(strip_tags($request->isi), 200);
         $blog->blog_category_id = $blog_category_id;
         $blog->id_user_for_blog = auth()->user()->id;
-        
+
         if ($request->hasFile('gambar')) {
 
             // $nama_file = hexdec(uniqid()).'.'.$request->gambar->getClientOriginalExtension();
             // nama file gambar sama dengan judul blog
             $judul_tanpa_spasi = str_replace(' ', '-', $request->judul);
-            $nama_file = $judul_tanpa_spasi.'-'.hexdec(uniqid()).'.'.$request->gambar->getClientOriginalExtension();
+            $nama_file = $judul_tanpa_spasi . '-' . hexdec(uniqid()) . '.' . $request->gambar->getClientOriginalExtension();
             // Image::make($request->gambar)->resize(1920, 1088)->save('upload/blog/'.$nama_file);
-            Image::make($request->gambar)->save('upload/blog/'.$nama_file);
+            Image::make($request->gambar)->save('upload/blog/' . $nama_file);
 
-            $blog->blog_image = 'upload/blog/'.$nama_file;
+            $blog->blog_image = 'upload/blog/' . $nama_file;
         };
 
         // $blog->save();
@@ -120,8 +124,9 @@ class BlogController extends Controller
             ]);
         }
     }
-    
-    public function blog_single($id){
+
+    public function blog_single($id)
+    {
         $blog = Blog::findOrFail($id);
 
         // get profil sekolah
@@ -133,10 +138,13 @@ class BlogController extends Controller
         // get semua blog urutkan berdasarkan tanggal terbaru
         $semua_blog_terbaru = Blog::orderBy('updated_at', 'desc')->limit(5)->get();
 
-        return view('frontend.blog.single', compact('blog', 'profil_sekolah', 'semua_blog_kategori', 'semua_blog_terbaru'));
+        $semua_blog_tanpa_kategori = Blog::where('blog_category_id', null)->orderBy('updated_at', 'desc')->paginate(4)->onEachSide(0);
+
+        return view('frontend.blog.single', compact('blog', 'profil_sekolah', 'semua_blog_kategori', 'semua_blog_terbaru', 'semua_blog_tanpa_kategori'));
     }
 
-    public function blog_by_category($id){
+    public function blog_by_category($id)
+    {
         $semua_blog = Blog::where('blog_category_id', $id)->orderBy('updated_at', 'desc')->paginate(4)->onEachSide(0);
 
         // get profil sekolah
@@ -153,10 +161,33 @@ class BlogController extends Controller
 
         $title =  $category_name->blog_category;
 
-        return view('frontend.blog.bycategory', compact('semua_blog', 'profil_sekolah', 'semua_blog_kategori', 'semua_blog_terbaru', 'category_name', 'title'));
+        $semua_blog_tanpa_kategori = Blog::where('blog_category_id', null)->orderBy('updated_at', 'desc')->paginate(4)->onEachSide(0);
+
+        return view('frontend.blog.bycategory', compact('semua_blog', 'profil_sekolah', 'semua_blog_kategori', 'semua_blog_terbaru', 'category_name', 'title', 'semua_blog_tanpa_kategori'));
     }
 
-    public function blog_all(){
+    public function blog_uncategorized()
+    {
+        $semua_blog = Blog::where('blog_category_id', null)->orderBy('updated_at', 'desc')->paginate(4)->onEachSide(0);
+
+        // get profil sekolah
+        $profil_sekolah = ProfilSekolah::find(1);
+
+        // get semua kategori blog
+        $semua_blog_kategori = BlogCategory::orderBy('blog_category', 'asc')->get();
+
+        // get semua blog urutkan berdasarkan tanggal terbaru
+        $semua_blog_terbaru = Blog::orderBy('updated_at', 'desc')->limit(5)->get();
+
+        $title = 'Uncategorized';
+
+        $semua_blog_tanpa_kategori = Blog::where('blog_category_id', null)->orderBy('updated_at', 'desc')->paginate(4)->onEachSide(0);
+
+        return view('frontend.blog.bycategory', compact('semua_blog', 'profil_sekolah', 'semua_blog_kategori', 'semua_blog_terbaru', 'title', 'semua_blog_tanpa_kategori'));
+    }
+
+    public function blog_all()
+    {
         $semua_blog = Blog::orderBy('updated_at', 'desc')->paginate(4)->onEachSide(0);
 
         // get profil sekolah
@@ -170,12 +201,15 @@ class BlogController extends Controller
 
         $title = 'All Posts';
 
-        return view('frontend.blog.bycategory', compact('semua_blog', 'profil_sekolah', 'semua_blog_kategori', 'semua_blog_terbaru', 'title'));
+        $semua_blog_tanpa_kategori = Blog::where('blog_category_id', null)->orderBy('updated_at', 'desc')->paginate(4)->onEachSide(0);
+
+        return view('frontend.blog.bycategory', compact('semua_blog', 'profil_sekolah', 'semua_blog_kategori', 'semua_blog_terbaru', 'title', 'semua_blog_tanpa_kategori'));
     }
 
-    public function search(Request $request){
+    public function search(Request $request)
+    {
         $search = $request->search;
-        $semua_blog = Blog::where('blog_title', 'like', '%'.$search.'%')->orWhere('blog_description', 'like', '%'.$search.'%')->orWhere('excerpt', 'like', '%'.$search.'%')->orderBy('updated_at', 'desc')->paginate(4)->onEachSide(0);
+        $semua_blog = Blog::where('blog_title', 'like', '%' . $search . '%')->orWhere('blog_description', 'like', '%' . $search . '%')->orWhere('excerpt', 'like', '%' . $search . '%')->orderBy('updated_at', 'desc')->paginate(4)->onEachSide(0);
 
         // get profil sekolah
         $profil_sekolah = ProfilSekolah::find(1);
@@ -188,10 +222,13 @@ class BlogController extends Controller
 
         $title = 'Search Result for: ' . $search;
 
-        return view('frontend.blog.bycategory', compact('semua_blog', 'profil_sekolah', 'semua_blog_kategori', 'semua_blog_terbaru', 'title'));
+        $semua_blog_tanpa_kategori = Blog::where('blog_category_id', null)->orderBy('updated_at', 'desc')->paginate(4)->onEachSide(0);
+
+        return view('frontend.blog.bycategory', compact('semua_blog', 'profil_sekolah', 'semua_blog_kategori', 'semua_blog_terbaru', 'title', 'semua_blog_tanpa_kategori'));
     }
 
-    public function edit($id){
+    public function edit($id)
+    {
         $blog = Blog::findOrFail($id);
         $blog_category = BlogCategory::findOrFail($blog->blog_category_id);
         $blog_category_name = $blog_category->blog_category;
@@ -204,7 +241,8 @@ class BlogController extends Controller
         return view('backend.blog.edit', compact('blog', 'title', 'blog_category', 'blog_category_name', 'blog_category_id'));
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         // $request->validate([
         //     'judul' => 'required',
         //     'isi' => 'required',
@@ -212,7 +250,7 @@ class BlogController extends Controller
 
         // validator
         $validator = Validator::make($request->all(), [
-            'judul' => 'required|unique:blogs,blog_title,'.$id,
+            'judul' => 'required|unique:blogs,blog_title,' . $id,
             'isi' => 'required',
         ]);
 
@@ -236,10 +274,10 @@ class BlogController extends Controller
             }
 
             $judul_tanpa_spasi = str_replace(' ', '-', $request->judul);
-            $nama_file = $judul_tanpa_spasi.'-'.hexdec(uniqid()).'.'.$request->gambar->getClientOriginalExtension();
-            Image::make($request->gambar)->save('upload/blog/'.$nama_file);
+            $nama_file = $judul_tanpa_spasi . '-' . hexdec(uniqid()) . '.' . $request->gambar->getClientOriginalExtension();
+            Image::make($request->gambar)->save('upload/blog/' . $nama_file);
 
-            $blog->blog_image = 'upload/blog/'.$nama_file;
+            $blog->blog_image = 'upload/blog/' . $nama_file;
         } elseif ($request->gambarPreview == null && $blog->blog_image != null) {
             unlink($blog->blog_image);
 
@@ -249,11 +287,11 @@ class BlogController extends Controller
             $file_ext = pathinfo($blog->blog_image, PATHINFO_EXTENSION);
 
             $judul_tanpa_spasi = str_replace(' ', '-', $request->judul);
-            $nama_file = $judul_tanpa_spasi.'-'.hexdec(uniqid()).'.'.$file_ext;
+            $nama_file = $judul_tanpa_spasi . '-' . hexdec(uniqid()) . '.' . $file_ext;
             // rename file name
-            rename(public_path($blog->blog_image), public_path('upload/blog/'.$nama_file));
+            rename(public_path($blog->blog_image), public_path('upload/blog/' . $nama_file));
 
-            $blog->blog_image = 'upload/blog/'.$nama_file;
+            $blog->blog_image = 'upload/blog/' . $nama_file;
         }
 
         // $blog->save();
@@ -279,7 +317,8 @@ class BlogController extends Controller
         }
     }
 
-    public function hapus($id){
+    public function hapus($id)
+    {
         $blog = Blog::findOrFail($id);
         // $blog_category = $blog->blog_category_id;
         // $blog->delete();
@@ -315,24 +354,53 @@ class BlogController extends Controller
     function filter_blog(Request $request)
     {
         $blog = Blog::with('category', 'user');
-
-        // filter berdasarkan tipe pengguna
-        if ($request->kategori_blog != null) {
-            $blog->where('blog_category_id', $request->kategori_blog);
-        }
-
-        // jika id_role user tidak 1, maka dapatkan data blog dengan id_user_for_blog = id user yang login
-        if (auth()->user()->id_role != 1 && auth()->user()->id_role != 2) {
-            $blog->where('id_user_for_blog', auth()->user()->id);
-        }
         
-        // filter berdasarkan kepemilikkan blog
-        if (Auth::user()->id_role === 2) {
-            if ($request->kepemilikan_blog != null) {
-                $blog->where('id_user_for_blog', $request->kepemilikan_blog);
+        if ($request->kategori_blog == '') {
+            // jika id_role user tidak 1, maka dapatkan data blog dengan id_user_for_blog = id user yang login
+            if (auth()->user()->id_role != 1 && auth()->user()->id_role != 2) {
+                $blog->where('id_user_for_blog', auth()->user()->id);
             }
-        } else if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
-            $blog->where('id_user_for_blog', Auth::user()->id);
+
+            // filter berdasarkan kepemilikkan blog
+            if (Auth::user()->id_role === 2 || Auth::user()->id_role === 1) {
+                if ($request->kepemilikan_blog != null) {
+                    $blog->where('id_user_for_blog', $request->kepemilikan_blog);
+                }
+            } else if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
+                $blog->where('id_user_for_blog', Auth::user()->id);
+            }
+        } elseif ($request->kategori_blog == 'uncategorized') {
+            $blog->where('blog_category_id', null);
+
+            // jika id_role user tidak 1, maka dapatkan data blog dengan id_user_for_blog = id user yang login
+            if (auth()->user()->id_role != 1 && auth()->user()->id_role != 2) {
+                $blog->where('id_user_for_blog', auth()->user()->id);
+            }
+
+            // filter berdasarkan kepemilikkan blog
+            if (Auth::user()->id_role === 2 || Auth::user()->id_role === 1) {
+                if ($request->kepemilikan_blog != null) {
+                    $blog->where('id_user_for_blog', $request->kepemilikan_blog);
+                }
+            } else if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
+                $blog->where('id_user_for_blog', Auth::user()->id);
+            }
+        } elseif ($request->kategori_blog != 'uncategorized') {
+            $blog->where('blog_category_id', $request->kategori_blog);
+
+            // jika id_role user tidak 1, maka dapatkan data blog dengan id_user_for_blog = id user yang login
+            if (auth()->user()->id_role != 1 && auth()->user()->id_role != 2) {
+                $blog->where('id_user_for_blog', auth()->user()->id);
+            }
+
+            // filter berdasarkan kepemilikkan blog
+            if (Auth::user()->id_role === 2 || Auth::user()->id_role === 1) {
+                if ($request->kepemilikan_blog != null) {
+                    $blog->where('id_user_for_blog', $request->kepemilikan_blog);
+                }
+            } else if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
+                $blog->where('id_user_for_blog', Auth::user()->id);
+            }
         }
 
         $blog = $blog->get();

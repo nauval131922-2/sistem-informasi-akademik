@@ -117,7 +117,12 @@ class AdminController extends Controller
         // simpan gambar jika ada
         if ($request->hasFile('gambar')) {
 
-            if ($user->profile_image) {
+            // if ($user->profile_image) {
+            //     unlink($user->profile_image);
+            // }
+
+            // jika menggunakkan gambar default jangan hapus gambar default
+            if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
                 unlink($user->profile_image);
             }
 
@@ -130,9 +135,14 @@ class AdminController extends Controller
 
             $user->profile_image = 'upload/profile_picture/'.$nama_file;
         } elseif ($request->gambarPreview == null && $user->profile_image != null) {
-            unlink($user->profile_image);
+            // unlink($user->profile_image);
+            
+            // jika menggunakkan gambar default jangan hapus gambar default
+            if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
+                unlink($user->profile_image);
+            }
 
-            $user->profile_image = null;
+            $user->profile_image = 'upload/profile_picture/default/1.jpg';
         } elseif ($request->gambarPreview != null && $user->profile_image != null) {
             // get file extension
             $file_ext = pathinfo($user->profile_image, PATHINFO_EXTENSION);

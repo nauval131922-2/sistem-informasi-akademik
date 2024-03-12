@@ -189,7 +189,15 @@
                     $('#gambarPreview').val(profile.profile_image);
                     $('#showImage').attr('src', '{{ asset('') }}' + profile.profile_image);
                     $('#namaUserLoginDiHeader').text(profile.name);
-                    $('#fotoUserLoginDiHeader').attr('src', '{{ asset('') }}' + profile.profile_image);
+                    // jika tidak ada gambar maka hidden tag img, jika ada maka tampilkan tag img dan ganti src dengan gambar yang diambil dari database
+                    if (profile.profile_image == null) {
+                        $('#fotoUserLoginDiHeader').hide();
+                    } else {
+                        $('#fotoUserLoginDiHeader').show();
+                        $('#fotoUserLoginDiHeader').attr('src', '{{ asset('') }}' + profile.profile_image);
+                    }
+
+                    // $('#fotoUserLoginDiHeader').attr('src', '{{ asset('') }}' + profile.profile_image);
                 }
 
             });

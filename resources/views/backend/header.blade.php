@@ -81,6 +81,12 @@
                     @if ($user_data->profile_image)
                         <img src="" alt=""
                             class="rounded header-profile-user" id="fotoUserLoginDiHeader">
+                    {{-- @else
+                        <div class="avatar-xs">
+                            <span class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                {{ substr($user_data->name, 0, 1) }}
+                            </span>
+                        </div> --}}
                     @endif
                     <span class="d-none d-xl-inline-block ms-1" id="namaUserLoginDiHeader"></span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
