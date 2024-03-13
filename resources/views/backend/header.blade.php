@@ -50,9 +50,9 @@
                         margin-left: 4px;
                         ">
                         <i class="ri-dashboard-line align-middle me-1"></i> 
-                        <span style="
+                        {{-- <span style="
                             vertical-align: middle;
-                        " >siakad</span> 
+                        " >siakad</span>  --}}
                     </span>
                 </a>
             </div>

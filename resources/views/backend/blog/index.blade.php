@@ -243,7 +243,9 @@ $route = Route::current()->getName();
                             '</td>' +
                             // jangan tampikan tombol delete jika id = 1
                             @if (Auth::user()->id_role == 1)
-                                '<td>' + editButton + deleteButton + '</td>' +
+                                '<td>' + (value.id != '1'  ?
+                                    editButton +
+                                    deleteButton : editButton) + '</td>' +
                             @elseif (Auth::user()->id_role == 2)
                                 '<td>' + (value.id_user_for_blog == '{{ Auth::user()->id }}' ?
                                     editButton + deleteButton : '') + '</td>' +

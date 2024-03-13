@@ -59,7 +59,9 @@ class BlogController extends Controller
         // get blog category id
         $blog_category_id = $blog_category->id;
 
-        return view('backend.blog.tambah', compact('title', 'blog_category', 'id', 'blog_category_id'));
+        $blog_categories = BlogCategory::all();
+
+        return view('backend.blog.tambah', compact('title', 'blog_category', 'id', 'blog_category_id', 'blog_categories'));
     }
 
     public function simpan(Request $request, $blog_category_id)

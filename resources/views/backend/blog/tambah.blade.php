@@ -33,6 +33,24 @@
             {{-- <form action="{{ route('blog-simpan', $blog_category) }}" method="POST" enctype="multipart/form-data"> --}}
             <form enctype="multipart/form-data" id="formTambahData" method="POST">
                 @csrf
+                {{-- dropdown kategori blog  --}}
+                <div class="row mb-3">
+                    <label for="blog_category_id" class="col-sm-2 col-form-label">Kategori</label>
+                    <div class="col-sm-10">
+                        <select class="form-select" id="blog_category_id" name="blog_category_id" required>
+                            <option value="">Pilih Kategori</option>
+                            @foreach ($blog_categories as $blog_category)
+                                <option value="{{ $blog_category->id }}">{{ $blog_category->blog_category }}</option>
+                            @endforeach
+                        </select>
+                        <div class="mt-2">
+                            @error('blog_category_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row mb-3">
                     <label for="judul" class="col-sm-2 col-form-label">Judul</label>
                     <div class="col-sm-10">
