@@ -25,7 +25,7 @@ require __DIR__ . '/auth.php';
 
 // prevent back history
 Route::group(['middleware' => 'prevent-back-history'], function () {
-    
+
     // auth
     Route::middleware(['auth'])->group(function () {
         // home
@@ -143,7 +143,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         //         Route::get('/jadwal-kepala-madarasah/cetak', 'cetak_jadwal_for_kepala_madrasah')->name('jadwal-for-kepala-madrasah-print');
         //     });
         // });
-        
+
         // Route::middleware('guru_wali_mapel_siswa')->group(function () {
         //     Route::controller(JadwalPelajaranController::class)->group(function () {
         //         Route::get('/jadwal', 'index_jawal_for_guru_wali_mapel_siswa')->name('jadwal-for-guru-wali-mapel-siswa-index');
@@ -257,7 +257,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             Route::controller(BlogCategoryController::class)->group(function () {
                 Route::get('/blog-category', 'index')->name('blog-category-index');
                 Route::get('/blog-category/fetch', 'fetch')->name('blog-category-fetch');
-                
+
             });
         });
 
@@ -266,8 +266,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             Route::controller(BlogController::class)->group(function () {
                 Route::get('/blog/all', 'index_all')->name('blog-all-index');
                 Route::get('/blog/filter', 'filter_blog')->name('blog-filter');
-                Route::get('/blog/{id}', 'index')->name('blog-index');
-                Route::get('/blog/tambah/{id}', 'tambah')->name('blog-tambah');
+                Route::get('/blog/tambah', 'tambah')->name('blog-tambah');
                 Route::post('/blog/simpan/{id}', 'simpan')->name('blog-simpan');
                 Route::get('/blog/edit/{id}', 'edit')->name('blog-edit');
                 Route::post('/blog/update/{id}', 'update')->name('blog-update');

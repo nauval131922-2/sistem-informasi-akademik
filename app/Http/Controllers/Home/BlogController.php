@@ -34,34 +34,15 @@ class BlogController extends Controller
         return view('backend.blog.index', compact('semua_blog', 'title', 'semua_kategori_blog'));
     }
 
-    public function index($id)
+    public function tambah()
     {
-        $semua_blog = Blog::where('blog_category_id', $id)->get();
-        $id = $id;
 
-        // get blog category name by id
-        $blog_category = BlogCategory::findOrFail($id);
-        $blog_category_name = $blog_category->blog_category;
+        $title = 'Data Blog';
 
-        $title = 'Data Blog ' . $blog_category_name;
-
-        return view('backend.blog.index', compact('semua_blog', 'title', 'id', 'blog_category', 'blog_category_name'));
-    }
-
-    public function tambah($id)
-    {
-        $id = $id;
-        $blog_category = BlogCategory::findOrFail($id);
-        $blog_category_name = $blog_category->blog_category;
-
-        $title = 'Data Blog' . ' ' . $blog_category_name;
-
-        // get blog category id
-        $blog_category_id = $blog_category->id;
 
         $blog_categories = BlogCategory::all();
 
-        return view('backend.blog.tambah', compact('title', 'blog_category', 'id', 'blog_category_id', 'blog_categories'));
+        return view('backend.blog.tambah', compact('title', 'blog_categories'));
     }
 
     public function simpan(Request $request, $blog_category_id)
@@ -73,6 +54,7 @@ class BlogController extends Controller
 
         // validator
         $validator = Validator::make($request->all(), [
+            'kategori' => 'required',
             'judul' => 'required|unique:blogs,blog_title',
             'isi' => 'required',
         ]);
@@ -89,7 +71,8 @@ class BlogController extends Controller
         $blog->blog_title = $request->judul;
         $blog->blog_description = $request->isi;
         $blog->excerpt = Str::limit(strip_tags($request->isi), 200);
-        $blog->blog_category_id = $blog_category_id;
+        // $blog->blog_category_id = $blog_category_id;
+        $blog->blog_category_id = $request->kategori;
         $blog->id_user_for_blog = auth()->user()->id;
 
         if ($request->hasFile('gambar')) {
@@ -232,15 +215,31 @@ class BlogController extends Controller
     public function edit($id)
     {
         $blog = Blog::findOrFail($id);
-        $blog_category = BlogCategory::findOrFail($blog->blog_category_id);
-        $blog_category_name = $blog_category->blog_category;
 
-        $title = 'Data Blog' . ' ' . $blog_category_name;
+        // cek apakah blog_category_id ada atau tidak
+        if ($blog->blog_category_id != null) {
+            $blog_category = BlogCategory::findOrFail($blog->blog_category_id);
+            $blog_category_name = $blog_category->blog_category;
+
+            $title = 'Data Blog' . ' ' . $blog_category_name;
+
+            $blog_category_id = $blog->blog_category_id;
+        } else {
+            $title = 'Uncategorized';
+        }
+
+        // $blog_category = BlogCategory::findOrFail($blog->blog_category_id);
+        // $blog_category_name = $blog_category->blog_category;
 
         // get blog category id
-        $blog_category_id = $blog->blog_category_id;
 
-        return view('backend.blog.edit', compact('blog', 'title', 'blog_category', 'blog_category_name', 'blog_category_id'));
+        $blog_categories = BlogCategory::all();
+
+        if ($blog->blog_category_id != null) {
+            return view('backend.blog.edit', compact('blog', 'title', 'blog_category', 'blog_category_name', 'blog_category_id', 'blog_categories'));
+        } else {
+            return view('backend.blog.edit', compact('blog', 'title', 'blog_categories'));
+        }
     }
 
     public function update(Request $request, $id)
@@ -252,6 +251,7 @@ class BlogController extends Controller
 
         // validator
         $validator = Validator::make($request->all(), [
+            'kategori' => 'required',
             'judul' => 'required|unique:blogs,blog_title,' . $id,
             'isi' => 'required',
         ]);
@@ -267,6 +267,7 @@ class BlogController extends Controller
         $blog = Blog::findOrFail($id);
         $blog->blog_title = $request->judul;
         $blog->blog_description = $request->isi;
+        $blog->blog_category_id = $request->kategori;
         $blog->excerpt = Str::limit(strip_tags($request->isi), 200);
 
         if ($request->hasFile('gambar')) {
@@ -356,7 +357,7 @@ class BlogController extends Controller
     function filter_blog(Request $request)
     {
         $blog = Blog::with('category', 'user');
-        
+
         if ($request->kategori_blog == '') {
             // jika id_role user tidak 1, maka dapatkan data blog dengan id_user_for_blog = id user yang login
             if (auth()->user()->id_role != 1 && auth()->user()->id_role != 2) {

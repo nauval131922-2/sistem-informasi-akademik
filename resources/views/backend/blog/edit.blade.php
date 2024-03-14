@@ -24,7 +24,7 @@
                     border-color: rgb(37,43,59);
                     ">
                                 <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                <span style="vertical-align: middle">Back to List</span>    
+                                <span style="vertical-align: middle">Back to List</span>
                 </a>
 
                             <h4 class="card-title">Ubah {{ $title }}</h4> --}}
@@ -34,6 +34,24 @@
                                 enctype="multipart/form-data"> --}}
             <form enctype="multipart/form-data" id="formUbahData" method="POST">
                 @csrf
+                {{-- dropdown kategori blog  --}}
+                <div class="row mb-3">
+                    <label for="kategori" class="col-sm-2 col-form-label">Kategori</label>
+                    <div class="col-sm-10">
+                        <select class="form-select" id="kategori" name="kategori" required>
+                            <option value="">Pilih Kategori</option>
+                            @foreach ($blog_categories as $blog_category)
+                                <option value="{{ $blog_category->id }}"
+                                    {{ $blog->blog_category_id == $blog_category->id ? 'selected' : '' }}>
+                                    {{ $blog_category->blog_category }}</option>
+                            @endforeach
+                        </select>
+                        <div class="mt-2">
+                            <span class="text-danger error-text kategori_error"></span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row mb-3">
                     <label for="judul" class="col-sm-2 col-form-label">Judul</label>
                     <div class="col-sm-10">

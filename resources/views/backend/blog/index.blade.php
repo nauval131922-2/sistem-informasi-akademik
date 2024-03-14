@@ -42,13 +42,21 @@ $route = Route::current()->getName();
 
                                 <div class="col-auto mb-2">
                                     <div class="dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" id="dropdownMenuLink"
+                                        {{-- <button class="btn btn-primary dropdown-toggle" id="dropdownMenuLink"
                                             data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="ri-add-line align-middle me-1"></i>
                                             <span style="vertical-align: middle">Tambah</span>
-                                        </button>
+                                        </button> --}}
+                                        <div class="col-auto mb-2">
+                                            <button class="btn btn-primary" role="button" data-bs-toggle="modal"
+                                                data-bs-target="#exampleModalScrollable" id="btnTambahData" onclick="tambahData()">
+                                                <i class="ri-add-line align-middle me-1"></i>
+                                                <span style="vertical-align: middle">Tambah</span>
+                                            </button>
+                                        </div>
 
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+                                        {{-- <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
                                             @foreach ($semua_kategori_blog as $kategori_blog)
                                                 <li><button class="dropdown-item"
@@ -58,7 +66,7 @@ $route = Route::current()->getName();
                                             @endforeach
 
 
-                                        </ul>
+                                        </ul> --}}
                                     </div>
                                 </div>
 
@@ -265,12 +273,12 @@ $route = Route::current()->getName();
         };
 
         // fungsi menampilkan modal tambah data jadwal pelajaran
-        function tambahData(id) {
+        function tambahData() {
 
             // console.log(id);
 
             $.ajax({
-                url: '/blog/tambah/' + id,
+                url: '/blog/tambah',
                 type: 'GET',
                 success: function(response) {
                     $('#content').html(response);

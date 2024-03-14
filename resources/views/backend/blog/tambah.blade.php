@@ -24,7 +24,7 @@
                     border-color: rgb(37,43,59);
                     ">
                                 <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                <span style="vertical-align: middle">Back to List</span>    
+                                <span style="vertical-align: middle">Back to List</span>
                 </a>
 
                             <h4 class="card-title">Tambah {{ $title }}</h4> --}}
@@ -35,18 +35,19 @@
                 @csrf
                 {{-- dropdown kategori blog  --}}
                 <div class="row mb-3">
-                    <label for="blog_category_id" class="col-sm-2 col-form-label">Kategori</label>
+                    <label for="kategori" class="col-sm-2 col-form-label">Kategori</label>
                     <div class="col-sm-10">
-                        <select class="form-select" id="blog_category_id" name="blog_category_id" required>
+                        <select class="form-select" id="kategori" name="kategori" required>
                             <option value="">Pilih Kategori</option>
                             @foreach ($blog_categories as $blog_category)
                                 <option value="{{ $blog_category->id }}">{{ $blog_category->blog_category }}</option>
                             @endforeach
                         </select>
                         <div class="mt-2">
-                            @error('blog_category_id')
+                            {{-- @error('kategori')
                                 <span class="text-danger">{{ $message }}</span>
-                            @enderror
+                            @enderror --}}
+                            <span class="text-danger error-text kategori_error"></span>
                         </div>
                     </div>
                 </div>
@@ -57,9 +58,6 @@
                         <input type="text" class="form-control" id="judul" name="judul"
                             value="{{ old('judul') }}" placeholder="Masukkan judul blog" required>
                         <div class="mt-2">
-                            {{-- @error('judul')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text judul_error"></span>
                         </div>
                     </div>
@@ -106,7 +104,7 @@
                 </div>
 
                 {{-- input hidden blog_category_id --}}
-                <input type="hidden" name="blog_category_id" value="{{ $blog_category_id }}" id="blog_category_id">
+                {{-- <input type="hidden" name="blog_category_id" value="{{ $blog_category_id }}" id="blog_category_id"> --}}
 
                 <button type="submit" class="btn btn-info waves-effect waves-light">
                     <i class="ri-save-3-line align-middle me-1"></i>
@@ -186,7 +184,7 @@
                         "hideMethod": "fadeOut"
                     });
                 }else{
-                
+
                     // toastr success message
                     toastr.success(response.message, "", {
                         "closeButton": false,
