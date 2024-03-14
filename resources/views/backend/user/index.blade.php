@@ -1,12 +1,7 @@
 @extends('backend.main')
 
 @section('title')
-    {{-- jika id role = 2 maka judulnya jangan ada kata 'Semua' --}}
-    {{-- @if ($id_role == '2')
-        Dashboard | {{ $title }}
-    @else --}}
     Dashboard | Semua {{ $title }}
-    {{-- @endif --}}
 @endsection
 
 <?php
@@ -24,31 +19,6 @@ $jabatan = App\Models\Jabatan::all();
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-
-                            {{-- @if ($route == 'user-index-all')
-                                <h4 class="card-title">Semua {{ $title }}</h4>
-                                <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Berikut adalah
-                                    semua {{ $title }}.</p>
-                            @else
-                                @if ($id_role == '2')
-                                    <h4 class="card-title">{{ $title }}</h4>
-                                    <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Berikut
-                                        adalah {{ $title }}.</p>
-                                @else
-                                    <h4 class="card-title">Semua {{ $title }}</h4>
-                                    <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Berikut
-                                        adalah semua {{ $title }}.</p>
-                                @endif
-                            @endif
-
-                            @can('admin')
-                                @if ($id_role == '1' || $id_role == '3' || $id_role == '4' || $id_role == '5')
-                                    <a class="btn btn-primary mb-3" href="{{ route('user-tambah', $id_role) }}" role="button">
-                                        <i class="ri-add-line align-middle me-1"></i>
-                                        <span style="vertical-align: middle">Tambah</span>
-                                    </a>
-                                @endif
-                            @endcan --}}
 
                             <div class="row">
                                 <div class="col-auto me-auto">
@@ -77,18 +47,6 @@ $jabatan = App\Models\Jabatan::all();
                                                         data-bs-toggle="modal" data-bs-target="#exampleModalScrollable"
                                                         id="buttonTambah">{{ $role->nama }}</button>
                                             @endforeach
-
-
-
-                                            {{-- <li><button class="dropdown-item" onclick="tambahDataGuruWali()"
-                                                    data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">Guru
-                                                    Wali</button></li>
-                                            <li><button class="dropdown-item" onclick="tambahDataGuruMapel()"
-                                                    data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">Guru
-                                                    Mata Pelajaran</button></li>
-                                            <li><button class="dropdown-item" onclick="tambahDataSiswa()"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModalScrollable">Siswa</button></li> --}}
                                         </ul>
                                     </div>
                                 </div>
@@ -138,72 +96,14 @@ $jabatan = App\Models\Jabatan::all();
                                         <th>Email</th>
                                         <th>Username</th>
                                         <th>Role</th>
-                                        {{-- @if ($id_role == '3' || $id_role == '5')
-                                            <th>Kelas</th>
-                                        @elseif($id_role == '4')
-                                            <th>Mata Pelajaran</th> --}}
-                                        {{-- @elseif($route == 'user-index-all') --}}
                                         <th>Kelas</th>
                                         <th>Mata Pelajaran</th>
-                                        {{-- @endif --}}
                                         @can('admin')
                                             <th>Action</th>
                                         @endcan
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @foreach ($semua_user as $no => $user)
-                                        <tr>
-                                            <td>{{ $no + 1 }}</td>
-                                            <td>{{ $user->name }}</td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>{{ $user->username }}</td>
-                                            <td>{{ $user->role->nama }}</td>
-                                            @if ($id_role == '3' || $id_role == '5')
-                                                <td>{{ $user->kelas->nama }}</td>
-                                            @elseif($id_role == '4')
-                                                <td>
-                                                    @if ($user->mapel == null)
-                                                        -
-                                                    @else
-                                                        {{ $user->mapel->mata_pelajaran }}
-                                                    @endif
-                                                </td>
-                                            @elseif($route == 'user-index-all')
-                                                @if ($user->id_role === 3 || $user->id_role === 5)
-                                                    <td>{{ $user->kelas->nama }}</td>
-                                                    <td></td>
-                                                @elseif($user->id_role === 4)
-                                                    <td></td>
-                                                    <td>
-                                                        @if ($user->mapel == null)
-                                                            -
-                                                        @else
-                                                            {{ $user->mapel->mata_pelajaran }}
-                                                        @endif
-                                                    </td>
-                                                @else
-                                                    <td></td>
-                                                    <td></td>
-                                                @endif
-                                            @endif
-                                            @can('admin')
-                                                <td>
-                                                    <a href="{{ route('user-edit', $user->id) }}" class="btn btn-info btn-sm">
-                                                        <i class="ri-edit-2-line align-middle me-1"></i>
-                                                        <span style="vertical-align: middle">Edit</span>
-                                                    </a>
-                                                    @if ($user->id != Auth::user()->id && $user->id_role != '2')
-                                                        <a href="{{ route('user-hapus', $user->id) }}"
-                                                            class="btn btn-danger btn-sm" id="delete">
-                                                            <i class="ri-delete-bin-2-line align-middle me-1"></i>
-                                                            <span style="vertical-align: middle">Hapus</span>
-                                                        </a>
-                                                    @endif
-                                                </td>
-                                            @endcan
-                                        </tr>
-                                    @endforeach --}}
                                 </tbody>
                             </table>
 
@@ -321,21 +221,6 @@ $jabatan = App\Models\Jabatan::all();
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
-                        // // success message menggunakan div class session
-                        // var alertHtml =
-                        //     '<div class="alert alert-warning" style="position: fixed; top: 10px; left: 0; right: 0; margin: auto; z-index: 9999; max-width: 500px; width: auto;text-align: center;" role="alert">' +
-                        //     '<strong>' + response.message + '</strong>' +
-                        //     '</div>';
-                        // $('.session').html(alertHtml);
-
-                        // setTimeout(function() {
-                        //     $('.session').html('');
-                        // }, 1500);
-
-                        // // set width dynamically based on the message length
-                        // var messageLength = response.message.length;
-                        // var alertWidth = messageLength * 10;
-                        // $('.alert').css('width', alertWidth);
 
                         // toastr success message
                         toastr.success(response.message, "", {
