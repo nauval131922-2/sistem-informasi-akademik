@@ -86,39 +86,23 @@ $route = Route::current()->getName();
                                         <select name="kepemilikan_blog" id="kepemilikan_blog" class="form-select mb-2"
                                             onchange="filterData()">
                                             <option value="{{ auth()->user()->id }}">Blog Saya</option>
+                                            <option value="anonymous">Anonymous</option>
                                             <option value="">Semua Blog</option>
+                                            {{-- tambah option anonymous --}}
                                         </select>
                                     </div>
                                 @endcanany
-
-                                {{-- jika yang login selain kepala_madrasah --}}
-                                {{-- @if (auth()->user()->id_role != 2)
-                                    <div class="col-md-4" style="display: none">
-                                        <select name="kepemilikan_blog" id="kepemilikan_blog" class="form-select mb-2"
-                                            onchange="filterData()">
-                                            <option value="{{ auth()->user()->id }}">Semua Blog</option>
-                                        </select>
-                                    </div>
-                                @else
-                                    <div class="col-md-4">
-                                        <select name="kepemilikan_blog" id="kepemilikan_blog" class="form-select mb-2"
-                                            onchange="filterData()">
-                                            <option value="{{ auth()->user()->id }}">Blog Saya</option>
-                                            <option value="">Semua Blog</option>
-                                        </select>
-                                    </div>
-                                @endif --}}
 
                                 <div class="col-md-4">
                                     <select name="kategori_blog" id="kategori_blog" class="form-select mb-2"
                                         onchange="filterData()">
                                         <option value="">Kategori Blog</option>
+                                        <option value="uncategorized">Uncategorized</option>
                                         @foreach ($semua_kategori_blog as $kategori_blog)
                                             <option value="{{ $kategori_blog->id }}">{{ $kategori_blog->blog_category }}
                                             </option>
                                         @endforeach
                                         {{-- tambah option uncategorized --}}
-                                        <option value="uncategorized">Uncategorized</option>
 
                                     </select>
                                 </div>

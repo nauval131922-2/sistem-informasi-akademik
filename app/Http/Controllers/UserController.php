@@ -187,29 +187,12 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        // // jika user yang dihapus adalah user yang login
-        // if($user->id == Auth::user()->id){
-        //     $notification = array(
-        //         'message' => 'Tidak bisa menghapus akun yang sedang login!',
-        //         'alert-type' => 'error'
-        //     );
-
-        //     return redirect()->back()->with($notification);
-        // }
-
         // cek jika ada gambar
-        if ($user->profile_image != null) {
+        if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
             unlink($user->profile_image);
         }
 
         $user->delete();
-
-        // $notification = array(
-        //     'message' => 'Data berhasil dihapus!',
-        //     'alert-type' => 'success'
-        // );
-
-        // return redirect()->back()->with($notification);
 
         // jika berhasil dihapus
         return response()->json([

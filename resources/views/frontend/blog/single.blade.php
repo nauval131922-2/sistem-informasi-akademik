@@ -50,6 +50,10 @@
                                     <li class="d-flex align-items-center"><i class="icofont-user"></i>
                                         {{ $blog->user->name }}
                                     </li>
+                                @else
+                                    <li class="d-flex align-items-center"><i class="icofont-user"></i>
+                                        Anonymouse
+                                    </li>
                                 @endif
                             </ul>
                         </div>

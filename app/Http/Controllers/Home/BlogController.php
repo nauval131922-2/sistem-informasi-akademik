@@ -268,6 +268,7 @@ class BlogController extends Controller
         $blog->blog_title = $request->judul;
         $blog->blog_description = $request->isi;
         $blog->blog_category_id = $request->kategori;
+        $blog->id_user_for_blog = auth()->user()->id;
         $blog->excerpt = Str::limit(strip_tags($request->isi), 200);
 
         if ($request->hasFile('gambar')) {
@@ -366,7 +367,11 @@ class BlogController extends Controller
 
             // filter berdasarkan kepemilikkan blog
             if (Auth::user()->id_role === 2 || Auth::user()->id_role === 1) {
-                if ($request->kepemilikan_blog != null) {
+                if ($request->kepemilikan_blog == '') {
+                    $blog->where('id', '!=', null);
+                } elseif ($request->kepemilikan_blog == 'anonymous') {
+                    $blog->where('id_user_for_blog', null);
+                } elseif ($request->kepemilikan_blog != 'anonymous') {
                     $blog->where('id_user_for_blog', $request->kepemilikan_blog);
                 }
             } else if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
@@ -382,7 +387,11 @@ class BlogController extends Controller
 
             // filter berdasarkan kepemilikkan blog
             if (Auth::user()->id_role === 2 || Auth::user()->id_role === 1) {
-                if ($request->kepemilikan_blog != null) {
+                if ($request->kepemilikan_blog == '') {
+                    $blog->where('id', '!=', null);
+                } elseif ($request->kepemilikan_blog == 'anonymous') {
+                    $blog->where('id_user_for_blog', null);
+                } elseif ($request->kepemilikan_blog != 'anonymous') {
                     $blog->where('id_user_for_blog', $request->kepemilikan_blog);
                 }
             } else if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
@@ -398,7 +407,11 @@ class BlogController extends Controller
 
             // filter berdasarkan kepemilikkan blog
             if (Auth::user()->id_role === 2 || Auth::user()->id_role === 1) {
-                if ($request->kepemilikan_blog != null) {
+                if ($request->kepemilikan_blog == '') {
+                    $blog->where('id', '!=', null);
+                } elseif ($request->kepemilikan_blog == 'anonymous') {
+                    $blog->where('id_user_for_blog', null);
+                } elseif ($request->kepemilikan_blog != 'anonymous') {
                     $blog->where('id_user_for_blog', $request->kepemilikan_blog);
                 }
             } else if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
