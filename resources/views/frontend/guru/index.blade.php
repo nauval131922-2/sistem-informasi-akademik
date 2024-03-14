@@ -33,7 +33,12 @@
                     @elseif ($guru->id_role == 3)
                       {{ $guru->role->nama }} {{ $guru->kelas->nama }}
                     @elseif ($guru->id_role == 4)
-                      {{ $guru->role->nama }} {{ $guru->mapel->mata_pelajaran }}
+                        {{-- jika $guru->mapel->mata_pelajaran ada --}}
+                        @if ($guru->mapel)
+                            {{ $guru->role->nama }} {{ $guru->mapel->mata_pelajaran }}
+                        @else
+                            {{ $guru->role->nama }}
+                        @endif
                     @endif
                   </span>
                 </div>

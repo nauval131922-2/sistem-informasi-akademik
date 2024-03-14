@@ -37,7 +37,7 @@ class AdminController extends Controller
     }
 
     public function UpdateProfile(Request $request)
-    {   
+    {
         // get id user
         $id = Auth::user()->id;
         $user = User::find($id);
@@ -90,7 +90,7 @@ class AdminController extends Controller
                     //     'message' => 'New Password and Confirm Password does not match!',
                     //     'alert-type' => 'error',
                     // );
-                    
+
                     // return redirect()->back()->with($notification);
 
                     return response()->json([
@@ -104,7 +104,7 @@ class AdminController extends Controller
                 //     'message' => 'Old Password is not match!',
                 //     'alert-type' => 'error',
                 // );
-                
+
                 // return redirect()->back()->with($notification);
 
                 return response()->json([
@@ -129,21 +129,21 @@ class AdminController extends Controller
             // simpan nama file dengan $request->nama hexdec(uniqid())
             $judul_tanpa_spasi = str_replace(' ', '-', $request->name);
             $nama_file = $judul_tanpa_spasi.'-'.hexdec(uniqid()).'.'.$request->gambar->getClientOriginalExtension();
-            
+
             // $nama_file = hexdec(uniqid()).'.'.$request->gambar->getClientOriginalExtension();
             Image::make($request->gambar)->save(public_path('/upload/profile_picture/'.$nama_file));
 
             $user->profile_image = 'upload/profile_picture/'.$nama_file;
         } elseif ($request->gambarPreview == null && $user->profile_image != null) {
             // unlink($user->profile_image);
-            
+
             // jika menggunakkan gambar default jangan hapus gambar default
             if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
                 unlink($user->profile_image);
             }
 
             $user->profile_image = 'upload/profile_picture/default/1.jpg';
-        } elseif ($request->gambarPreview != null && $user->profile_image != null) {
+        } elseif ($request->gambarPreview != null && $user->profile_image != null && $user->profile_image != 'upload/profile_picture/default/1.jpg') {
             // get file extension
             $file_ext = pathinfo($user->profile_image, PATHINFO_EXTENSION);
 
@@ -163,7 +163,7 @@ class AdminController extends Controller
         //     'message' => 'User Profile Updated Successfully!',
         //     'alert-type' => 'success',
         // );
-        
+
         // return redirect()->back()->with($notification);
 
         // jika berhasil disimpan

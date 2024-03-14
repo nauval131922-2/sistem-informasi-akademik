@@ -319,7 +319,7 @@ class UserController extends Controller
             }
 
             $user->profile_image = 'upload/profile_picture/default/1.jpg';
-        } elseif ($request->gambarPreview != null && $user->profile_image != null) {
+        } elseif ($request->gambarPreview != null && $user->profile_image != null && $user->profile_image != 'upload/profile_picture/default/1.jpg') {
             // get file extension
             $file_ext = pathinfo($user->profile_image, PATHINFO_EXTENSION);
 
