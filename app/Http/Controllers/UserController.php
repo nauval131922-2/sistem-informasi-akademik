@@ -37,7 +37,11 @@ class UserController extends Controller
         // semua role keculai role dengan id = 2
         $semua_role = Jabatan::where('id', '!=', 2)->get();
 
-        return view('backend.user.index', compact('semua_user', 'title', 'semua_role'));
+        $kelas = Kelas::all();
+
+        $mapel = MataPelajaran::all();
+
+        return view('backend.user.index', compact('semua_user', 'title', 'semua_role', 'kelas', 'mapel'));
     }
 
     public function tambah($id)
@@ -381,6 +385,16 @@ class UserController extends Controller
         // filter berdasarkan tipe pengguna
         if ($request->tipe_pengguna != null) {
             $user->where('id_role', $request->tipe_pengguna);
+        }
+
+        // filter berdasarkan kelas
+        if ($request->kelas != null) {
+            $user->where('id_kelas', $request->kelas);
+        }
+
+        // filter berdasarkan mata pelajaran
+        if ($request->mapel != null) {
+            $user->where('id_mapel', $request->mapel);
         }
 
         $user = $user->get();

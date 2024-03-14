@@ -57,12 +57,12 @@ $jabatan = App\Models\Jabatan::all();
 
 
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="filterData">Filter</label>
                                 </div>
                             </div>
                             <div class="row justify-content-start">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <select name="tipe_pengguna" id="tipe_pengguna" class="form-select mb-2"
                                         onchange="filterData()">
                                         <option value="">Tipe Pengguna</option>
@@ -73,7 +73,25 @@ $jabatan = App\Models\Jabatan::all();
                                         <option value="5">Siswa</option>
                                     </select>
                                 </div>
-                                <div class="col-md-4">
+                                {{-- filter kelas --}}
+                                <div class="col-md-3">
+                                    <select name="kelas" id="kelas" class="form-select mb-2" onchange="filterData()">
+                                        <option value="">Kelas</option>
+                                        @foreach ($kelas as $k)
+                                            <option value="{{ $k->id }}">{{ $k->nama }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                {{-- filter mata pelajaran --}}
+                                <div class="col-md-3">
+                                    <select name="mapel" id="mapel" class="form-select mb-2" onchange="filterData()">
+                                        <option value="">Mata Pelajaran</option>
+                                        @foreach ($mapel as $m)
+                                            <option value="{{ $m->id }}">{{ $m->mata_pelajaran }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
                                     <button class="btn btn-light" style="margin-right: 5px" onclick="resetFilter()">
                                         <i class="ri-refresh-line align-middle me-1"></i>
                                         <span style="vertical-align: middle">Reset</span>
@@ -92,7 +110,7 @@ $jabatan = App\Models\Jabatan::all();
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Nama</th>
+                                        <th>Namaa</th>
                                         <th>Email</th>
                                         <th>Username</th>
                                         <th>Role</th>
@@ -140,7 +158,8 @@ $jabatan = App\Models\Jabatan::all();
         function filterData() {
 
             $.ajax({
-                url: '{{ route('user-filter') }}?tipe_pengguna=' + $('#tipe_pengguna').val(),
+                url: '{{ route('user-filter') }}?tipe_pengguna=' + $('#tipe_pengguna').val() + '&kelas=' +
+                    $('#kelas').val() + '&mapel=' + $('#mapel').val(),
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
@@ -191,6 +210,8 @@ $jabatan = App\Models\Jabatan::all();
         // reset filter jam
         function resetFilter() {
             $('#tipe_pengguna').val('');
+            $('#kelas').val('');
+            $('#mapel').val('');
             filterData();
         };
 
