@@ -99,8 +99,13 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    $('#datatable').DataTable().destroy();
-                    $('#datatable tbody').empty();
+                    // $('#datatable').DataTable().destroy();
+                    // $('#datatable tbody').empty();
+                    var table = $('#datatable').DataTable();
+
+                    if ($.fn.DataTable.isDataTable('#datatable')) {
+                        table.clear();
+                    }
                     var data = response.data;
                     $.each(data, function(key, value) {
                         var balasViaEmail = '';
@@ -136,29 +141,45 @@
                             ')"><i class="ri-delete-bin-2-line align-middle me-1"></i><span style="vertical-align: middle">Hapus</span></button>';
 
 
-                        $('#datatable tbody').append(
-                            '<tr>' +
-                            '<td>' + (key + 1) + '</td>' +
-                            '<td>' + value.name + '</td>' +
-                            '<td>' + value.email + '</td>' +
-                            // '<td>' + value.subject + '</td>' +
-                            '<td>' + decodeURIComponent(value.subject).substring(0, 25) +
-                            '...</td>' +
-                            // ambil 100 karakter dari value.message
-                            '<td>' + decodeURIComponent(value.message).substring(0, 25) +
-                            '...</td>' +
-                            '<td>' + (value.status == 'Belum dibalas' ?
+                        table.row.add([
+                            // '<tr>' +
+                            // '<td>' + (key + 1) + '</td>' +
+                            // '<td>' + value.name + '</td>' +
+                            // '<td>' + value.email + '</td>' +
+                            // // '<td>' + value.subject + '</td>' +
+                            // '<td>' + decodeURIComponent(value.subject).substring(0, 25) +
+                            // '...</td>' +
+                            // // ambil 100 karakter dari value.message
+                            // '<td>' + decodeURIComponent(value.message).substring(0, 25) +
+                            // '...</td>' +
+                            // '<td>' + (value.status == 'Belum dibalas' ?
+                            //     '<span class="btn btn-danger btn-sm"><i class="ri-close-line align-middle me-1"></i><span style="vertical-align: middle">' +
+                            //     value.status + '</span></span>' :
+                            //     '<span class="btn btn-success btn-sm"><i class="ri-check-line align-middle me-1"></i><span style="vertical-align: middle">' +
+                            //     value.status + '</span></span>') + '</td>' +
+                            // @can('admin')
+                            //     '<td>' + balasViaEmail + gantiStatus + deleteButton + '</td>' +
+                            // @endcan
+                            // '</tr>'
+                            (key + 1),
+                            value.name,
+                            value.email,
+                            decodeURIComponent(value.subject).substring(0, 25) + '...',
+                            decodeURIComponent(value.message).substring(0, 25) + '...',
+                            (value.status == 'Belum dibalas' ?
                                 '<span class="btn btn-danger btn-sm"><i class="ri-close-line align-middle me-1"></i><span style="vertical-align: middle">' +
                                 value.status + '</span></span>' :
                                 '<span class="btn btn-success btn-sm"><i class="ri-check-line align-middle me-1"></i><span style="vertical-align: middle">' +
-                                value.status + '</span></span>') + '</td>' +
-                            @can('admin')
-                                '<td>' + balasViaEmail + gantiStatus + deleteButton + '</td>' +
-                            @endcan
-                            '</tr>'
-                        );
+                                value.status + '</span></span>'),
+                            @if (auth()->user()->can('admin'))
+                                balasViaEmail + gantiStatus + deleteButton
+                            @else
+                                ''
+                            @endif
+
+                        ]).draw(false);
                     });
-                    $('#datatable').DataTable();
+                    table.columns.adjust().draw();
                 }
             });
         }

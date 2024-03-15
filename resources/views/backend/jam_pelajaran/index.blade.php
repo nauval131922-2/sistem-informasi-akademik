@@ -164,8 +164,13 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    $('#datatable').DataTable().destroy();
-                    $('#datatable tbody').empty();
+                    // $('#datatable').DataTable().destroy();
+                    // $('#datatable tbody').empty();
+                    var table = $('#datatable').DataTable();
+
+                    if ($.fn.DataTable.isDataTable('#datatable')) {
+                        table.clear();
+                    }
                     var data = response.data;
                     $.each(data, function(key, value) {
                         var editButton = '';
@@ -181,20 +186,29 @@
                             value.id +
                             ')"><i class="ri-delete-bin-2-line align-middle me-1"></i><span style="vertical-align: middle">Hapus</span></button>';
 
-                        $('#datatable tbody').append(
-                            '<tr>' +
-                            '<td>' + value.jam_ke + '</td>' +
-                            '<td>' + value.jam_mulai + '</td>' +
-                            '<td>' + value.jam_selesai + '</td>' +
-                            '<td>' + value.tipe_jam + '</td>' +
-                            @can('admin')
-                                '<td>' + editButton + deleteButton + '</td>' +
-                            @endcan
-                            '</tr>'
-                        );
+                        table.row.add([
+                            // '<tr>' +
+                            // '<td>' + value.jam_ke + '</td>' +
+                            // '<td>' + value.jam_mulai + '</td>' +
+                            // '<td>' + value.jam_selesai + '</td>' +
+                            // '<td>' + value.tipe_jam + '</td>' +
+                            // @can('admin')
+                            //     '<td>' + editButton + deleteButton + '</td>' +
+                            // @endcan
+                            // '</tr>'
+                            value.jam_ke,
+                            value.jam_mulai,
+                            value.jam_selesai,
+                            value.tipe_jam,
+                            @if (auth()->user()->can('admin'))
+                                '<td>' + editButton + deleteButton + '</td>'
+                            @else
+                                ''
+                            @endif
+                        ]).draw(false);
                     });
-                    $('#datatable').DataTable();
-
+                    // $('#datatable').DataTable();
+                    table.columns.adjust().draw();
                 }
             });
         }

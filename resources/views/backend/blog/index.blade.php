@@ -49,7 +49,8 @@ $route = Route::current()->getName();
                                         </button> --}}
                                         <div class="col-auto mb-2">
                                             <button class="btn btn-primary" role="button" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModalScrollable" id="btnTambahData" onclick="tambahData()">
+                                                data-bs-target="#exampleModalScrollable" id="btnTambahData"
+                                                onclick="tambahData()">
                                                 <i class="ri-add-line align-middle me-1"></i>
                                                 <span style="vertical-align: middle">Tambah</span>
                                             </button>
@@ -199,16 +200,15 @@ $route = Route::current()->getName();
                 url: '{{ route('blog-filter') }}?kategori_blog=' + $('#kategori_blog').val() +
                     '&kepemilikan_blog=' + $('#kepemilikan_blog').val(),
 
-                // jika #kategori_blog == uncategorized, maka tampilkan semua blog yang tidak memiliki kategori
-                // url: '{{ route('blog-filter') }}?kategori_blog=' + ($('#kategori_blog').val() == 'uncategorized' ? '' :
-                //     $('#kategori_blog').val()) +
-                //     '&kepemilikan_blog=' + $('#kepemilikan_blog').val(),
-
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    $('#datatable').DataTable().destroy();
-                    $('#datatable tbody').empty();
+                    var table = $('#datatable').DataTable();
+
+                    if ($.fn.DataTable.isDataTable('#datatable')) {
+                        table.clear();
+                    }
+
                     var data = response.data;
                     $.each(data, function(key, value) {
                         var editButton = '';
@@ -224,27 +224,22 @@ $route = Route::current()->getName();
                             value.id +
                             ')"><i class="ri-delete-bin-2-line align-middle me-1"></i><span style="vertical-align: middle">Hapus</span></button>';
 
-                        $('#datatable tbody').append(
-                            '<tr>' +
-                            '<td>' + (key + 1) + '</td>' +
-                            '<td>' + value.blog_title + '</td>' +
-                            // jika value.user.name == null, maka tampilkan kosong
-                            '<td>' + (value.id_user_for_blog == null ? '' : value.user.name) +
-                            '</td>' +
-                            '<td>' + (value.category == null ? '' : value.category.blog_category) +
-                            '</td>' +
-                            // jangan tampikan tombol delete jika id = 1
+                        table.row.add([
+                            (key + 1),
+                            value.blog_title,
+                            (value.id_user_for_blog == null ? '' : value.user.name),
+                            (value.category == null ? '' : value.category.blog_category),
                             @if (Auth::user()->id_role == 1)
-                                '<td>' + (value.id != '1'  ?
-                                    editButton +
-                                    deleteButton : editButton) + '</td>' +
+                                (value.id != '1' ? editButton + deleteButton : editButton),
                             @elseif (Auth::user()->id_role == 2)
-                                '<td>' + (value.id_user_for_blog == '{{ Auth::user()->id }}' ?
-                                    editButton + deleteButton : '') + '</td>' +
+                                (value.id_user_for_blog == '{{ Auth::user()->id }}' ?
+                                    editButton + deleteButton : ''),
+                            @else
+                                ''
                             @endif
-                            '</tr>');
+                        ]).draw(false);
                     });
-                    $('#datatable').DataTable();
+                    table.columns.adjust().draw();
                 }
             });
         }

@@ -224,8 +224,13 @@ $semua_tahun_ajaran = App\Models\TahunAjaran::all();
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    $('#datatable').DataTable().destroy();
-                    $('#datatable tbody').empty();
+                    // $('#datatable').DataTable().destroy();
+                    // $('#datatable tbody').empty();
+                    var table = $('#datatable').DataTable();
+
+                    if ($.fn.DataTable.isDataTable('#datatable')) {
+                        table.clear();
+                    }
                     var data = response.data;
                     $.each(data, function(key, value) {
                         var editButton = '';
@@ -241,26 +246,42 @@ $semua_tahun_ajaran = App\Models\TahunAjaran::all();
                             value.id +
                             ')"><i class="ri-delete-bin-2-line align-middle me-1"></i><span style="vertical-align: middle">Hapus</span></button>';
 
-                        $('#datatable tbody').append(
-                            '<tr>' +
-                            '<td>' + (key + 1) + '</td>' +
-                            '<td>' + value.hari + '</td>' +
-                            '<td>' + value.kelas.nama + '</td>' +
-                            '<td>' + (value.id_mapel_for_jadwal ? value.mapel.mata_pelajaran : value
-                                .ekstra.nama) + '</td>' +
-                            '<td>' + value.user.name + '</td>' +
-                            '<td>' + (value.id_jam_for_jadwal ? value.jam.jam_ke : '-') + '</td>' +
-                            '<td>' + (value.id_jam_for_jadwal ? value.jam.jam_mulai : '-') +
-                            '</td>' +
-                            '<td>' + (value.id_jam_for_jadwal ? value.jam.jam_selesai : '-') +
-                            '</td>' +
-                            @can('admin')
-                                '<td>' + editButton + deleteButton + '</td>' +
-                            @endcan
-                            '</tr>'
-                        );
+                        table.row.add([
+                            // '<tr>' +
+                            // '<td>' + (key + 1) + '</td>' +
+                            // '<td>' + value.hari + '</td>' +
+                            // '<td>' + value.kelas.nama + '</td>' +
+                            // '<td>' + (value.id_mapel_for_jadwal ? value.mapel.mata_pelajaran :
+                            //     value
+                            //     .ekstra.nama) + '</td>' +
+                            // '<td>' + value.user.name + '</td>' +
+                            // '<td>' + (value.id_jam_for_jadwal ? value.jam.jam_ke : '-') +
+                            // '</td>' +
+                            // '<td>' + (value.id_jam_for_jadwal ? value.jam.jam_mulai : '-') +
+                            // '</td>' +
+                            // '<td>' + (value.id_jam_for_jadwal ? value.jam.jam_selesai : '-') +
+                            // '</td>' +
+                            // @can('admin')
+                            //     '<td>' + editButton + deleteButton + '</td>' +
+                            // @endcan
+                            // '</tr>'
+                            (key + 1),
+                            value.hari,
+                            value.kelas.nama,
+                            (value.id_mapel_for_jadwal ? value.mapel.mata_pelajaran : value
+                                .ekstra.nama),
+                            value.user.name,
+                            (value.id_jam_for_jadwal ? value.jam.jam_ke : '-'),
+                            (value.id_jam_for_jadwal ? value.jam.jam_mulai : '-'),
+                            (value.id_jam_for_jadwal ? value.jam.jam_selesai : '-'),
+                            @if (auth()->user()->can('admin'))
+                                editButton + deleteButton
+                            @else
+                                ''
+                            @endif
+                        ]).draw(false);
                     });
-                    $('#datatable').DataTable();
+                    table.columns.adjust().draw();
 
                 }
             });

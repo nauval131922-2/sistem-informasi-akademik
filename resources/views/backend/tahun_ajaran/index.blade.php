@@ -143,8 +143,13 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    $('#datatable').DataTable().destroy();
-                    $('#datatable tbody').empty();
+                    // $('#datatable').DataTable().destroy();
+                    // $('#datatable tbody').empty();
+                    var table = $('#datatable').DataTable();
+
+                    if ($.fn.DataTable.isDataTable('#datatable')) {
+                        table.clear();
+                    }
                     var data = response.data;
                     $.each(data, function(key, value) {
                         var editButton = '';
@@ -160,23 +165,39 @@
                             value.id +
                             ')"><i class="ri-delete-bin-2-line align-middle me-1"></i><span style="vertical-align: middle">Hapus</span></button>';
 
-                        $('#datatable tbody').append(
-                            '<tr>' +
-                            '<td>' + (key + 1) + '</td>' +
-                            '<td>' + value.semester + '</td>' +
-                            '<td>' + value.tahun + '</td>' +
+                        table.row.add([
+                            // '<tr>' +
+                            // '<td>' + (key + 1) + '</td>' +
+                            // '<td>' + value.semester + '</td>' +
+                            // '<td>' + value.tahun + '</td>' +
+                            // // jika status tahun ajaran aktif maka tampilkan tombol hijau
+                            // '<td>' + (value.status == 'Aktif' ?
+                            //     '<span class="btn btn-success btn-sm">' + value.status +
+                            //     '</span>' :
+                            //     '<span class="btn btn-danger btn-sm">' + value.status +
+                            //     '</span>') +
+                            // '</td>' +
+                            // @can('admin')
+                            //     '<td>' + editButton + deleteButton + '</td>' +
+                            // @endcan
+                            // '</tr>'
+                            (key + 1),
+                            value.semester,
+                            value.tahun,
                             // jika status tahun ajaran aktif maka tampilkan tombol hijau
-                            '<td>' + (value.status == 'Aktif' ?
-                                '<span class="btn btn-success btn-sm">' + value.status + '</span>' :
-                                '<span class="btn btn-danger btn-sm">' + value.status + '</span>') +
-                            '</td>' +
-                            @can('admin')
-                                '<td>' + editButton + deleteButton + '</td>' +
-                            @endcan
-                            '</tr>'
-                        );
+                            (value.status == 'Aktif' ?
+                                '<span class="btn btn-success btn-sm">' + value.status +
+                                '</span>' :
+                                '<span class="btn btn-danger btn-sm">' + value.status +
+                                '</span>'),
+                            @if (auth()->user()->can('admin'))
+                                '<td>' + editButton + deleteButton + '</td>'
+                            @else
+                                ''
+                            @endif
+                        ]).draw(false);
                     });
-                    $('#datatable').DataTable();
+                    table.columns.adjust().draw();
                 }
             });
         }

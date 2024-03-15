@@ -122,9 +122,28 @@ $jabatan = App\Models\Jabatan::all();
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {{-- <tr>
+                                        <td>Tiger Nixon</td>
+                                        <td>System Architect</td>
+                                        <td>Edinburgh</td>
+                                        <td>61</td>
+                                        <td>2011/04/25</td>
+                                        <td>$320,800</td>
+                                        <td>$320,800</td>
+                                        <td>$320,800</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Garrett Winters</td>
+                                        <td>Accountant</td>
+                                        <td>Tokyo</td>
+                                        <td>63</td>
+                                        <td>2011/07/25</td>
+                                        <td>$170,750</td>
+                                        <td>$170,750</td>
+                                        <td>$170,750</td>
+                                    </tr> --}}
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>
@@ -156,15 +175,18 @@ $jabatan = App\Models\Jabatan::all();
 
         // fetch data all jam
         function filterData() {
-
             $.ajax({
                 url: '{{ route('user-filter') }}?tipe_pengguna=' + $('#tipe_pengguna').val() + '&kelas=' +
                     $('#kelas').val() + '&mapel=' + $('#mapel').val(),
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    $('#datatable').DataTable().destroy();
-                    $('#datatable tbody').empty();
+                    var table = $('#datatable').DataTable();
+
+                    if ($.fn.DataTable.isDataTable('#datatable')) {
+                        table.clear();
+                    }
+
                     var data = response.data;
                     $.each(data, function(key, value) {
                         var editButton = '';
@@ -180,32 +202,34 @@ $jabatan = App\Models\Jabatan::all();
                             value.id +
                             ')"><i class="ri-delete-bin-2-line align-middle me-1"></i><span style="vertical-align: middle">Hapus</span></button>';
 
-                        $('#datatable tbody').append(
-                            '<tr>' +
-                            '<td>' + (key + 1) + '</td>' +
-                            '<td>' + value.name + '</td>' +
-                            '<td>' + (value.email == null ? '' : value.email) + '</td>' +
-                            '<td>' + value.username + '</td>' +
-                            '<td>' + value.role.nama + '</td>' +
-                            '<td>' + (value.id_role == '3' || value.id_role == '5' ? value.kelas
-                                .nama : '') + '</td>' +
-                            '<td>' + ((value.id_role == '4' || value.id_role == '3') && value.mapel != null ? value.mapel
-                                .mata_pelajaran : '') + '</td>' +
-                            // jangan tampikan tombol delete jika user yang login adalah user yang sedang di edit
-                            @can('admin')
-                                '<td>' + (value.id != '{{ Auth::user()->id }}' && value.id_role !=
-                                    '2' ?
-                                    editButton +
-                                    deleteButton : editButton) + '</td>' +
-                            @endcan
-                            '</tr>');
-
-
+                        table.row.add([
+                            key + 1,
+                            value.name,
+                            value.email == null ? '' : value.email,
+                            value.username,
+                            value.role.nama,
+                            (value.id_role == '3' || value.id_role == '5') ? value.kelas.nama :
+                            '',
+                            ((value.id_role == '4' || value.id_role == '3') && value.mapel !=
+                                null) ? value.mapel.mata_pelajaran : '',
+                            @if (Auth::user()->id_role == 1)
+                                (value.id != '{{ Auth::user()->id }}' && value.id_role != '2' ?
+                                    editButton + deleteButton : editButton)
+                            @else
+                                ''
+                            @endif
+                        ]).draw(false);
                     });
-                    $('#datatable').DataTable();
+                    table.columns.adjust().draw();
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
                 }
             });
         }
+
+
+
 
         // reset filter jam
         function resetFilter() {

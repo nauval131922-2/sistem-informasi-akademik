@@ -120,8 +120,13 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    $('#datatable').DataTable().destroy();
-                    $('#datatable tbody').empty();
+                    // $('#datatable').DataTable().destroy();
+                    // $('#datatable tbody').empty();
+                    var table = $('#datatable').DataTable();
+
+                    if ($.fn.DataTable.isDataTable('#datatable')) {
+                        table.clear();
+                    }
                     var data = response.data;
                     $.each(data, function(key, value) {
                         var editButton = '';
@@ -139,17 +144,24 @@
                             ')"><i class="ri-delete-bin-2-line align-middle me-1"></i><span style="vertical-align: middle">Hapus</span></button>';
 
 
-                        $('#datatable tbody').append(
-                            '<tr>' +
-                            '<td>' + (key + 1) + '</td>' +
-                            '<td>' + value.blog_category + '</td>' +
-                            @can('admin')
-                                '<td>' + editButton + deleteButton + '</td>' +
-                            @endcan
-                            '</tr>'
-                        );
+                        table.row.add([
+                            // '<tr>' +
+                            // '<td>' + (key + 1) + '</td>' +
+                            // '<td>' + value.blog_category + '</td>' +
+                            // @can('admin')
+                            //     '<td>' + editButton + deleteButton + '</td>' +
+                            // @endcan
+                            // '</tr>'
+                            (key + 1),
+                            value.blog_category,
+                            @if (auth()->user()->can('admin'))
+                                editButton + deleteButton
+                            @else
+                                ''
+                            @endif
+                        ]).draw(false);
                     });
-                    $('#datatable').DataTable();
+                    table.columns.adjust().draw();
                 }
             });
         }

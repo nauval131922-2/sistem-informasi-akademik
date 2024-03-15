@@ -70,16 +70,20 @@
 
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                                 <li><button class="dropdown-item" onclick="tambahDataNilaiUlanganHarian()"
-                                                        data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">Nilai
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModalScrollable">Nilai
                                                         Ulangan Harian</button></li>
                                                 <li><button class="dropdown-item" onclick="tambahDataNilaiTugas()"
-                                                        data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">Nilai
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModalScrollable">Nilai
                                                         Tugas</button></li>
                                                 <li><button class="dropdown-item" onclick="tambahDataNilaiUts()"
-                                                        data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">Nilai
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModalScrollable">Nilai
                                                         UTS</button></li>
                                                 <li><button class="dropdown-item" onclick="tambahDataNilaiUas()"
-                                                        data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">Nilai
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModalScrollable">Nilai
                                                         UAS</button></li>
                                             </ul>
                                         </div>
@@ -241,8 +245,13 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    $('#datatable').DataTable().destroy();
-                    $('#datatable tbody').empty();
+                    // $('#datatable').DataTable().destroy();
+                    // $('#datatable tbody').empty();
+                    var table = $('#datatable').DataTable();
+
+                    if ($.fn.DataTable.isDataTable('#datatable')) {
+                        table.clear();
+                    }
                     var data = response.data;
                     $.each(data, function(key, value) {
                         var editButton = '';
@@ -258,26 +267,42 @@
                             value.id +
                             ')"><i class="ri-delete-bin-2-line align-middle me-1"></i><span style="vertical-align: middle">Hapus</span></button>';
 
-                        $('#datatable tbody').append(
-                            '<tr>' +
-                            '<td>' + (key + 1) + '</td>' +
-                            '<td>' + value.kelas.nama + '</td>' +
-                            '<td>' + value.judul + '</td>' +
-                            '<td>' + value.siswa.name + '</td>' +
-                            '<td>' + value.guru.name + '</td>' +
-                            '<td>' + value.mapel.mata_pelajaran + '</td>' +
-                            '<td>' + value.nilai + '</td>' +
-                            '<td>' + value.tipe_nilai + '</td>' +
+                        table.row.add([
+                            // '<tr>' +
+                            // '<td>' + (key + 1) + '</td>' +
+                            // '<td>' + value.kelas.nama + '</td>' +
+                            // '<td>' + value.judul + '</td>' +
+                            // '<td>' + value.siswa.name + '</td>' +
+                            // '<td>' + value.guru.name + '</td>' +
+                            // '<td>' + value.mapel.mata_pelajaran + '</td>' +
+                            // '<td>' + value.nilai + '</td>' +
+                            // '<td>' + value.tipe_nilai + '</td>' +
+                            // @if (Auth::user()->id_role == 1)
+                            //     '<td>' + editButton + deleteButton + '</td>' +
+                            // @elseif (Auth::user()->id_role == 2 || Auth::user()->id_role == 3 || Auth::user()->id_role == 4)
+                            //     '<td>' + (value.id_guru_for_nilai == '{{ Auth::user()->id }}' ?
+                            //         editButton + deleteButton : '') + '</td>' +
+                            // @endif
+                            // '</tr>'
+                            (key + 1),
+                            value.kelas.nama,
+                            value.judul,
+                            value.siswa.name,
+                            value.guru.name,
+                            value.mapel.mata_pelajaran,
+                            value.nilai,
+                            value.tipe_nilai,
                             @if (Auth::user()->id_role == 1)
-                                '<td>' + editButton + deleteButton + '</td>' +
+                                '<td>' + editButton + deleteButton + '</td>',
                             @elseif (Auth::user()->id_role == 2 || Auth::user()->id_role == 3 || Auth::user()->id_role == 4)
                                 '<td>' + (value.id_guru_for_nilai == '{{ Auth::user()->id }}' ?
-                                    editButton + deleteButton : '') + '</td>' +
+                                    editButton + deleteButton : '') + '</td>',
+                            @else
+                                ''
                             @endif
-                            '</tr>'
-                        );
+                        ]).draw(false);
                     });
-                    $('#datatable').DataTable();
+                    table.columns.adjust().draw();
 
                 }
             });
