@@ -110,7 +110,7 @@ $jabatan = App\Models\Jabatan::all();
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Namaa</th>
+                                        <th>Nama</th>
                                         <th>Email</th>
                                         <th>Username</th>
                                         <th>Role</th>
