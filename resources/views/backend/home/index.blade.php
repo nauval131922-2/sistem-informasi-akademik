@@ -218,7 +218,7 @@
         </h6>
         ${pengumuman.gambar ?
             `<div><img src="${pengumuman.gambar}" class="img-fluid rounded"></div>` :
-            `<div><img src="https://source.unsplash.com/1280x720?quote" class="img-fluid rounded"></div>`
+            `<div><img src="https://source.unsplash.com/1920x1080?quote" class="img-fluid rounded"></div>`
         }
         <p>${pengumuman.isi}</p>
         `;
