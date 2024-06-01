@@ -41,7 +41,7 @@
             <a href="#" class="instagram"><i class="icofont-instagram"></i></a>
             <a href="#" class="linkedin"><i class="icofont-linkedin"></i></i></a> --}}
             @if (Auth::check())
-                <a href="{{ route('dashboard') }}" class="login" target="_blank" data-toggle="tooltip"
+                <a href="{{ route('dashboard') }}" class="login" data-toggle="tooltip"
                     title="Dashboard">
                     {{-- <i class="ri-dashboard-line align-middle"></i> --}}
                     {{-- gunakan icon dari icofont --}}
@@ -53,7 +53,7 @@
                     <i class="icofont-logout"></i>
                 </a>
             @else
-                <a href="{{ route('login') }}" class="login" target="_blank" data-toggle="tooltip" title="Login">
+                <a href="{{ route('login') }}" class="login" data-toggle="tooltip" title="Login">
                     {{-- <i class="ri-login-box-line align-middle"></i> --}}
                     {{-- gunakan icon dari icofont --}}
                     <i class="icofont-login"></i>

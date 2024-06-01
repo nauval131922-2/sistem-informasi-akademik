@@ -18,7 +18,7 @@
                             height="22">
                     </span> --}}
                     {{-- <span class="logo-lg">
-                        
+
                         <img src="{{ asset('backend/assets/images/logo-sm-new.png') }}" alt="logo-sm-light"
                             height="22" style="margin-top: -4px;">
 
@@ -49,7 +49,7 @@
                         color: #fff;
                         margin-left: 4px;
                         ">
-                        <i class="ri-dashboard-line align-middle me-1"></i> 
+                        <i class="ri-dashboard-line align-middle me-1"></i>
                         {{-- <span style="
                             vertical-align: middle;
                         " >siakad</span>  --}}
@@ -97,14 +97,14 @@
                         <i class="ri-user-line align-middle me-1"></i>
                         <span style="
                             vertical-align: middle;
-                        " >Profile</span> 
+                        " >Profile</span>
                     </a>
-                        
-                    <a class="dropdown-item" href="{{ route('home') }}"target="_blank">
+
+                    <a class="dropdown-item" href="{{ route('home') }}">
                         <i class="ri-earth-line align-middle me-1"></i>
                         <span style="
                             vertical-align: middle;
-                        " >Website</span> 
+                        " >Website</span>
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-danger" href="{{ route('logout') }}">
