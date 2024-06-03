@@ -58,7 +58,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Semeter</th>
-                                        <th>Tahun</th>
+                                        <th>Tahun Ajaran</th>
                                         <th>Status</th>
                                         @can('admin')
                                             <th>Action</th>
