@@ -21,8 +21,8 @@ return new class extends Migration
             // kolom nilai
             $table->integer('nilai');
             // kolom tipe nilai
-            $table->enum('tipe_nilai', ['Ulangan Harian', 'TPugas', 'UTS', 'UAS', 'Rapor']);
-            
+            $table->enum('tipe_nilai', ['Ulangan Harian', 'Tugas', 'UTS', 'UAS', 'Rapor']);
+
         });
     }
 
