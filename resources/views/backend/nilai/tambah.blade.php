@@ -15,61 +15,6 @@ $route = Route::currentRouteName();
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-121">
-            {{-- <div class="card">
-                        <div class="card-body"> --}}
-
-
-            {{-- @if ($route == 'nilai-ulangan-harian-tambah')
-                                <a href="{{ route('nilai-ulangan-harian-index-kelas', $id_kelas) }}"
-                                    class="btn btn-light mb-3"
-                                    style="
-                        /* taruh di samping kanan */
-                        float: right;
-                        /* background-color lebih muda lagi */
-                        /* background-color: rgb(37,43,59); */
-                        border-color: rgb(37,43,59);
-                        ">
-                                    <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                    <span style="vertical-align: middle">Back to List</span>
-                                </a>
-                            @elseif ($route == 'nilai-tugas-tambah')
-                                <a href="{{ route('nilai-tugas-index-kelas', $id_kelas) }}" class="btn btn-light mb-3"
-                                    style="
-                        /* taruh di samping kanan */
-                        float: right;
-                        /* background-color lebih muda lagi */
-                        /* background-color: rgb(37,43,59); */
-                        border-color: rgb(37,43,59);
-                        ">
-                                    <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                    <span style="vertical-align: middle">Back to List</span>
-                                </a>
-                            @elseif ($route == 'nilai-uts-tambah')
-                                <a href="{{ route('nilai-uts-index-kelas', $id_kelas) }}" class="btn btn-light mb-3"
-                                    style="
-                        /* taruh di samping kanan */
-                        float: right;
-                        /* background-color lebih muda lagi */
-                        /* background-color: rgb(37,43,59); */
-                        border-color: rgb(37,43,59);
-                        ">
-                                    <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                    <span style="vertical-align: middle">Back to List</span>
-                                </a>
-                            @elseif ($route == 'nilai-uas-tambah')
-                                <a href="{{ route('nilai-uas-index-kelas', $id_kelas) }}" class="btn btn-light mb-3"
-                                    style="
-                        /* taruh di samping kanan */
-                        float: right;
-                        /* background-color lebih muda lagi */
-                        /* background-color: rgb(37,43,59); */
-                        border-color: rgb(37,43,59);
-                        ">
-                                    <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                    <span style="vertical-align: middle">Back to List</span>
-                                </a>
-                            @endif --}}
-
 
             {{-- <h4 class="card-title">Tambah {{ $title }}</h4> --}}
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
