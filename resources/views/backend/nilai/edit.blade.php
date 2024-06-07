@@ -1,10 +1,3 @@
-{{-- @extends('backend.main')
-
-@section('title')
-    Dashboard | Ubah {{ $title }}
-@endsection
-
-@section('content') --}}
 
 <?php
 // get route name
@@ -15,51 +8,6 @@ $route = Route::currentRouteName();
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            {{-- <div class="card">
-                        <div class="card-body"> --}}
-
-
-
-            {{-- @if ($nilai->tipe_nilai == 'Ulangan Harian')
-                                <a href="{{ route('nilai-ulangan-harian-index-kelas', $id_kelas) }}"
-                                    class="btn btn-light mb-3"
-                                    style="
-                                float: right;
-                                border-color: rgb(37,43,59);
-                            ">
-                            <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                            <span style="vertical-align: middle">Back to List</span>    
-                        </a>
-                            @elseif ($nilai->tipe_nilai == 'Tugas')
-                                <a href="{{ route('nilai-tugas-index-kelas', $id_kelas) }}" class="btn btn-light mb-3"
-                                    style="
-                                float: right;
-                                border-color: rgb(37,43,59);
-                            ">
-                            <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                            <span style="vertical-align: middle">Back to List</span>    
-                        </a>
-                            @elseif ($nilai->tipe_nilai == 'UTS')
-                                <a href="{{ route('nilai-uts-index-kelas', $id_kelas) }}" class="btn btn-light mb-3"
-                                    style="
-                                float: right;
-                                border-color: rgb(37,43,59);
-                            ">
-                            <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                            <span style="vertical-align: middle">Back to List</span>    
-                        </a>
-                            @elseif ($nilai->tipe_nilai == 'UAS')
-                                <a href="{{ route('nilai-uas-index-kelas', $id_kelas) }}" class="btn btn-light mb-3"
-                                    style="
-                                float: right;
-                                border-color: rgb(37,43,59);
-                            ">
-                            <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                            <span style="vertical-align: middle">Back to List</span>    
-                        </a>
-                            @endif
-
-                            <h4 class="card-title">Ubah {{ $title }}</h4> --}}
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
                 berikut untuk mengubah {{ $title }}.</p>
             {{-- <form action="{{ route('nilai-update', $nilai->id) }}" method="POST"> --}}
@@ -89,7 +37,7 @@ $route = Route::currentRouteName();
                     </div>
                 </div>
 
-                @if (Auth::user()->id_role == '1' || Auth::user()->id_role == '2')
+                @if (Auth::user()->id_role == '1')
                     {{-- old guru --}}
                     <input type="hidden" name="old_guru" id="old_guru" value="{{ $nilai->id_guru_for_nilai }}">
 
@@ -164,7 +112,7 @@ $route = Route::currentRouteName();
                             </div>
                         </div>
                     </div>
-                    
+
                     {{-- id_mapel --}}
                     <input type="hidden" name="mapel" id="mapel" value="{{ $semua_mapel->id }}">
                 @endif
