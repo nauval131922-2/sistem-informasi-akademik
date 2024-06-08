@@ -140,7 +140,7 @@ $route = Route::current()->getName();
                             <span style="vertical-align: middle">Nilai</span>
                         </a>
 
-                        
+
                     </li>
                 @endcanany --}}
 
@@ -224,7 +224,7 @@ $route = Route::current()->getName();
                 @endcan
 
                 @canany(['admin', 'kepala_madrasah'])
-                    <li class="menu-title">Frontend</li>
+                    <li class="menu-title">Main Website</li>
                 @endcanany
 
                 @canany(['admin', 'kepala_madrasah'])
