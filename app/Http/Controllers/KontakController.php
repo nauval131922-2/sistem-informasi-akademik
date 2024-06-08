@@ -7,6 +7,7 @@ use App\Models\MediaSosial;
 use Illuminate\Http\Request;
 use App\Models\ProfilSekolah;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Validator;
 
 class KontakController extends Controller
 {
@@ -14,7 +15,7 @@ class KontakController extends Controller
         // get profil sekolah
         $profil_sekolah = ProfilSekolah::find(1);
 
-        
+
 
         return view('frontend.kontak.index', compact('profil_sekolah'));
     }
@@ -28,12 +29,20 @@ class KontakController extends Controller
     }
 
     public function simpan(Request $request){
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email',
             'subject' => 'required',
             'message' => 'required',
         ]);
+
+        // jika validasi gagal
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()->toArray()
+            ]);
+        }
 
         $kontak = new Kontak;
         $kontak->name = $request->name;
@@ -41,21 +50,20 @@ class KontakController extends Controller
         $kontak->subject = $request->subject;
         $kontak->message = $request->message;
         $kontak->status = 'Belum dibalas';
-        $kontak->save();
 
-        $notification = array(
-            'message' => 'Pesan anda telah terkirim, kami akan segera membalas pesan anda via email.',
-            'alert-type' => 'success'
-        );
-
-        // reload halaman
-        return redirect()->back()->with($notification);
+        // jike berhasil disimpan
+        if ($kontak->save()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Pesan anda telah terkirim, kami akan segera membalas pesan anda via email.'
+            ]);
+        }
     }
 
     public function balas($id){
         // redirect ke halaman balas email via gmail
         $kontak = Kontak::find($id);
-        
+
         // cari email berdasarkan id
         $email = $kontak->email;
 
