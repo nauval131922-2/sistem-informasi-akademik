@@ -42,14 +42,6 @@ class AdminController extends Controller
         $id = Auth::user()->id;
         $user = User::find($id);
 
-        // validasi
-        // $request->validate([
-        //     'name' => 'required',
-        //     'email' => 'nullable|email|unique:users,email,'.$id,
-        //     'username' => 'required|unique:users,username,'.$id,
-        //     'profile_image' => 'nullable|image',
-        // ]);
-
         // validator
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -73,6 +65,8 @@ class AdminController extends Controller
         // simpan data request yang nullable jika tidak kosong
         if ($request->email != null) {
             $user->email = $request->email;
+        } else {
+            $user->email = null;
         }
 
         // validasi password
@@ -85,13 +79,6 @@ class AdminController extends Controller
                     // simpan password baru
                     $user->password = bcrypt($request->newpassword);
                 } else {
-                    // redirect
-                    // $notification = array(
-                    //     'message' => 'New Password and Confirm Password does not match!',
-                    //     'alert-type' => 'error',
-                    // );
-
-                    // return redirect()->back()->with($notification);
 
                     return response()->json([
                         'status' => 'error2',
@@ -99,13 +86,7 @@ class AdminController extends Controller
                     ]);
                 }
             } else {
-                // redirect
-                // $notification = array(
-                //     'message' => 'Old Password is not match!',
-                //     'alert-type' => 'error',
-                // );
 
-                // return redirect()->back()->with($notification);
 
                 return response()->json([
                     'status' => 'error2',
@@ -116,10 +97,6 @@ class AdminController extends Controller
 
         // simpan gambar jika ada
         if ($request->hasFile('gambar')) {
-
-            // if ($user->profile_image) {
-            //     unlink($user->profile_image);
-            // }
 
             // jika menggunakkan gambar default jangan hapus gambar default
             if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
@@ -154,17 +131,6 @@ class AdminController extends Controller
 
             $user->profile_image = 'upload/profile_picture/'.$nama_file;
         }
-
-        // simpan data
-        // $user->save();
-
-        // // redirect
-        // $notification = array(
-        //     'message' => 'User Profile Updated Successfully!',
-        //     'alert-type' => 'success',
-        // );
-
-        // return redirect()->back()->with($notification);
 
         // jika berhasil disimpan
         if ($user->save()) {
