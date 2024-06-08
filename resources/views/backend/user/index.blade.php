@@ -43,9 +43,13 @@ $jabatan = App\Models\Jabatan::all();
 
 
                                             @foreach ($semua_role as $role)
-                                                <li><button class="dropdown-item" onclick="tambahData({{ $role->id }})"
+                                                <li>
+                                                    <button class="dropdown-item" onclick="tambahData({{ $role->id }})"
                                                         data-bs-toggle="modal" data-bs-target="#exampleModalScrollable"
-                                                        id="buttonTambah">{{ $role->nama }}</button>
+                                                        id="buttonTambah">
+                                                        {{ $role->nama }}
+                                                    </button>
+                                                </li>
                                             @endforeach
                                         </ul>
                                     </div>
@@ -122,26 +126,6 @@ $jabatan = App\Models\Jabatan::all();
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- <tr>
-                                        <td>Tiger Nixon</td>
-                                        <td>System Architect</td>
-                                        <td>Edinburgh</td>
-                                        <td>61</td>
-                                        <td>2011/04/25</td>
-                                        <td>$320,800</td>
-                                        <td>$320,800</td>
-                                        <td>$320,800</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Garrett Winters</td>
-                                        <td>Accountant</td>
-                                        <td>Tokyo</td>
-                                        <td>63</td>
-                                        <td>2011/07/25</td>
-                                        <td>$170,750</td>
-                                        <td>$170,750</td>
-                                        <td>$170,750</td>
-                                    </tr> --}}
                                 </tbody>
                             </table>
                         </div>
@@ -164,6 +148,28 @@ $jabatan = App\Models\Jabatan::all();
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <script>
+        function tambahData(id) {
+            $.ajax({
+                url: '/data-user/tambah/' + id,
+                type: 'GET',
+                success: function(response) {
+                    $('#content').html(response);
+                    $('#exampleModalScrollableTitle').html('Tambah Data User');
+                    $('#exampleModalScrollable').modal(
+                        'show'); // Menampilkan modal secara manual jika AJAX berhasil
+                },
+                error: function(xhr) {
+                    if (xhr.status === 401) {
+                        window.location = "{{ route('login') }}";
+                    } else {
+                        console.error('An error occurred:', xhr);
+                    }
+                }
+            });
+        }
+    </script>
 
     <script>
         $(document).ready(function() {
@@ -239,21 +245,7 @@ $jabatan = App\Models\Jabatan::all();
             filterData();
         };
 
-        // fungsi menampilkan modal tambah data jadwal pelajaran
-        function tambahData(id) {
 
-            // console.log(id);
-
-            $.ajax({
-                url: '/data-user/tambah/' + id,
-                type: 'GET',
-                success: function(response) {
-                    $('#content').html(response);
-                    // modal title tulisan dari dropdown button yang dipilih
-                    $('#exampleModalScrollableTitle').html('Tambah Data User');
-                }
-            });
-        }
 
         // make delete function
         function deleteData(id) {
