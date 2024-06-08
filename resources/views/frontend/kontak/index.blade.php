@@ -74,7 +74,7 @@
 
             <div class="row mt-5 justify-content-center" data-aos="fade-up">
                 <div class="col-lg-12">
-                    <form method="post" action="{{ route('kontak-simpan') }}" class="kontak">
+                    <form id="contactForm" method="post" class="php-email-form">
                         @csrf
                         <div class="form-row">
                             <div class="col-md-6 form-group">
@@ -98,12 +98,73 @@
                                 data-msg="Please write something for us" placeholder="Message"></textarea>
                             <div class="validate"></div>
                         </div>
+                        <div class="mb-3">
+                            <div class="loading">Loading</div>
+                            <div class="alert alert-warning dismissible fade show" role="alert" id="responseMessage"
+                                style="display:none;">
+
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        </div>
                         <div class="text-center"><button type="submit">Send Message</button></div>
                     </form>
+
                 </div>
 
             </div>
 
         </div>
     </section><!-- End Contact Section -->
+
+    <script src="{{ asset('frontend/assets/vendor/jquery/jquery.min.js') }}"></script>
+
+    <script>
+        $('#contactForm').on('submit', function(e) {
+            e.preventDefault();
+
+            let formData = new FormData($('#contactForm')[0]);
+
+            $.ajax({
+                url: '{{ route('kontak-simpan') }}',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+
+                    if (response.status == 'success') {
+                        toastr.success(response.message, "", {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "100",
+                            "hideDuration": "100",
+                            "timeOut": "1500",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                        });
+
+                        // reset form
+                        $('#contactForm')[0].reset();
+                    } else {
+                        e.preventDefault();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    e.preventDefault();
+                }
+
+
+            })
+
+        })
+    </script>
 @endsection
