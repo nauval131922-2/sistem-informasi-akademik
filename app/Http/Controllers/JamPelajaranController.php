@@ -21,40 +21,6 @@ class JamPelajaranController extends Controller
         return view('backend.jam_pelajaran.index', compact('semua_jam_pelajaran', 'title'));
     }
 
-    public function index_jam_pelajaran(){
-        $title = 'Data Jam Pelajaran';
-        $semua_jam_pelajaran = JamPelajaran::where('tipe_jam', '=', 'Pelajaran')->get();
-        return view('backend.jam_pelajaran.index', compact('semua_jam_pelajaran', 'title'));
-    }
-
-    public function index_jam_istirahat(){
-        $title = 'Data Jam Istirahat';
-        $semua_jam_pelajaran = JamPelajaran::where('tipe_jam', '=', 'Istirahat')->get();
-        return view('backend.jam_pelajaran.index', compact('semua_jam_pelajaran', 'title'));
-    }
-
-    function fetch_jam_pelajaran()
-    {
-        $semua_jam_pelajaran = JamPelajaran::where('tipe_jam', '=', 'Pelajaran')->get();
-        $title = 'Data Jam Pelajaran';
-
-        return response()->json([
-            'data' => $semua_jam_pelajaran,
-            'title' => $title
-        ]);
-    }
-
-    function fetch_jam_istirahat()
-    {
-        $semua_jam_pelajaran = JamPelajaran::where('tipe_jam', '=', 'Istirahat')->get();
-        $title = 'Data Jam Istirahat';
-
-        return response()->json([
-            'data' => $semua_jam_pelajaran,
-            'title' => $title
-        ]);
-    }
-
     // fetch data all jam
     function fetch_jam()
     {
@@ -99,164 +65,10 @@ class JamPelajaranController extends Controller
         return view('backend.jam_pelajaran.create', compact('title', 'tipe_jam'));
     }
 
-    public function store_jam_pelajaran(Request $request)
-    {
-        $request->validate([
-            'jam_ke' => 'required|unique:jam_pelajarans,jam_ke',
-            'jam_mulai' => 'required',
-            'jam_selesai' => 'required',
-        ]);
 
-        $jam_pelajaran = new JamPelajaran();
-        $jam_pelajaran->jam_ke = $request->jam_ke;
-        $jam_pelajaran->jam_mulai = $request->jam_mulai;
-        $jam_pelajaran->jam_selesai = $request->jam_selesai;
-
-        $jam_pelajaran->tipe_jam = 'Pelajaran';
-
-        $cek_jam = JamPelajaran::where('jam_mulai',$request->jam_mulai)
-        ->where('jam_selesai',$request->jam_selesai)
-        ->first();
-
-        $cek_jam_2 = JamPelajaran::where('jam_mulai','>=', $request->jam_mulai)
-        ->where('jam_mulai','<=',$request->jam_selesai)
-        ->first();
-
-        $cek_jam_3 = JamPelajaran::where('jam_mulai','>=', $request->jam_mulai)
-        ->where('jam_selesai','<=',$request->jam_selesai)
-        ->first();
-
-        $cek_jam_4 = JamPelajaran::where('jam_mulai','<=', $request->jam_mulai)
-        ->where('jam_selesai','>=',$request->jam_selesai)
-        ->first();
-
-        $cek_jam_5 = JamPelajaran::where('jam_selesai','<=', $request->jam_selesai)
-        ->where('jam_mulai','>=',$request->jam_selesai)
-        ->first();
-
-        $cek_jam_6 = JamPelajaran::where('jam_selesai', $request->jam_mulai)
-        ->where('jam_mulai',$request->jam_selesai)
-        ->first();
-
-        $cek_jam_7 = JamPelajaran::where('jam_mulai','<=', $request->jam_mulai)
-        ->where('jam_selesai','>=',$request->jam_mulai)
-        ->first();
-
-        // cek jika jam mulai lebih besar dari jam selesai
-        if ($request->jam_mulai > $request->jam_selesai) {
-            $notification = array(
-                'message' => 'Jam mulai tidak boleh lebih besar dari jam selesai',
-                'alert-type' => 'error'
-            );
-
-            return redirect()->back()->with($notification);
-        }
-
-        if(($cek_jam)
-        ||($cek_jam_2)
-        ||($cek_jam_3)
-        ||($cek_jam_4)
-        ||($cek_jam_5)
-        ||($cek_jam_6)
-        ||($cek_jam_7)){
-            $notification = array(
-                'message' => 'Jam Pelajaran sudah ada',
-                'alert-type' => 'error'
-            );
-
-            return redirect()->back()->with($notification);
-        }
-
-        $jam_pelajaran->save();
-
-        $notification = array(
-            'message' => 'Data Berhasil Ditambahkan',
-            'alert-type' => 'success'
-        );
-
-        return redirect()->route('jam-pelajaran-index')->with($notification);
-    }
-
-    public function store_jam_istirahat(Request $request)
-    {
-        $request->validate([
-            'jam_ke' => 'required|unique:jam_pelajarans,jam_ke',
-            'jam_mulai' => 'required',
-            'jam_selesai' => 'required',
-        ]);
-
-        $jam_pelajaran = new JamPelajaran();
-        $jam_pelajaran->jam_ke = $request->jam_ke;
-        $jam_pelajaran->jam_mulai = $request->jam_mulai;
-        $jam_pelajaran->jam_selesai = $request->jam_selesai;
-
-        $jam_pelajaran->tipe_jam = 'Istirahat';
-
-        $cek_jam = JamPelajaran::where('jam_mulai',$request->jam_mulai)
-        ->where('jam_selesai',$request->jam_selesai)
-        ->first();
-
-        $cek_jam_2 = JamPelajaran::where('jam_mulai','>=', $request->jam_mulai)
-        ->where('jam_mulai','<=',$request->jam_selesai)
-        ->first();
-
-        $cek_jam_3 = JamPelajaran::where('jam_mulai','>=', $request->jam_mulai)
-        ->where('jam_selesai','<=',$request->jam_selesai)
-        ->first();
-
-        $cek_jam_4 = JamPelajaran::where('jam_mulai','<=', $request->jam_mulai)
-        ->where('jam_selesai','>=',$request->jam_selesai)
-        ->first();
-
-        $cek_jam_5 = JamPelajaran::where('jam_selesai','<=', $request->jam_selesai)
-        ->where('jam_mulai','>=',$request->jam_selesai)
-        ->first();
-
-        $cek_jam_6 = JamPelajaran::where('jam_selesai', $request->jam_mulai)
-        ->where('jam_mulai',$request->jam_selesai)
-        ->first();
-
-        $cek_jam_7 = JamPelajaran::where('jam_mulai','<=', $request->jam_mulai)
-        ->where('jam_selesai','>=',$request->jam_mulai)
-        ->first();
-
-        // cek jika jam mulai lebih besar dari jam selesai
-        if ($request->jam_mulai > $request->jam_selesai) {
-            $notification = array(
-                'message' => 'Jam mulai tidak boleh lebih besar dari jam selesai',
-                'alert-type' => 'error'
-            );
-
-            return redirect()->back()->with($notification);
-        }
-
-        if(($cek_jam)
-        ||($cek_jam_2)
-        ||($cek_jam_3)
-        ||($cek_jam_4)
-        ||($cek_jam_5)
-        ||($cek_jam_6)
-        ||($cek_jam_7)){
-            $notification = array(
-                'message' => 'Jam Pelajaran sudah ada',
-                'alert-type' => 'error'
-            );
-
-            return redirect()->back()->with($notification);
-        }
-
-        $jam_pelajaran->save();
-
-        $notification = array(
-            'message' => 'Data Berhasil Ditambahkan',
-            'alert-type' => 'success'
-        );
-
-        return redirect()->route('jam-istirahat-index')->with($notification);
-    }
 
     public function store_jam(Request $request)
-    {   
+    {
 
         // validator
         $validator = Validator::make($request->all(), [
@@ -367,7 +179,7 @@ class JamPelajaranController extends Controller
 
     public function edit($id){
         $jam_pelajaran = JamPelajaran::findOrFail($id);
-        
+
         $tipe_jam = $jam_pelajaran->tipe_jam;
 
         $title = 'Data Jam '. $tipe_jam;
