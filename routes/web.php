@@ -295,8 +295,6 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             Route::controller(JamPelajaranController::class)->group(function () {
                 Route::get('/data-jam-pelajaran/tambah', 'create_jam_pelajaran')->name('jam-pelajaran-tambah');
                 Route::get('/data-jam-istirahat/tambah', 'create_jam_istirahat')->name('jam-istirahat-tambah');
-                Route::post('/data-jam-pelajaran/simpan', 'store_jam_pelajaran')->name('jam-pelajaran-simpan');
-                Route::post('/data-jam-istirahat/simpan', 'store_jam_istirahat')->name('jam-istirahat-simpan');
                 // tambah rout simpan jam
                 Route::post('/data-jam/simpan', 'store_jam')->name('jam-simpan');
                 Route::get('/data-jam/edit/{id}', 'edit')->name('jam-edit');
