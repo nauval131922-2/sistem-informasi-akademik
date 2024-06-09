@@ -69,13 +69,6 @@ class TahunAjaranController extends Controller
             ]);
         }
 
-
-        // $request->validate([
-        //     'semester' => 'required',
-        //     'tahun_ajaran' => 'required',
-        //     'statuss' => 'required',
-        // ]);
-
         $tahun_ajaran = new TahunAjaran;
         $tahun_ajaran->semester = $request->semester;
         $tahun_ajaran->tahun = $request->tahun_ajaran;
@@ -85,15 +78,6 @@ class TahunAjaranController extends Controller
         if ($request->statuss == 'Aktif') {
             $cek_tahun_ajaran_aktif = TahunAjaran::where('status', 'Aktif')
                 ->first();
-
-            // if ($cek_tahun_ajaran_aktif) {
-            //     $notification = array(
-            //         'message' => 'Tahun Ajaran lain masih aktif!',
-            //         'alert-type' => 'error'
-            //     );
-
-            //     return redirect()->back()->withInput()->with($notification);
-            // }
 
             if ($cek_tahun_ajaran_aktif) {
                 return response()->json([
@@ -109,26 +93,12 @@ class TahunAjaranController extends Controller
             ->first();
 
         if ($cek_tahun_ajaran) {
-            // $notification = array(
-            //     'message' => 'Tahun Ajaran sudah ada!',
-            //     'alert-type' => 'error'
-            // );
-
-            // return redirect()->back()->withInput()->with($notification);
 
             return response()->json([
                 'status' => 'error3',
                 'message' => 'Tahun Ajaran sudah ada!'
             ]);
         } else {
-            // $tahun_ajaran->save();
-
-            // $notification = array(
-            //     'message' => 'Data Tahun Ajaran berhasil ditambahkan',
-            //     'alert-type' => 'success'
-            // );
-
-            // return redirect()->route('data-tahun-ajaran-index')->with($notification);
 
             // jika tahun ajaran berhasil disimpan
             if ($tahun_ajaran->save()) {
@@ -202,7 +172,7 @@ class TahunAjaranController extends Controller
         //     'tahun_ajaran' => 'required',
         //     'statuss' => 'required',
         // ]);
-        
+
         $tahun_ajaran = TahunAjaran::find($id);
         $tahun_ajaran->semester = $request->semester;
         $tahun_ajaran->tahun = $request->tahun_ajaran;
