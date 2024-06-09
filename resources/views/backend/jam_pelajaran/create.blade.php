@@ -1,61 +1,13 @@
-{{-- @extends('backend.main')
 
-@section('title')
-    Dashboard | Tambah {{ $title }}
-@endsection --}}
-
-<?php
-// $route = Route::current()->getName();
-?>
-
-{{-- @section('content') --}}
-{{-- <div class="page-content"> --}}
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            {{-- <div class="card"> --}}
-            {{-- <div class="card-body"> --}}
-
-            {{-- get route name --}}
             <?php
             $route = Route::current()->getName();
             ?>
 
-            {{-- tambah tombol back to list --}}
-            {{-- @if ($route == 'jam-pelajaran-tambah')
-                                <a href="{{ route('jam-pelajaran-index') }}" class="btn btn-light mb-3"
-                                    style="
-											/* taruh di samping kanan */
-											float: right;
-											/* background-color lebih muda lagi */
-											/* background-color: rgb(37,43,59); */
-											border-color: rgb(37,43,59);
-											">
-                                    <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                    <span style="vertical-align: middle">Back to List</span>
-                                </a>
-                            @elseif($route == 'jam-istirahat-tambah')
-                                <a href="{{ route('jam-istirahat-index') }}" class="btn btn-light mb-3"
-                                    style="
-											/* taruh di samping kanan */
-											float: right;
-											/* background-color lebih muda lagi */
-											/* background-color: rgb(37,43,59); */
-											border-color: rgb(37,43,59);
-											">
-                                    <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                    <span style="vertical-align: middle">Back to List</span>
-                                </a>
-                            @endif --}}
-
-            {{-- <h4 class="card-title">Tambah {{ $title }}</h4> --}}
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
                 berikut untuk menambah {{ $title }}</p>
-            {{-- @if ($route == 'jam-pelajaran-tambah')
-                <form action="{{ route('jam-pelajaran-simpan') }}" method="POST">
-                @elseif ($route == 'jam-istirahat-tambah')
-                    <form action="{{ route('jam-istirahat-simpan') }}" method="POST">
-            @endif --}}
             <form enctype="multipart/form-data" id="formTambahData" method="POST">
                 @csrf
                 <div class="row mb-3">
@@ -64,9 +16,6 @@
                         <input class="form-control" type="number" placeholder="Masukkan Jam ke" id="jam_ke"
                             name="jam_ke" value="{{ old('jam_ke') }}" required>
                         <div class="mt-2">
-                            {{-- @error('jam_ke')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text jam_ke_error"></span>
                         </div>
                     </div>
@@ -78,9 +27,6 @@
                         <input class="form-control" type="time" placeholder="Masukkan Jam Mulai" id="jam_mulai"
                             name="jam_mulai" value="{{ old('jam_mulai') }}" required>
                         <div class="mt-2">
-                            {{-- @error('jam_mulai')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text jam_mulai_error"></span>
                         </div>
                     </div>
@@ -92,9 +38,6 @@
                         <input class="form-control" type="time" placeholder="Masukkan Jam Selesai" id="jam_selesai"
                             name="jam_selesai" value="{{ old('jam_selesai') }}" required>
                         <div class="mt-2">
-                            {{-- @error('jam_selesai')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text jam_selesai_error"></span>
                         </div>
                     </div>
@@ -112,10 +55,6 @@
         </div>
     </div>
 </div> <!-- end col -->
-{{-- </div> --}}
-{{-- </div>
-</div> --}}
-{{-- @endsection --}}
 
 <script>
     $(document).ready(function() {

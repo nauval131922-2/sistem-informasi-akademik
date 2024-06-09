@@ -187,15 +187,6 @@
                             ')"><i class="ri-delete-bin-2-line align-middle me-1"></i><span style="vertical-align: middle">Hapus</span></button>';
 
                         table.row.add([
-                            // '<tr>' +
-                            // '<td>' + value.jam_ke + '</td>' +
-                            // '<td>' + value.jam_mulai + '</td>' +
-                            // '<td>' + value.jam_selesai + '</td>' +
-                            // '<td>' + value.tipe_jam + '</td>' +
-                            // @can('admin')
-                            //     '<td>' + editButton + deleteButton + '</td>' +
-                            // @endcan
-                            // '</tr>'
                             value.jam_ke,
                             value.jam_mulai,
                             value.jam_selesai,
@@ -232,23 +223,6 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
-                        // // success message menggunakan div class session
-                        // var alertHtml =
-                        //     '<div class="alert alert-warning" style="position: fixed; top: 10px; left: 0; right: 0; margin: auto; z-index: 9999; max-width: 500px; width: auto;text-align: center;" role="alert">' +
-                        //     '<strong>' + response.message + '</strong>' +
-                        //     '</div>';
-                        // $('.session').html(alertHtml);
-
-                        // setTimeout(function() {
-                        //     $('.session').html('');
-                        // }, 1500);
-
-                        // // set width dynamically based on the message length
-                        // var messageLength = response.message.length;
-                        // var alertWidth = messageLength * 10;
-                        // $('.alert').css('width', alertWidth);
-
-                        // toastr success message
                         toastr.success(response.message, "", {
                             "closeButton": false,
                             "debug": false,
