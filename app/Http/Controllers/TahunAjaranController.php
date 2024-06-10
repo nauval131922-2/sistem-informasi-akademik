@@ -177,15 +177,6 @@ class TahunAjaranController extends Controller
                 ->where('id', '!=', $id)
                 ->first();
 
-            // if ($cek_tahun_ajaran_aktif) {
-            //     $notification = array(
-            //         'message' => 'Tahun Ajaran lain masih aktif!',
-            //         'alert-type' => 'error'
-            //     );
-
-            //     return redirect()->back()->withInput()->with($notification);
-            // }
-
             if ($cek_tahun_ajaran_aktif) {
                 return response()->json([
                     'status' => 'error2',
@@ -201,26 +192,12 @@ class TahunAjaranController extends Controller
             ->first();
 
         if ($cek_tahun_ajaran) {
-            // $notification = array(
-            //     'message' => 'Tahun Ajaran sudah ada!',
-            //     'alert-type' => 'error'
-            // );
-
-            // return redirect()->back()->withInput()->with($notification);
 
             return response()->json([
                 'status' => 'error3',
                 'message' => 'Tahun Ajaran sudah ada!'
             ]);
         } else {
-            // $tahun_ajaran->save();
-
-            // $notification = array(
-            //     'message' => 'Data Tahun Ajaran berhasil diubah',
-            //     'alert-type' => 'success'
-            // );
-
-            // return redirect()->route('data-tahun-ajaran-index')->with($notification);
 
             // jika tahun ajaran berhasil diubah
             if ($tahun_ajaran->save()) {
