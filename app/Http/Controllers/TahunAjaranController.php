@@ -166,13 +166,6 @@ class TahunAjaranController extends Controller
             ]);
         }
 
-
-        // $request->validate([
-        //     'semester' => 'required',
-        //     'tahun_ajaran' => 'required',
-        //     'statuss' => 'required',
-        // ]);
-
         $tahun_ajaran = TahunAjaran::find($id);
         $tahun_ajaran->semester = $request->semester;
         $tahun_ajaran->tahun = $request->tahun_ajaran;
