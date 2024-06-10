@@ -125,7 +125,7 @@
                 @endif
                 @if ($jadwal->tipe_jadwal == 'Ekstrakurikuler')
                     <div class="row mb-3">
-                        <label for="ekstra" class="col-sm-2 col-form-label">Eksrakuriler</label>
+                        <label for="ekstra" class="col-sm-2 col-form-label">Ekstrakurikuler</label>
                         <div class="col-sm-10">
                             <select class="form-select" id="ekstra" name="ekstra" required>
                                 <option value="">Pilih Eksrakuriler</option>
