@@ -306,18 +306,80 @@ class JadwalPelajaranController extends Controller
         ]);
     }
 
+    public function getHariIndex($hari)
+    {
+        $days = [
+            'Sabtu' => 1,
+            'Minggu' => 2,
+            'Senin' => 3,
+            'Selasa' => 4,
+            'Rabu' => 5,
+            'Kamis' => 6,
+            'Jumat' => 7,
+        ];
+
+        return $days[$hari] ?? 8; // Jika hari tidak ditemukan, berikan nilai yang besar untuk mengurutkan di akhir
+    }
+
+    public function checkJumlahJadwal(Request $request)
+    {
+        $query = JadwalPelajaran::with('kelas', 'mapel', 'ekstra', 'user', 'jam');
+
+        if ($request->tipe_jadwal != null) {
+            $query->where('tipe_jadwal', $request->tipe_jadwal);
+        }
+
+        if (auth()->user()->id_role != 5) {
+            if ($request->kelas != null) {
+                $query->where('id_kelas_for_jadwal', $request->kelas);
+            } else {
+                // Handle the case where no specific class is selected
+            }
+        } else {
+            $query->where('id_kelas_for_jadwal', auth()->user()->id_kelas);
+        }
+
+        if ($request->tahun_ajaran != null) {
+            $query->where('id_tahun_ajaran_for_jadwal', $request->tahun_ajaran);
+        } else {
+            $tahun_ajaran = TahunAjaran::where('status', "Aktif")->first();
+            $query->where('id_tahun_ajaran_for_jadwal', $tahun_ajaran->id);
+        }
+
+        if (auth()->user()->id_role === 1 || auth()->user()->id_role === 2) {
+            if ($request->kepemilikan_jadwal != null) {
+                $query->where('id_guru_for_jadwal', $request->kepemilikan_jadwal);
+            }
+        } else if (auth()->user()->id_role === 3) {
+            $query->where('id_guru_for_jadwal', auth()->user()->id);
+        } else if (auth()->user()->id_role === 4) {
+            $query->where('id_guru_for_jadwal', auth()->user()->id);
+        }
+
+        $jumlahJadwal = $query->count();
+
+        if ($jumlahJadwal == 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Tidak ada jadwal!'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'jumlah_jadwal' => $jumlahJadwal
+        ]);
+    }
+
     public function cetak_jadwal(Request $request)
     {
-
         $semua_jadwal = JadwalPelajaran::with('kelas', 'mapel', 'ekstra', 'user', 'jam');
 
         if ($request->tipe_jadwal != null) {
-            $title = 'Semua Data Jadwal ' . $request->tipe_jadwal;
             $semua_jadwal->where('tipe_jadwal', $request->tipe_jadwal);
             $tipe_jadwal = $request->tipe_jadwal;
         } else {
-            $title = 'Semus Data Jadwal';
-            $tipe_jadwal = 'Semua Data Jadwal';
+            $tipe_jadwal = 'Data Semua Jadwal';
         }
 
         // jika auth id role user tidak sama dengan 5
@@ -375,44 +437,60 @@ class JadwalPelajaranController extends Controller
             $kepemilikan_jadwal = Jabatan::find($kepemilikan_jadwal)->nama . ' ' . $kelas_untuk_id_role_5;
         }
 
+        $semua_jadwal->where('id_tahun_ajaran_for_jadwal', $tahun_ajaran->id);
+
         $semua_jadwal = $semua_jadwal->get();
+
+        $semua_jadwal = $semua_jadwal->map(function ($jadwal) {
+            $jadwal->hari_index = $this->getHariIndex($jadwal->hari); // Asumsikan ada kolom 'hari' di jadwal
+            return $jadwal;
+        });
+
+        $semua_jadwal = $semua_jadwal->sortBy([
+            ['id_kelas_for_jadwal', 'asc'],
+            ['hari_index', 'asc'],
+            ['id_jam_for_jadwal', 'asc']
+        ]);
+
 
         // $tahun_ajaran = TahunAjaran::where('status', "Aktif")->first();
         $sekolah = ProfilSekolah::first();
         $logo = public_path($sekolah->logo);
 
-        $dompdf = new Dompdf();
+
 
         $tahun = explode('/', $tahun_ajaran->tahun);
         // jika auth id role user tidak sama dengan 5
         if (auth()->user()->id_role != 5) {
             if ($request->tipe_jadwal != null && $kepemilikan_jadwal != null) {
-                $nama_file = 'Cetak Semua Data Jadwal ' . $tipe_jadwal . ' ' . $kepemilikan_jadwal . ' | ' . $kelas . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
+                $nama_file = 'Cetak Data Semua Jadwal ' . $tipe_jadwal . ' ' . $kepemilikan_jadwal . ' | ' . $kelas . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
             } else if ($request->tipe_jadwal != null && $kepemilikan_jadwal == null) {
-                $nama_file = 'Cetak Semua Data Jadwal ' . $tipe_jadwal . ' | ' . $kelas . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
+                $nama_file = 'Cetak Data Semua Jadwal ' . $tipe_jadwal . ' | ' . $kelas . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
             } else if ($request->tipe_jadwal == null && $kepemilikan_jadwal != null) {
-                $nama_file = 'Cetak Semua Data Jadwal ' . $kepemilikan_jadwal . ' | ' . $kelas . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
+                $nama_file = 'Cetak Data Semua Jadwal ' . $kepemilikan_jadwal . ' | ' . $kelas . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
             } else {
-                $nama_file = 'Cetak Semua Data Jadwal | ' . $kelas . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
+                $nama_file = 'Cetak Data Semua Jadwal | ' . $kelas . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
             }
         } else {
             if ($request->tipe_jadwal != null && $kepemilikan_jadwal != null) {
-                $nama_file = 'Cetak Semua Data Jadwal ' . $tipe_jadwal . ' ' . $kepemilikan_jadwal . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
+                $nama_file = 'Cetak Data Semua Jadwal ' . $tipe_jadwal . ' ' . $kepemilikan_jadwal . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
             } else if ($request->tipe_jadwal != null && $kepemilikan_jadwal == null) {
-                $nama_file = 'Cetak Semua Data Jadwal ' . $tipe_jadwal . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
+                $nama_file = 'Cetak Data Semua Jadwal ' . $tipe_jadwal . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
             } else if ($request->tipe_jadwal == null && $kepemilikan_jadwal != null) {
-                $nama_file = 'Cetak Semua Data Jadwal ' . $kepemilikan_jadwal . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
+                $nama_file = 'Cetak Data Semua Jadwal ' . $kepemilikan_jadwal . ' | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
             } else {
-                $nama_file = 'Cetak Semua Data Jadwal | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
+                $nama_file = 'Cetak Data Semua Jadwal | ' . 'Semester' . ' ' . $tahun_ajaran->semester . ' ' . $tahun[0] . '-' . $tahun[1] . '.pdf';
             }
         }
 
-        $dompdf->loadHtml(view('backend.jadwal_pelajaran.cetak_all', compact('title', 'semua_jadwal', 'tahun_ajaran', 'logo', 'sekolah', 'nama_file', 'kelas', 'tipe_jadwal', 'kepemilikan_jadwal')));
+        $dompdf = new Dompdf();
 
         $dompdf->setPaper('A4', 'portrait');
 
+        $dompdf->loadHtml(view('backend.jadwal_pelajaran.cetak_all', compact('semua_jadwal', 'tahun_ajaran', 'logo', 'sekolah', 'nama_file', 'kelas', 'tipe_jadwal', 'kepemilikan_jadwal')));
+
         $dompdf->render();
 
-        $dompdf->stream($nama_file, array("Attachment" => false));
+        $dompdf->stream($nama_file, ['Attachment' => 0]);
     }
 }
