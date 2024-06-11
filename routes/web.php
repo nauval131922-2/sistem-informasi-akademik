@@ -132,6 +132,10 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
                 Route::get('/jadwal-ekstra/{id}/print', 'cetak_jadwal_ekstra')->name('jadwal-ekstra-print');
                 // tambah route filter
                 Route::get('/jadwal/filter', 'filter_jadwal')->name('jadwal-filter');
+
+                // route cek jumlah jadwal
+                Route::get('/jadwal/cek-jumlah', 'checkJumlahJadwal')->name('jadwal-check');
+
                 // route jadwal cetak
                 Route::get('/jadwal/print', 'cetak_jadwal')->name('jadwal-cetak');
             });
