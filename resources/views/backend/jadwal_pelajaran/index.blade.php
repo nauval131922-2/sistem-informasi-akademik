@@ -112,7 +112,7 @@ $semua_tahun_ajaran = App\Models\TahunAjaran::all();
                                     </button>
                                     {{-- button cetak filter --}}
 
-                                    <button class="btn btn-success" onclick="cetakData()">
+                                    <button class="btn btn-success" onclick="handleCetak()" id="btnCetak">
                                         <i class="ri-printer-line align-middle me-1"></i>
                                         <span style="vertical-align: middle">Cetak</span>
                                     </button>
@@ -369,6 +369,62 @@ $semua_tahun_ajaran = App\Models\TahunAjaran::all();
                 url += '&kepemilikan_jadwal=' + kepemilikan_jadwal;
             }
             window.open(url, '_blank');
+        }
+
+        function handleCetak() {
+            var tipe_jadwal = $('#tipe_jadwal').val();
+            var kelas = $('#kelas').val();
+            var tahun_ajaran = $('#tahun_ajaran').val();
+            var kepemilikan_jadwal = $('#kepemilikan_jadwal').val();
+            var url2 = '/jadwal/cek-jumlah?';
+
+            if (tipe_jadwal) {
+                url2 += 'tipe_jadwal=' + tipe_jadwal;
+            }
+            if (kelas) {
+                url2 += '&kelas=' + kelas;
+            }
+            if (tahun_ajaran) {
+                url2 += '&tahun_ajaran=' + tahun_ajaran;
+            }
+            if (kepemilikan_jadwal) {
+                url2 += '&kepemilikan_jadwal=' + kepemilikan_jadwal;
+            }
+
+            $.ajax({
+                url: url2,
+                type: 'GET',
+                data: {
+                    tipe_jadwal: tipe_jadwal,
+                    kelas: kelas,
+                    tahun_ajaran: tahun_ajaran,
+                    kepemilikan_jadwal: kepemilikan_jadwal
+                },
+                contentType: 'application/json',
+                success: function(response) {
+                    if (response.status === 'error') {
+                        toastr.warning(response.message, "", {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "100",
+                            "hideDuration": "100",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                        });
+                    } else {
+                        cetakData();
+                    }
+                }
+            });
         }
     </script>
 @endsection
