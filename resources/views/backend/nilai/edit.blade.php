@@ -1,16 +1,13 @@
-
 <?php
 // get route name
 $route = Route::currentRouteName();
 ?>
 
-{{-- <div class="page-content"> --}}
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
                 berikut untuk mengubah {{ $title }}.</p>
-            {{-- <form action="{{ route('nilai-update', $nilai->id) }}" method="POST"> --}}
             <form enctype="multipart/form-data" id="formUbahData" method="POST">
                 @csrf
 
@@ -29,9 +26,6 @@ $route = Route::currentRouteName();
                             placeholder="Ubah judul {{ $title }}" value="{{ old('judul') ?? $nilai->judul }}"
                             required>
                         <div class="mt-2">
-                            {{-- @error('judul')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text judul_error"></span>
                         </div>
                     </div>
@@ -56,9 +50,6 @@ $route = Route::currentRouteName();
                                 @endforeach
                             </select>
                             <div class="mt-2">
-                                {{-- @error('guru')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
                                 <span class="text-danger error-text guru_error"></span>
                             </div>
                         </div>
@@ -90,9 +81,6 @@ $route = Route::currentRouteName();
                                 @endforeach
                             </select>
                             <div class="mt-2">
-                                {{-- @error('mapel')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
                                 <span class="text-danger error-text mapel_error"></span>
                             </div>
                         </div>
@@ -103,11 +91,9 @@ $route = Route::currentRouteName();
                         <label for="mapell" class="col-md-2 col-form-label">Mata Pelajaran</label>
                         <div class="col-md-10">
                             <input class="form-control" type="text" name="mapell" id="mapell"
-                                placeholder="Masukkan mata pelajaran" value="{{ $semua_mapel->mata_pelajaran }}" required disabled>
+                                placeholder="Masukkan mata pelajaran" value="{{ $semua_mapel->mata_pelajaran }}"
+                                required disabled>
                             <div class="mt-2">
-                                {{-- @error('mapel')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
                                 <span class="text-danger error-text mapell_error"></span>
                             </div>
                         </div>
@@ -136,9 +122,6 @@ $route = Route::currentRouteName();
                             @endforeach
                         </select>
                         <div class="mt-2">
-                            {{-- @error('kelas')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text kelas_error"></span>
                         </div>
                     </div>
@@ -149,55 +132,12 @@ $route = Route::currentRouteName();
                     name="old_tahun_ajaran" value="{{ $nilai->id_tahun_ajaran_for_nilai ?? old('tahun_ajaran') }}"
                     required>
 
-                {{-- <div class="row mb-3">
-                    <label for="siswa" class="col-sm-2 col-form-label">Siswa</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" type="text" placeholder="Masukkan Nama Siswa" id="siswa"
-                            name="siswa" value="{{ $nilai->siswa->name }}" disabled>
-                        <div class="mt-2">
-                            @error('siswa')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label for="nilai" class="col-sm-2 col-form-label">Nilai</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" type="text" placeholder="Masukkan Nilai" id="nilai"
-                            name="nilai" value="{{ $nilai->nilai ?? old('nilai') }}" required>
-                        <div class="mt-2">
-                            @error('nilai')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                </div> --}}
 
                 <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)" id="judul-daftar-siswa">
                     Daftar Siswa
                 </p>
 
                 <div id="daftar-siswa">
-                    {{-- @foreach ($semua_siswa as $no => $siswa)
-                        <div class="row mb-3">
-                            <label for="nilai{{ $no + 1 }}"
-                                class="col-md-2 col-form-label">{{ $siswa->siswa->name }}</label>
-                            <input type="hidden" name="siswa{{ $no + 1 }}" value="{{ $siswa->id }}" required
-                                id="siswa{{ $no + 1 }}">
-                            <div class="col-md-10">
-                                <input class="form-control" type="number" name="nilai{{ $no + 1 }}"
-                                    id="nilai{{ $no + 1 }}" required placeholder="Masukkan nilai siswa"
-                                    value="{{ $siswa->nilai ?? old('nilai' . ($no + 1)) }}">
-                                <div class="mt-2">
-                                    @error('nilai')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach --}}
                 </div>
 
                 @if ($nilai->tipe_nilai == 'Ulangan Harian')
@@ -209,7 +149,6 @@ $route = Route::currentRouteName();
                 @elseif ($nilai->tipe_nilai == 'UAS')
                     <input type="hidden" name="tipe_nilai" id="tipe_nilaii" value="UAS">
                 @endif
-                {{-- <input type="submit" value="Update" class="btn btn-info waves-effect waves-light"> --}}
                 <button type="submit" class="btn btn-info waves-effect waves-light">
                     <i class="ri-refresh-line align-middle me-1"></i>
                     <span style="vertical-align: middle">Update</span>
@@ -219,10 +158,6 @@ $route = Route::currentRouteName();
         </div>
     </div>
 </div> <!-- end col -->
-{{-- </div>
-</div>
-</div>
-@endsection --}}
 
 <script>
     $(document).ready(function() {
@@ -245,7 +180,8 @@ $route = Route::currentRouteName();
             $.ajax({
                 url: '/get-data-siswa?id=' + id + '&old_judul=' + judul + '&old_guru=' + guru +
                     '&old_mapel=' + mapel +
-                    '&kelas=' + kelas + '&tipe_nilaii=' + tipe_nilai + '&old_tahun_ajaran=' + tahun_ajaran,
+                    '&kelas=' + kelas + '&tipe_nilaii=' + tipe_nilai + '&old_tahun_ajaran=' +
+                    tahun_ajaran,
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
@@ -265,6 +201,8 @@ $route = Route::currentRouteName();
                                 index + 1) + '" id="nilai' + (index + 1) +
                             '" required placeholder="Masukkan nilai siswa" value="' + (data
                                 .nilai ? data.nilai[index] : '') + '">';
+                        siswa_html +=
+                            '<div class="invalid-feedback" style"background-image: none;">Nilai tidak boleh lebih dari 100</div>';
                         siswa_html += '</div>'; // tambahkan tag penutup div
                         siswa_html += '</div>'; // tambahkan tag penutup div
                         // tambah input id nilai
@@ -299,7 +237,8 @@ $route = Route::currentRouteName();
             $.ajax({
                 url: '/get-data-siswa?id=' + id + '&old_judul=' + judul + '&old_guru=' + guru +
                     '&old_mapel=' + mapel +
-                    '&kelas=' + kelas + '&tipe_nilaii=' + tipe_nilai + '&old_tahun_ajaran=' + tahun_ajaran,
+                    '&kelas=' + kelas + '&tipe_nilaii=' + tipe_nilai + '&old_tahun_ajaran=' +
+                    tahun_ajaran,
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
@@ -319,6 +258,8 @@ $route = Route::currentRouteName();
                                 index + 1) + '" id="nilai' + (index + 1) +
                             '" required placeholder="Masukkan nilai siswa" value="' + (data
                                 .nilai ? data.nilai[index] : '') + '">';
+                        siswa_html +=
+                            '<div class="invalid-feedback" style"background-image: none;">Nilai tidak boleh lebih dari 100</div>';
                         siswa_html += '</div>'; // tambahkan tag penutup div
                         siswa_html += '</div>'; // tambahkan tag penutup div
                         // tambah input id nilai
@@ -335,6 +276,18 @@ $route = Route::currentRouteName();
         } else {
             $('#judul-daftar-siswa').html('Daftar Siswa');
             $('#daftar-siswa').html('');
+        }
+    });
+
+    $('#daftar-siswa').on('input', 'input[name^="nilai"]', function() {
+        var inputValue = parseInt($(this).val());
+        if (inputValue > 100) {
+            $(this).val(100);
+            $(this).addClass('is-invalid');
+            $(this).next('.invalid-feedback').text('Nilai tidak boleh lebih dari 100');
+        } else {
+            $(this).removeClass('is-invalid');
+            $(this).next('.invalid-feedback').text('');
         }
     });
 
