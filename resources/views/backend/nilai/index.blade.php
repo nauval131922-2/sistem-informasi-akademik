@@ -19,35 +19,6 @@
                     <div class="card">
                         <div class="card-body">
 
-                            {{-- <h4 class="card-title">Semua {{ $title }}</h4>
-                            <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Berikut adalah semua
-                                {{ $title }}.</p>
-
-                            @if ($route == 'nilai-ulangan-harian-index-kelas')
-                                <a class="btn btn-primary mb-3" href="{{ route('nilai-ulangan-harian-tambah', $id_kelas) }}"
-                                    role="button">
-									<i class="ri-add-line align-middle me-1"></i>
-                                    <span style="vertical-align: middle">Tambah</span>
-								</a>
-                            @elseif ($route == 'nilai-tugas-index-kelas')
-                                <a class="btn btn-primary mb-3" href="{{ route('nilai-tugas-tambah', $id_kelas) }}"
-                                    role="button">
-									<i class="ri-add-line align-middle me-1"></i>
-									<span style="vertical-align: middle">Tambah</span>
-								</a>
-                            @elseif ($route == 'nilai-uts-index-kelas')
-                                <a class="btn btn-primary mb-3" href="{{ route('nilai-uts-tambah', $id_kelas) }}"
-                                    role="button">
-									<i class="ri-add-line align-middle me-1"></i>
-									<span style="vertical-align: middle">Tambah</span>
-								</a>
-                            @elseif ($route == 'nilai-uas-index-kelas')
-                                <a class="btn btn-primary mb-3" href="{{ route('nilai-uas-tambah', $id_kelas) }}"
-                                    role="button">
-									<i class="ri-add-line align-middle me-1"></i>
-									<span style="vertical-align: middle">Tambah</span>
-								</a>
-                            @endif --}}
 
                             <div class="row">
                                 <div class="col-auto me-auto">
