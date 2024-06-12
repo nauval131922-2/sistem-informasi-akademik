@@ -1,22 +1,11 @@
-{{-- @extends('backend.main')
-
-@section('title')
-    Dashboard | Tambah {{ $title }}
-@endsection
-
-@section('content') --}}
-{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
-
 <?php
 $route = Route::currentRouteName();
 ?>
 
-{{-- <div class="page-content"> --}}
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-121">
 
-            {{-- <h4 class="card-title">Tambah {{ $title }}</h4> --}}
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
                 berikut untuk menambah {{ $title }}.</p>
             <form enctype="multipart/form-data" id="formTambahData" method="POST">
@@ -27,9 +16,6 @@ $route = Route::currentRouteName();
                         <input class="form-control" type="text" name="judul" id="judul"
                             placeholder="Masukkan judul {{ $title }}" value="{{ old('judul') }}" required>
                         <div class="mt-2">
-                            {{-- @error('judul')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text judul_error"></span>
                         </div>
                     </div>
@@ -51,9 +37,6 @@ $route = Route::currentRouteName();
                                 @endforeach
                             </select>
                             <div class="mt-2">
-                                {{-- @error('guru')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
                                 <span class="text-danger error-text guru_error"></span>
                             </div>
                         </div>
@@ -62,7 +45,6 @@ $route = Route::currentRouteName();
                     <input type="hidden" name="guru" value="{{ Auth::user()->id }}">
                 @endif
 
-                {{-- jika auth user admin/1 atau kepala madrasah/2 atau guru walikelas/3 maka tampikan form mapel, tetapi jika auth user guru/4 maka disable form mapel --}}
                 @if (Auth::user()->id_role == '1' || Auth::user()->id_role == '2' || Auth::user()->id_role == '3')
                     <div class="row mb-3">
                         <label for="mapel" class="col-md-2 col-form-label">Mata Pelajaran</label>
@@ -80,9 +62,6 @@ $route = Route::currentRouteName();
                                 @endforeach
                             </select>
                             <div class="mt-2">
-                                {{-- @error('mapel')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
                                 <span class="text-danger error-text mapel_error"></span>
                             </div>
                         </div>
@@ -93,11 +72,9 @@ $route = Route::currentRouteName();
                         <label for="mapell" class="col-md-2 col-form-label">Mata Pelajaran</label>
                         <div class="col-md-10">
                             <input class="form-control" type="text" name="mapell" id="mapell"
-                                placeholder="Masukkan mata pelajaran" value="{{ $semua_mapel->mata_pelajaran }}" required disabled>
+                                placeholder="Masukkan mata pelajaran" value="{{ $semua_mapel->mata_pelajaran }}"
+                                required disabled>
                             <div class="mt-2">
-                                {{-- @error('mapel')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
                                 <span class="text-danger error-text mapell_error"></span>
                             </div>
                         </div>
@@ -123,9 +100,6 @@ $route = Route::currentRouteName();
                             @endforeach
                         </select>
                         <div class="mt-2">
-                            {{-- @error('kelas')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text kelas_error"></span>
                         </div>
                     </div>
@@ -136,28 +110,7 @@ $route = Route::currentRouteName();
                 </p>
 
                 <?php
-                // $no = 1;
-                // $no2 = 1;
-                // $no3 = 1;
                 ?>
-                {{-- @foreach ($semua_siswa as $no => $siswa)
-                    <div class="row mb-3">
-                        <label for="nilai{{ $no + 1 }}"
-                            class="col-md-2 col-form-label">{{ $siswa->name }}</label>
-                        <input type="hidden" name="siswa{{ $no + 1 }}" value="{{ $siswa->id }}" required
-                            id="siswa{{ $no + 1 }}">
-                        <div class="col-md-10">
-                            <input class="form-control" type="number" name="nilai{{ $no + 1 }}"
-                                id="nilai{{ $no + 1 }}" required placeholder="Masukkan nilai siswa"
-                                value="{{ old('nilai' . $no + 1) }}">
-                            <div class="mt-2">
-                                @error('nilai')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                @endforeach --}}
 
                 <div id="daftar-siswa"></div>
 
@@ -171,7 +124,6 @@ $route = Route::currentRouteName();
                     <input type="hidden" name="tipe_nilai" value="UAS">
                 @endif
 
-                {{-- <input type="submit" value="Simpan" class="btn btn-info waves-effect waves-light"> --}}
                 <button type="submit" class="btn btn-info waves-effect waves-light">
                     <i class="ri-save-3-line align-middle me-1"></i>
                     <span style="vertical-align: middle">Simpan</span>
@@ -181,13 +133,6 @@ $route = Route::currentRouteName();
         </div>
     </div>
 </div> <!-- end col -->
-{{-- </div>
-</div>
-</div>
-
-
-
-@endsection --}}
 
 <script>
     $(document).ready(function() {
@@ -199,12 +144,7 @@ $route = Route::currentRouteName();
     });
 
     $('#kelass').change(function() {
-        // var id = $('#id').val();
-        // var judul = $('#judul').val();
-        // var guru = $('#guru').val();
-        // var mapel = $('#mapel').val();
         var kelas = $('#kelass').val();
-        // var tipe_nilaii = $('#tipe_nilai').val();
 
         if (kelas != '') {
             $.ajax({
@@ -213,7 +153,6 @@ $route = Route::currentRouteName();
                 dataType: 'json',
                 success: function(data) {
                     $('#judul-daftar-siswa').html('Daftar Siswa ' + data.kelas);
-                    var siswa_html = '';
                     var siswa_html = '';
                     $.each(data.siswa, function(index, siswa) {
                         siswa_html += '<div class="row mb-3">';
@@ -226,8 +165,10 @@ $route = Route::currentRouteName();
                         siswa_html +=
                             '<input class="form-control" type="number" name="nilai' + (
                                 index + 1) + '" id="nilai' + (index + 1) +
-                            '" required placeholder="Masukkan nilai siswa" value="' + (data
-                                .nilai ? data.nilai[index] : '') + '">';
+                            '" required placeholder="nilai siswa" value="' + (data.nilai ?
+                                data.nilai[index] : '') + '">';
+                        siswa_html +=
+                            '<div class="invalid-feedback" style"background-image: none;">Nilai tidak boleh lebih dari 100</div>';
                         siswa_html += '</div>'; // tambahkan tag penutup div
                         siswa_html += '</div>'; // tambahkan tag penutup div
                     });
@@ -240,6 +181,19 @@ $route = Route::currentRouteName();
             $('#daftar-siswa').html('');
         }
     });
+
+    $('#daftar-siswa').on('input', 'input[name^="nilai"]', function() {
+        var inputValue = parseInt($(this).val());
+        if (inputValue > 100) {
+            $(this).val(100);
+            $(this).addClass('is-invalid');
+            $(this).next('.invalid-feedback').text('Nilai tidak boleh lebih dari 100');
+        } else {
+            $(this).removeClass('is-invalid');
+            $(this).next('.invalid-feedback').text('');
+        }
+    });
+
 
 
     // insert data
