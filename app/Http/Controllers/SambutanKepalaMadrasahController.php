@@ -19,19 +19,22 @@ class SambutanKepalaMadrasahController extends Controller
         return view('backend.sambutan_kepala_madrasah.index', compact('sambutan', 'title'));
     }
 
-    public function update(Request $request, $id){
-        // $request->validate([
-        //     'judul' => 'required',
-        //     'isi' => 'required',
-        // ]);
-
-        // validator
+    /**
+     * Update the sambutan data.
+     *
+     * @param Request $request The HTTP request object.
+     * @param int $id The ID of the sambutan to update.
+     * @return \Illuminate\Http\JsonResponse The JSON response.
+     */
+    public function update(Request $request, $id)
+    {
+        // Validate request data
         $validator = Validator::make($request->all(), [
-            'judul' => 'required',
-            'isi' => 'required',
+            'judul' => 'required', // Sambutan title is required
+            'isi' => 'required', // Sambutan content is required
         ]);
 
-        // jika validator gagal
+        // If validation fails, return error response
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
@@ -39,54 +42,28 @@ class SambutanKepalaMadrasahController extends Controller
             ]);
         }
 
+        // Find the sambutan to update
         $sambutan = SambutanKepalaMadrasah::find($id);
-        $sambutan->judul = $request->judul;
-        $sambutan->isi = $request->isi;
-        $sambutan->excerpt = Str::limit(strip_tags($request->isi), 500);
 
-        // jika belum ada folder upload/sambutan, maka buat folder
-        if (!file_exists(public_path('/upload/sambutan'))) {
-            mkdir(public_path('/upload/sambutan'), 0777, true);
+        // Update sambutan data
+        $sambutan->judul = $request->judul; // Update title
+        $sambutan->isi = $request->isi; // Update content
+        $sambutan->excerpt = Str::limit(strip_tags($request->isi), 500); // Generate excerpt
+
+        // Process image upload if a file was uploaded
+        if ($request->hasFile('gambar')) {
+            $this->processImage($request, $sambutan); // Process image upload
+        }
+        // If no file was uploaded and a preview image exists, remove the image
+        elseif ($request->gambarPreview == null && $sambutan->gambar != null) {
+            $this->removeImage($sambutan);
+        }
+        // If a preview image exists and a file was not uploaded, rename the image
+        elseif ($request->gambarPreview != null && $sambutan->gambar != null) {
+            $this->renameImage($sambutan);
         }
 
-        if ($request->hasFile('gambar')) {
-
-            if ($sambutan->gambar) {
-                unlink($sambutan->gambar);
-            }
-
-            $judul_tanpa_spasi = str_replace(' ', '-', $request->judul);
-            $nama_file = $judul_tanpa_spasi.'-'.hexdec(uniqid()).'.'.$request->gambar->getClientOriginalExtension();
-            // Image::make($request->gambar)->save(public_path('/upload/sambutan/'.$nama_file));
-            Image::make($request->gambar)->resize(500, 500)->save(public_path('/upload/sambutan/'.$nama_file));
-
-            $sambutan->gambar = 'upload/sambutan/'.$nama_file;
-        } elseif ($request->gambarPreview == null && $sambutan->gambar != null) {
-            unlink($sambutan->gambar);
-
-            $sambutan->gambar = null;
-        } elseif ($request->gambarPreview != null && $sambutan->gambar != null) {
-            // get file extension
-            $file_ext = pathinfo($sambutan->gambar, PATHINFO_EXTENSION);
-
-            $judul_tanpa_spasi = str_replace(' ', '-', $request->judul);
-            $nama_file = $judul_tanpa_spasi.'-'.hexdec(uniqid()).'.'.$file_ext;
-            // rename file name
-            rename(public_path($sambutan->gambar), public_path('upload/sambutan/'.$nama_file));
-
-            $sambutan->gambar = 'upload/sambutan/'.$nama_file;
-        };
-
-        // $sambutan->save();
-
-        // $notification = array(
-        //     'message' => 'Sambutan Kepala Madrasah berhasil diubah!',
-        //     'alert-type' => 'success'
-        // );
-
-        // return redirect()->route('sambutan-kepala-madrasah-index')->with($notification);
-
-        // jika berhasil diubah
+        // Save the updated sambutan and return success or error response
         if ($sambutan->save()) {
             return response()->json([
                 'status' => 'success',
@@ -98,6 +75,48 @@ class SambutanKepalaMadrasahController extends Controller
                 'message' => 'Sambutan Kepala Madrasah gagal diubah!'
             ]);
         }
+    }
+
+    private function processImage($request, $sambutan)
+    {
+        $this->removeImage($sambutan);
+
+        $file_name = $this->generateFileName($request->judul, $request->gambar);
+        Image::make($request->gambar)->resize(500, 500)->save(public_path('/upload/sambutan/'.$file_name));
+
+        $sambutan->gambar = 'upload/sambutan/'.$file_name;
+    }
+
+    private function removeImage($sambutan)
+    {
+        if ($sambutan->gambar) {
+            unlink($sambutan->gambar);
+            $sambutan->gambar = null;
+        }
+    }
+
+    private function renameImage($sambutan)
+    {
+        // get file extension
+        $file_ext = pathinfo($sambutan->gambar, PATHINFO_EXTENSION);
+
+        $file_name = $this->generateFileName($sambutan->judul, null, $file_ext);
+        rename(public_path($sambutan->gambar), public_path('upload/sambutan/'.$file_name));
+
+        $sambutan->gambar = 'upload/sambutan/'.$file_name;
+    }
+
+    private function generateFileName($judul, $file, $file_ext = null)
+    {
+        $judul_tanpa_spasi = str_replace(' ', '-', $judul);
+        $file_name = $judul_tanpa_spasi.'-'.hexdec(uniqid());
+        if ($file_ext) {
+            $file_name .= '.'.$file_ext;
+        } elseif ($file) {
+            $file_name .= '.' . $file->getClientOriginalExtension();
+        }
+
+        return $file_name;
     }
 
     public function index_fe(){
