@@ -25,122 +25,51 @@ class NilaiController extends Controller
         return view('backend.nilai.index', compact('semua_nilai', 'title'));
     }
 
-    public function index_nilai_ulangan_harian($id)
-    {
-        // $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'Ulangan Harian')->get();
-
-        if (Auth::user()->id_role === 1 || Auth::user()->id_role === 2) {
-            $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'Ulangan Harian')->get();
-        } else if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
-            $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'Ulangan Harian')->where('id_guru_for_nilai', Auth::user()->id)->get();
-        } else if (Auth::user()->id_role === 5) {
-            $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'Ulangan Harian')->where('id_siswa_for_nilai', Auth::user()->id)->get();
-        }
-
-        $title = 'Data Nilai Ulangan Harian' . ' ' . Kelas::find($id)->nama;
-        $id_kelas = $id;
-
-        return view('backend.nilai.index', compact('semua_nilai', 'title', 'id_kelas'));
-    }
-
-    public function index_nilai_tugas($id)
-    {
-        // $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'tugas')->get();
-
-        if (Auth::user()->id_role === 1 || Auth::user()->id_role === 2) {
-            $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'Tugas')->get();
-        } else if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
-            $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'Tugas')->where('id_guru_for_nilai', Auth::user()->id)->get();
-        } else if (Auth::user()->id_role === 5) {
-            $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'Tugas')->where('id_siswa_for_nilai', Auth::user()->id)->get();
-        }
-
-        $title = 'Data Nilai Tugas' . ' ' . Kelas::find($id)->nama;
-        $id_kelas = $id;
-
-        return view('backend.nilai.index', compact('semua_nilai', 'title', 'id_kelas'));
-    }
-
-    public function index_nilai_uts($id)
-    {
-        // $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'UTS')->get();
-
-        if (Auth::user()->id_role === 1 || Auth::user()->id_role === 2) {
-            $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'UTS')->get();
-        } else if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
-            $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'UTS')->where('id_guru_for_nilai', Auth::user()->id)->get();
-        } else if (Auth::user()->id_role === 5) {
-            $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'UTS')->where('id_siswa_for_nilai', Auth::user()->id)->get();
-        }
-
-        $title = 'Data Nilai UTS' . ' ' . Kelas::find($id)->nama;
-        $id_kelas = $id;
-
-        return view('backend.nilai.index', compact('semua_nilai', 'title', 'id_kelas'));
-    }
-
-    public function index_nilai_uas($id)
-    {
-        // $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'UAS')->get();
-
-        if (Auth::user()->id_role === 1 || Auth::user()->id_role === 2) {
-            $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'UAS')->get();
-        } else if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
-            $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'UAS')->where('id_guru_for_nilai', Auth::user()->id)->get();
-        } else if (Auth::user()->id_role === 5) {
-            $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'UAS')->where('id_siswa_for_nilai', Auth::user()->id)->get();
-        }
-
-        $title = 'Data Nilai UAS' . ' ' . Kelas::find($id)->nama;
-        $id_kelas = $id;
-
-        return view('backend.nilai.index', compact('semua_nilai', 'title', 'id_kelas'));
-    }
-
-    public function index_nilai_rapor($id)
-    {
-        $semua_nilai = Nilai::where('id_kelas_for_nilai', $id)->where('tipe_nilai', 'Rapor')->get();
-        $title = 'Data Nilai Rapor' . ' ' . Kelas::find($id)->nama;
-        $id_kelas = $id;
-
-        return view('backend.nilai.index', compact('semua_nilai', 'title', 'id_kelas'));
-    }
-
-    // public function tambah_nilai_ulangan_harian($id){
+    /**
+     * This function is used to render the view for adding homework grades.
+     * It fetches all the students and teachers based on the user's role.
+     * It also fetches the list of subjects based on the user's role.
+     * It sets the title of the page to 'Data Nilai Ulangan Harian'.
+     * Finally, it renders the 'backend.nilai.tambah' view with the necessary data.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function tambah_nilai_ulangan_harian()
     {
-        // $semua_siswa = User::where('id_role', '5')->where('id_kelas', $id)->get();
-        // semua siswa
+        // Fetch all the students
         $semua_siswa = User::where('id_role', '5')->get();
 
-        // $semua_guru = User::where('id_role', '3')->orWhere('id_role', '4')->get();
-
+        // Check the user's role and fetch the corresponding teachers
         if (Auth::user()->id_role === 1) {
+            // If the user is an admin, fetch all the teachers and lecturers
             $semua_guru = User::where('id_role', '3')->orWhere('id_role', '4')->orWhere('id_role', '2')->get();
         } else if (Auth::user()->id_role === 2 || Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
+            // If the user is a teacher or lecturer, fetch the user's data
             $semua_guru = User::where('id', Auth::user()->id)->get();
         }
 
-        // $semua_mapel = MataPelajaran::all();
-
+        // Check the user's role and fetch the list of subjects
         if (Auth::user()->id_role === 1 || Auth::user()->id_role === 2) {
+            // If the user is an admin or teacher, fetch all the subjects
             $semua_mapel = MataPelajaran::all();
         } else if (Auth::user()->id_role === 4) {
-            // cari nama mapel di tabel MataPelajaran berdasarkan id_mapel di tabel user
+            // If the user is a lecturer, fetch the subject based on the user's subject ID
             $semua_mapel = MataPelajaran::where('id', Auth::user()->id_mapel)->first();
         } else if (Auth::user()->id_role === 3) {
-            // cari semua mapel yang tidak diajar oleh id_role 4
+            // If the user is a head of department, fetch all the subjects that the lecturers do not teach
             $semua_mapel = MataPelajaran::whereNotIn('id', User::where('id_role', '4')->pluck('id_mapel'))->get();
         }
 
+        // Set the types of grades
         $semua_tipe_nilai = ['Ulangan Harian', 'Tugas', 'UTS', 'UAS', 'Rapor'];
-        // $title = 'Data Nilai Ulangan Harian' . ' ' . Kelas::find($id)->nama;
+
+        // Set the title of the page
         $title = 'Data Nilai Ulangan Harian';
-        // $id_kelas = $id;
-        // $nama_kelas = Kelas::find($id)->nama;
-        // semua kelas
+
+        // Fetch all the classes
         $semua_kelas = Kelas::all();
 
+        // Render the 'backend.nilai.tambah' view with the necessary data
         return view('backend.nilai.tambah', compact('semua_siswa', 'semua_guru', 'semua_mapel', 'semua_tipe_nilai', 'title', 'semua_kelas'));
     }
 
@@ -258,17 +187,8 @@ class NilaiController extends Controller
 
     public function simpan(Request $request)
     {
+        $validator = $this->validateRequest($request);
 
-        // validator
-        $validator = Validator::make($request->all(), [
-            'judul' => 'required',
-            'guru' => 'required',
-            'mapel' => 'required',
-            'tipe_nilai' => 'required',
-            'kelas' => 'required',
-        ]);
-
-        // jika validor gagal
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
@@ -276,13 +196,10 @@ class NilaiController extends Controller
             ]);
         }
 
-        // semua siswa yang ada di kelas yang dipilih
-        $semua_siswa = User::where('id_role', '5')->where('id_kelas', $request->kelas)->count();
+        $numberOfStudents = $this->countStudents($request->kelas);
 
-        // jika nilai yang diinputkan lebih dari 100 maka akan muncul notifikasi error
-        for ($i = 0; $i < $semua_siswa; $i++) {
+        for ($i = 0; $i < $numberOfStudents; $i++) {
             if ($request->input('nilai' . $i + 1) > 100) {
-
                 return response()->json([
                     'status' => 'error2',
                     'message' => 'Nilai tidak boleh lebih dari 100'
@@ -290,82 +207,97 @@ class NilaiController extends Controller
             }
         }
 
-        // get tahun ajaran dengan status aktif
-        $tahun_ajaran = TahunAjaran::where('status', 'Aktif')->first();
+        $activeAcademicYear = $this->findActiveAcademicYear();
 
-        // jika tahun ajaran tidak ada yang aktif
-        if ($tahun_ajaran === null) {
+        if (!$activeAcademicYear) {
             return response()->json([
                 'status' => 'error2',
                 'message' => 'Tahun Ajaran Aktif Tidak Ditemukan'
             ]);
         }
 
-        // cek apakah judul nilai sudah ada
-        $cek_judul_nilai = Nilai::where('id_kelas_for_nilai', $request->kelas)->where('id_guru_for_nilai', $request->guru)->where('id_mapel_for_nilai', $request->mapel)->where('tipe_nilai', $request->tipe_nilai)->where('judul', $request->judul)->where('id_tahun_ajaran_for_nilai', $tahun_ajaran->id)->count();
+        $examTitleAlreadyExists = $this->checkExamTitleAlreadyExists($request, $activeAcademicYear);
 
-        if ($cek_judul_nilai > 0) {
-
+        if ($examTitleAlreadyExists) {
             return response()->json([
                 'status' => 'error3',
                 'message' => 'Data nilai sudah ada'
             ]);
-        } else {
-            // insert multiple data based on number of semua siswa
-            for ($i = 0; $i < $semua_siswa; $i++) {
-                if ($i < $semua_siswa) {
+        }
 
-                    if (Auth::user()->id_role === 1) {
-                        $guru = $request->guru;
-                    } else if (Auth::user()->id_role === 2 || Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
-                        $guru = Auth::user()->id;
-                    }
+        $this->saveExamScores($request, $numberOfStudents, $activeAcademicYear);
 
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data Nilai Berhasil Ditambahkan'
+        ]);
+    }
 
+    private function validateRequest(Request $request)
+    {
+        return Validator::make($request->all(), [
+            'judul' => 'required',
+            'guru' => 'required',
+            'mapel' => 'required',
+            'tipe_nilai' => 'required',
+            'kelas' => 'required',
+        ]);
+    }
 
-                    Nilai::create([
-                        'judul' => $request->judul,
-                        'id_kelas_for_nilai' => $request->kelas,
-                        'id_siswa_for_nilai' => $request->input('siswa' . $i + 1),
-                        'id_guru_for_nilai' => $guru,
-                        'id_mapel_for_nilai' => $request->mapel,
-                        'id_tahun_ajaran_for_nilai' => $tahun_ajaran->id,
-                        'tipe_nilai' => $request->tipe_nilai,
-                        'nilai' => $request->input('nilai' . $i + 1),
-                    ]);
-                }
-            }
+    private function countStudents($kelas)
+    {
+        return User::where('id_role', '5')
+            ->where('id_kelas', $kelas)
+            ->count();
+    }
 
-            // jika berhasil disimpan
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data Nilai Berhasil Ditambahkan'
+    private function findActiveAcademicYear()
+    {
+        return TahunAjaran::where('status', 'Aktif')
+            ->first();
+    }
+
+    private function checkExamTitleAlreadyExists($request, $activeAcademicYear)
+    {
+        return Nilai::where('id_kelas_for_nilai', $request->kelas)
+            ->where('id_guru_for_nilai', $request->guru)
+            ->where('id_mapel_for_nilai', $request->mapel)
+            ->where('tipe_nilai', $request->tipe_nilai)
+            ->where('judul', $request->judul)
+            ->where('id_tahun_ajaran_for_nilai', $activeAcademicYear->id)
+            ->count();
+    }
+
+    private function saveExamScores($request, $numberOfStudents, $activeAcademicYear)
+    {
+        $teacherId = $this->getTeacherId($request);
+
+        for ($i = 0; $i < $numberOfStudents; $i++) {
+            Nilai::create([
+                'judul' => $request->judul,
+                'id_kelas_for_nilai' => $request->kelas,
+                'id_siswa_for_nilai' => $request->input('siswa' . $i + 1),
+                'id_guru_for_nilai' => $teacherId,
+                'id_mapel_for_nilai' => $request->mapel,
+                'id_tahun_ajaran_for_nilai' => $activeAcademicYear->id,
+                'tipe_nilai' => $request->tipe_nilai,
+                'nilai' => $request->input('nilai' . $i + 1),
             ]);
+        }
+    }
+
+    private function getTeacherId($request)
+    {
+        if (Auth::user()->id_role === 1) {
+            return $request->guru;
+        } else {
+            return Auth::user()->id;
         }
     }
 
     public function hapus($id)
     {
         $nilai = Nilai::find($id);
-        // $id_kelas = $nilai->id_kelas_for_nilai;
-        // $nilai->delete();
-
-        // $notification = array(
-        //     'message' => 'Data Nilai Berhasil Dihapus',
-        //     'alert-type' => 'success'
-        // );
-
-        // if ($nilai->tipe_nilai == 'Ulangan Harian') {
-        //     return redirect()->route('nilai-ulangan-harian-index-kelas', $id_kelas)->with($notification);
-        // } elseif ($nilai->tipe_nilai == 'Tugas') {
-        //     return redirect()->route('nilai-tugas-index-kelas', $id_kelas)->with($notification);
-        // } elseif ($nilai->tipe_nilai == 'UTS') {
-        //     return redirect()->route('nilai-uts-index-kelas', $id_kelas)->with($notification);
-        // } elseif ($nilai->tipe_nilai == 'UAS') {
-        //     return redirect()->route('nilai-uas-index-kelas', $id_kelas)->with($notification);
-        // } elseif ($nilai->tipe_nilai == 'Rapor') {
-        //     return redirect()->route('nilai-rapor-index-kelas', $id_kelas)->with($notification);
-        // }
 
         // jika berhasil dihapus
         if ($nilai->delete()) {
@@ -407,32 +339,64 @@ class NilaiController extends Controller
         return view('backend.nilai.edit', compact('nilai', 'semua_siswa', 'semua_guru', 'semua_mapel', 'semua_tipe_nilai', 'title', 'id_kelas', 'judul', 'semua_kelas'));
     }
 
+    /**
+     * Update the data of a grade.
+     *
+     * @param Request $request The HTTP request object.
+     * @param int $id The ID of the grade to update.
+     * @return \Illuminate\Http\JsonResponse The JSON response containing the status and message.
+     */
     public function update(Request $request, $id)
     {
-
-        // validator
+        // Validate the request data
         $validator = Validator::make($request->all(), [
-            'judul' => 'required',
-            'guru' => 'required',
-            'mapel' => 'required',
-            'tipe_nilai' => 'required',
-            'kelas' => 'required',
+            'judul' => 'required', // Judul (title) is required
+            'guru' => 'required', // Guru (teacher) is required
+            'mapel' => 'required', // Mapel (subject) is required
+            'tipe_nilai' => 'required', // Tipe Nilai (grade type) is required
+            'kelas' => 'required', // Kelas (class) is required
         ]);
 
-        // jika validor gagal
+        // If validation fails, return an error response
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
-                'message' => $validator->errors()->toArray()
+                'message' => $validator->errors()
             ]);
         }
 
-        // count siswa dengan id_kelas = $id
-        $semua_siswa = User::where('id_role', '5')->where('id_kelas', $request->kelas)->count();
-        // jika nilai yang diinputkan lebih dari 100 maka akan muncul notifikasi error
-        for ($i = 0; $i < $semua_siswa; $i++) {
-            if ($request->input('nilai' . $i + 1) > 100) {
+        // Get the class name from the request
+        $className = $request->kelas;
 
+        // Get the count of all students in the class
+        $allStudentsCount = User::where('id_role', 5)
+            ->where('id_kelas', $className)
+            ->count();
+
+        // Create an array to store all student IDs
+        $allStudentIds = [];
+
+        // Loop through all students and add their IDs to the array
+        for ($i = 0; $i < $allStudentsCount; $i++) {
+            $allStudentIds[] = $request->input('id_nilai' . ($i + 1));
+        }
+
+        // Get the active year from the database
+        $activeYear = TahunAjaran::where('status', 'Aktif')->first();
+
+        // Get the number of students in the class
+        $numberOfStudents = $this->countStudents($request->kelas);
+
+        // Loop through all the students and check their grades
+        for ($i = 0; $i < $numberOfStudents; $i++) {
+
+            // Get the grade for the current student
+            $grade = $request->input('nilai' . ($i + 1));
+
+            // Check if the grade is greater than 100
+            if ($grade > 100) {
+
+                // If the grade is greater than 100, return an error response
                 return response()->json([
                     'status' => 'error2',
                     'message' => 'Nilai tidak boleh lebih dari 100'
@@ -440,61 +404,57 @@ class NilaiController extends Controller
             }
         }
 
-        // $cek_judul_nilai = Nilai::where('id_kelas_for_nilai', $request->kelas)->where('id_guru_for_nilai', $request->guru)->where('id_mapel_for_nilai', $request->mapel)->where('tipe_nilai', $request->tipe_nilai)->where('judul', $request->judul)->count();
+        // Check if a grade with the same title, class, teacher, subject, and type of grade already exists
+        $isTitleExists = Nilai::where('judul', $request->judul)
+            ->where('id_kelas_for_nilai', $className)
+            ->where('id_guru_for_nilai', $request->guru)
+            ->where('id_mapel_for_nilai', $request->mapel)
+            ->where('tipe_nilai', $request->tipe_nilai)
+            ->where('id_tahun_ajaran_for_nilai', $request->old_tahun_ajaran)
+            ->whereNotIn('id', $allStudentIds)
+            ->count();
 
-        // cek judul nilai looping sebanyak jumlah siswa
-        // $cek_judul_nilai = 0;
-        // for ($i = 0; $i < $semua_siswa; $i++) {
-            // $cek_judul_nilai = Nilai::where('id_kelas_for_nilai', $request->kelas)->where('id_guru_for_nilai', $request->guru)->where('id_mapel_for_nilai', $request->mapel)->where('tipe_nilai', $request->tipe_nilai)->where('judul', $request->judul)->where('id', '!=', $request->input('id_nilai' . $i + 1))->count();
-
-        // }
-
-        // cek judul nilai kecuali semua id_nilai yang sedang diupdate
-        $id_nilai = [];
-        for ($i = 0; $i < $semua_siswa; $i++) {
-            $id_nilai[] = $request->input('id_nilai' . $i + 1);
-        }
-
-        // get tahun ajaran dengan status aktif
-        $tahun_ajaran = TahunAjaran::where('status', 'Aktif')->first();
-
-        $cek_judul_nilai = Nilai::where('judul', $request->judul)->where('id_kelas_for_nilai', $request->kelas)->where('id_guru_for_nilai', $request->guru)->where('id_mapel_for_nilai', $request->mapel)->where('tipe_nilai', $request->tipe_nilai)->where('id_tahun_ajaran_for_nilai', $request->old_tahun_ajaran)->whereNotIn('id', $id_nilai)->count();
-
-        if ($cek_judul_nilai > 0) {
-
+        // If the title already exists, return an error response
+        if ($isTitleExists > 0) {
             return response()->json([
-                'status' => 'error3',
+                'status' => 'error',
                 'message' => 'Data nilai sudah ada'
             ]);
         } else {
+            // Delete all grades with the same title, class, teacher, subject, and type of grade
+            Nilai::where('judul', $request->old_judul)
+                ->where('id_kelas_for_nilai', $className)
+                ->where('id_guru_for_nilai', $request->old_guru)
+                ->where('id_mapel_for_nilai', $request->old_mapel)
+                ->where('tipe_nilai', $request->tipe_nilai)
+                ->where('id_tahun_ajaran_for_nilai', $request->old_tahun_ajaran)
+                ->delete();
 
-            // hapus semua data nilai dengan judul, id_kelas_for_nilai, id_guru_for_nilai, id_mapel_for_nilai, dan tipe_nilai yang sama dengan old data dari nilai yang akan diupdate
-            Nilai::where('judul', $request->old_judul)->where('id_kelas_for_nilai', $request->kelas)->where('id_guru_for_nilai', $request->old_guru)->where('id_mapel_for_nilai', $request->old_mapel)->where('tipe_nilai', $request->tipe_nilai)->where('id_tahun_ajaran_for_nilai', $request->old_tahun_ajaran)->delete();
+            // Loop through all students and create new grades for them
+            for ($i = 0; $i < $allStudentsCount; $i++) {
+                $studentId = $request->input('siswa' . ($i + 1));
 
-            // insert multiple data based on number of semua siswa
-            for ($i = 0; $i < $semua_siswa; $i++) {
-                if ($i < $semua_siswa) {
-
-                    if (Auth::user()->id_role === 1) {
-                        $guru = $request->guru;
-                    } else if (Auth::user()->id_role === 2 || Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
-                        $guru = Auth::user()->id;
-                    }
-
-                    Nilai::create([
-                        'judul' => $request->judul,
-                        'id_kelas_for_nilai' => $request->kelas,
-                        'id_siswa_for_nilai' => $request->input('siswa' . $i + 1),
-                        'id_guru_for_nilai' => $guru,
-                        'id_mapel_for_nilai' => $request->mapel,
-                        'id_tahun_ajaran_for_nilai' => $request->old_tahun_ajaran,
-                        'tipe_nilai' => $request->tipe_nilai,
-                        'nilai' => $request->input('nilai' . $i + 1),
-                    ]);
+                // Get the ID of the teacher based on the user's role
+                if ($request->user()->id_role === 2 || $request->user()->id_role === 3 || $request->user()->id_role === 4) {
+                    $guruId = $request->user()->id;
+                } elseif ($request->user()->id_role === 1) {
+                    $guruId = $request->guru;
                 }
+
+                // Create a new grade
+                Nilai::create([
+                    'judul' => $request->judul,
+                    'id_kelas_for_nilai' => $className,
+                    'id_siswa_for_nilai' => $studentId,
+                    'id_guru_for_nilai' => $guruId,
+                    'id_mapel_for_nilai' => $request->mapel,
+                    'id_tahun_ajaran_for_nilai' => $request->old_tahun_ajaran,
+                    'tipe_nilai' => $request->tipe_nilai,
+                    'nilai' => $request->input('nilai' . ($i + 1)),
+                ]);
             }
 
-            // jika berhasil disimpan
+            // Return a success response
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Nilai Berhasil Diubah'
