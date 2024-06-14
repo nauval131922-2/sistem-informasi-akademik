@@ -240,7 +240,7 @@ $route = Route::current()->getName();
                     <li>
                         <a href="{{ route('profil-sekolah-index') }}" class="waves-effect">
                             <i class="ri-file-list-line align-middle"></i>
-                            <span style="vertical-align: middle">Profil Sekolah</span>
+                            <span style="vertical-align: middle">Profil Madrasah</span>
                         </a>
                     </li>
                 @endcanany
