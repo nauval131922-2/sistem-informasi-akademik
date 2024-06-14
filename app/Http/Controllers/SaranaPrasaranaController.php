@@ -26,9 +26,6 @@ class SaranaPrasaranaController extends Controller
     }
 
     public function simpan(Request $request){
-        // $this->validate($request, [
-        //     'nama' => 'required',
-        // ]);
 
         // validator
         $validator = Validator::make($request->all(), [
@@ -60,23 +57,6 @@ class SaranaPrasaranaController extends Controller
             $sarana_prasarana->gambar = 'upload/sarana_prasarana/'.$nama_file;
         }
 
-        // jika lolos validasi
-        // if($sarana_prasarana->save()){
-        //     $notification = array(
-        //         'message' => 'Data Sarana Prasarana Berhasil Ditambahkan',
-        //         'alert-type' => 'success'
-        //     );
-
-        //     return redirect()->route('sarana-prasarana-index')->with($notification);
-        // }else{
-        //     $notification = array(
-        //         'message' => 'Data Sarana Prasarana Gagal Ditambahkan',
-        //         'alert-type' => 'error'
-        //     );
-
-        //     return redirect()->back()->withinput()->with($notification);
-        // }
-
         // jika berhasil simpan
         if ($sarana_prasarana->save()) {
             return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan.']);
@@ -93,9 +73,6 @@ class SaranaPrasaranaController extends Controller
     }
 
     public function update(Request $request, $id){
-        // $this->validate($request, [
-        //     'nama' => 'required',
-        // ]);
 
         // validator
         $validator = Validator::make($request->all(), [
@@ -139,23 +116,6 @@ class SaranaPrasaranaController extends Controller
 
             $sarana_prasarana->gambar = 'upload/sarana_prasarana/'.$nama_file;
         }
-
-        // jika lolos validasi
-        // if($sarana_prasarana->save()){
-        //     $notification = array(
-        //         'message' => 'Data Sarana Prasarana Berhasil Diubah',
-        //         'alert-type' => 'success'
-        //     );
-
-        //     return redirect()->route('sarana-prasarana-index')->with($notification);
-        // }else{
-        //     $notification = array(
-        //         'message' => 'Data Sarana Prasarana Gagal Diubah',
-        //         'alert-type' => 'error'
-        //     );
-
-        //     return redirect()->back()->withinput()->with($notification);
-        // }
 
         // jika berhasil update
         if ($sarana_prasarana->save()) {
