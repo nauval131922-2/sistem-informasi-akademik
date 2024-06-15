@@ -24,9 +24,6 @@ class BlogCategoryController extends Controller
     }
 
     public function simpan(Request $request){
-        // $this->validate($request, [
-        //     'blog_category' => 'required|unique:blog_categories,blog_category',
-        // ]);
 
         // validator
         $validator = Validator::make($request->all(), [
@@ -43,14 +40,6 @@ class BlogCategoryController extends Controller
 
         $blog_category = new BlogCategory;
         $blog_category->blog_category = $request->blog_category;
-        // $blog_category->save();
-
-        // $notification = array(
-        //     'message' => 'Blog Category berhasil ditambahkan',
-        //     'alert-type' => 'success'
-        // );
-
-        // return redirect()->route('blog-category-index')->with($notification);
 
         // jika berhasil disimpan
         if ($blog_category->save()) {
@@ -69,9 +58,6 @@ class BlogCategoryController extends Controller
     }
 
     public function update(Request $request, $id){
-        // $this->validate($request, [
-        //     'blog_category' => 'required|unique:blog_categories,blog_category,'.$id,
-        // ]);
 
         // validator
         $validator = Validator::make($request->all(), [
@@ -88,14 +74,6 @@ class BlogCategoryController extends Controller
 
         $blog_category = BlogCategory::find($id);
         $blog_category->blog_category = $request->blog_category;
-        // $blog_category->save();
-
-        // $notification = array(
-        //     'message' => 'Blog Category berhasil diubah',
-        //     'alert-type' => 'success'
-        // );
-
-        // return redirect()->route('blog-category-index')->with($notification);
 
         // jika berhasil diubah
         if ($blog_category->save()) {
