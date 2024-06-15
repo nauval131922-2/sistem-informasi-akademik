@@ -35,47 +35,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @foreach ($semua_kontak as $no => $kontak)
-                                        <tr>
-                                            <td>{{ $no + 1 }}</td>
-                                            <td>{{ $kontak->name }}</td>
-                                            <td>{{ $kontak->email }}</td>
-                                            <td>{{ $kontak->subject }}</td>
-                                            <td>{!! $kontak->message !!}</td>
-                                            <td>
-                                                @if ($kontak->status == 'Belum dibalas')
-                                                    <span class="btn btn-danger btn-sm">
-                                                        <i class="ri-close-line align-middle me-1"></i>
-                                                        <span style="vertical-align: middle">{{ $kontak->status }}</span>
-                                                    </span>
-                                                @else
-                                                    <span class="btn btn-success btn-sm">
-                                                        <i class="ri-check-line align-middle me-1"></i>
-                                                        <span style="vertical-align: middle">{{ $kontak->status }}</span>
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            @can('admin')
-                                                <td>
-                                                    <a href="{{ route('kontak-balas', $kontak->id) }}"
-                                                        class="btn btn-info btn-sm" target="_blank">
-                                                        <i class="ri-mail-send-line align-middle me-1"></i>
-                                                        <span style="vertical-align: middle">Balas via Email</span>
-                                                    </a>
-                                                    <a href="{{ route('kontak-ganti-status', $kontak->id) }}"
-                                                        class="btn btn-success btn-sm">
-                                                        <i class="ri-check-line align-middle me-1"></i>
-                                                        <span style="vertical-align: middle">Ganti Status</span>
-                                                    </a>
-                                                    <a href="{{ route('kontak-hapus', $kontak->id) }}"
-                                                        class="btn btn-danger btn-sm" id="delete">
-                                                        <i class="ri-delete-bin-2-line align-middle me-1"></i>
-                                                        <span style="vertical-align: middle">Hapus</span>
-                                                    </a>
-                                                </td>
-                                            @endcan
-                                        </tr>
-                                    @endforeach --}}
                                 </tbody>
                             </table>
                         </div>
@@ -99,8 +58,6 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    // $('#datatable').DataTable().destroy();
-                    // $('#datatable tbody').empty();
                     var table = $('#datatable').DataTable();
 
                     if ($.fn.DataTable.isDataTable('#datatable')) {
@@ -112,16 +69,11 @@
                         var gantiStatus = '';
                         var hapus = '';
 
-                        // Route::get('/kontak/balas/{id}', 'balas')->name('kontak-balas');
-                        balasViaEmail =
+                        balasViaEmail = (value.status == 'Belum dibalas') ?
                             '<a href="/kontak/balas/' + value.id +
-                            '" class="btn btn-info btn-sm" target="_blank" style="margin-right: 5px;"><i class="ri-mail-send-line align-middle me-1"></i><span style="vertical-align: middle">Balas via Email</span></a>';
+                            '" class="btn btn-info btn-sm" target="_blank" style="margin-right: 5px;"><i class="ri-mail-send-line align-middle me-1"></i><span style="vertical-align: middle">Balas via Email</span></a>' :
+                            '';
 
-                        // gantiStatus =
-                        //     '<button class="btn btn-success btn-sm" id="btnGantiStatus" style="margin-right: 5px;" onclick="gantiStatus(' +
-                        //     value.id +
-                        //     ')"><i class="ri-check-line align-middle me-1"></i><span style="vertical-align: middle">Ganti Status</span></button>';
-                        // jika value.status == 'Belum dibalas'
                         if (value.status == 'Belum dibalas') {
                             gantiStatus =
                                 '<button class="btn btn-success btn-sm" id="btnGantiStatus" style="margin-right: 5px;" onclick="gantiStatus(' +
@@ -142,25 +94,6 @@
 
 
                         table.row.add([
-                            // '<tr>' +
-                            // '<td>' + (key + 1) + '</td>' +
-                            // '<td>' + value.name + '</td>' +
-                            // '<td>' + value.email + '</td>' +
-                            // // '<td>' + value.subject + '</td>' +
-                            // '<td>' + decodeURIComponent(value.subject).substring(0, 25) +
-                            // '...</td>' +
-                            // // ambil 100 karakter dari value.message
-                            // '<td>' + decodeURIComponent(value.message).substring(0, 25) +
-                            // '...</td>' +
-                            // '<td>' + (value.status == 'Belum dibalas' ?
-                            //     '<span class="btn btn-danger btn-sm"><i class="ri-close-line align-middle me-1"></i><span style="vertical-align: middle">' +
-                            //     value.status + '</span></span>' :
-                            //     '<span class="btn btn-success btn-sm"><i class="ri-check-line align-middle me-1"></i><span style="vertical-align: middle">' +
-                            //     value.status + '</span></span>') + '</td>' +
-                            // @can('admin')
-                            //     '<td>' + balasViaEmail + gantiStatus + deleteButton + '</td>' +
-                            // @endcan
-                            // '</tr>'
                             (key + 1),
                             value.name,
                             value.email,
@@ -184,7 +117,6 @@
             });
         }
 
-        // Route::get('/kontak/ganti/status/{id}', 'ganti_status')->name('kontak-ganti-status');
         function gantiStatus(id) {
             $.ajax({
                 url: '/kontak/ganti/status/' + id,
@@ -218,8 +150,6 @@
             });
         }
 
-        // make delete function
-        // Route::get('/kontak/hapus/{id}', 'hapus')->name('kontak-hapus');
         function deleteData(id) {
             if (confirm('Apakah anda yakin ingin menghapus data ini?')) {
 
