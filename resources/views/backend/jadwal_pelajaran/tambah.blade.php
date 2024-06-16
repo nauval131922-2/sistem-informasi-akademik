@@ -1,69 +1,24 @@
-{{-- @extends('backend.main')
-
-@section('title')
-    Dashboard | Tambah {{ $title }}
-@endsection
-
-@section('content')
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
 
 <?php
 $route = Route::current()->getName();
 ?>
 
-{{-- <div class="page-content"> --}}
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            {{-- <div class="card">
-                        <div class="card-body"> --}}
-
-            {{-- @if ($route == 'jadwal-pelajaran-tambah')
-                                <a href="{{ route('jadwal-pelajaran-index', $id_kelas) }}" class="btn btn-light mb-3"
-                                    style="
-                        /* taruh di samping kanan */
-                        float: right;
-                        /* background-color lebih muda lagi */
-                        /* background-color: rgb(37,43,59); */
-                        border-color: rgb(37,43,59);
-                        ">
-                                    <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                    <span style="vertical-align: middle">Back to List</span>
-                                </a>
-                            @elseif ($route == 'jadwal-ekstra-tambah')
-                                <a href="{{ route('jadwal-ekstra-index', $id_kelas) }}" class="btn btn-light mb-3"
-                                    style="
-                        /* taruh di samping kanan */
-                        float: right;
-                        /* background-color lebih muda lagi */
-                        /* background-color: rgb(37,43,59); */
-                        border-color: rgb(37,43,59);
-                        ">
-                                    <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                    <span style="vertical-align: middle">Back to List</span>
-                                </a>
-                            @endif --}}
 
             @if ($route == 'jadwal-pelajaran-tambah')
-                {{-- <h4 class="card-title">Tambah {{ $title }}</h4> --}}
                 <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
                     berikut untuk menambah {{ $title }}.</p>
             @endif
             @if ($route == 'jadwal-ekstra-tambah')
-                {{-- <h4 class="card-title">Tambah {{ $title }}</h4> --}}
                 <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
                     berikut untuk menambah {{ $title }}.</p>
             @endif
 
-            {{-- @if ($route == 'jadwal-pelajaran-tambah')
-                <form action="{{ route('jadwal-pelajaran-simpan', $id_kelas) }}" method="POST">
-                @elseif ($route == 'jadwal-ekstra-tambah')
-                    <form action="{{ route('jadwal-ekstra-simpan', $id_kelas) }}" method="POST">
-            @endif --}}
             <form enctype="multipart/form-data" id="formTambahData" method="POST">
                 @csrf
 
-                {{-- kelas --}}
                 <div class="row mb-3">
                     <label for="kelas" class="col-sm-2 col-form-label">Kelas</label>
                     <div class="col-sm-10">
@@ -78,9 +33,6 @@ $route = Route::current()->getName();
                             @endforeach
                         </select>
                         <div class="mt-2">
-                            {{-- @error('kelas')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text kelas_error"></span>
                         </div>
                     </div>
@@ -100,9 +52,6 @@ $route = Route::current()->getName();
                             @endforeach
                         </select>
                         <div class="mt-2">
-                            {{-- @error('hari')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text hari_error"></span>
                         </div>
                     </div>
@@ -121,9 +70,6 @@ $route = Route::current()->getName();
                             @endforeach
                         </select>
                         <div class="mt-2">
-                            {{-- @error('guru')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text guru_error"></span>
                         </div>
                     </div>
@@ -146,9 +92,6 @@ $route = Route::current()->getName();
                                 @endforeach
                             </select>
                             <div class="mt-2">
-                                {{-- @error('mapel')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
                                 <span class="text-danger error-text mapel_error"></span>
                             </div>
                         </div>
@@ -171,9 +114,6 @@ $route = Route::current()->getName();
                                 @endforeach
                             </select>
                             <div class="mt-2">
-                                {{-- @error('ekstra')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
                                 <span class="text-danger error-text ekstra_error"></span>
                             </div>
                         </div>
@@ -196,15 +136,11 @@ $route = Route::current()->getName();
                             @endforeach
                         </select>
                         <div class="mt-2">
-                            {{-- @error('jam_ke')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text jam_ke_error"></span>
                         </div>
                     </div>
                 </div>
 
-                {{-- <input type="submit" value="Simpan" class="btn btn-info waves-effect waves-light"> --}}
                 <button type="submit" class="btn btn-info waves-effect waves-light">
                     <i class="ri-save-3-line align-middle me-1"></i>
                     <span style="vertical-align: middle">Simpan</span>
@@ -214,11 +150,6 @@ $route = Route::current()->getName();
         </div>
     </div>
 </div> <!-- end col -->
-{{-- </div>
-</div>
-</div>
-
-@endsection --}}
 
 <script>
     $(document).ready(function() {
