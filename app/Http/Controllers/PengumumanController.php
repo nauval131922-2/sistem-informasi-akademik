@@ -54,77 +54,85 @@ class PengumumanController extends Controller
         return view('backend.pengumuman_for_siswa.index', compact('pengumuman', 'title'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request, $id){
-        // $request->validate([
-        //     'judul' => 'required',
-        //     'isi' => 'required',
-        // ]);
-
-        // validator
+        // Start of validation
+        // Validate the request input
         $validator = Validator::make($request->all(), [
             'judul' => 'required',
             'isi' => 'required',
         ]);
 
-        // jika validator gagal
+        // If validation fails, return error response
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'message' => $validator->errors()->toArray()
             ]);
         }
+        // End of validation
 
+        // Start of updating the model
         $pengumuman = Pengumuman::find($id);
         $pengumuman->judul = $request->judul;
         $pengumuman->isi = $request->isi;
 
-        // jika belum ada folder upload/pengumuman, maka buat folder tersebut
+        // Create the 'upload/pengumuman' directory if it doesn't exist
         if (!file_exists('upload/pengumuman')) {
             mkdir('upload/pengumuman', 0777, true);
         }
 
+        // Check if there is a file submitted in the request
         if ($request->hasFile('gambar')) {
 
+            // If there is already an image uploaded, delete it
             if ($pengumuman->gambar) {
                 unlink($pengumuman->gambar);
             }
 
+            // Generate a unique filename for the uploaded image
             $judul_tanpa_spasi = str_replace(' ', '-', $request->judul);
             $nama_file = $judul_tanpa_spasi.'-'.hexdec(uniqid()).'.'.$request->gambar->getClientOriginalExtension();
+
+            // Save the uploaded image to the 'upload/pengumuman' directory
             Image::make($request->gambar)->save(public_path('/upload/pengumuman/'.$nama_file));
 
+            // Update the model with the new image path
             $pengumuman->gambar = 'upload/pengumuman/'.$nama_file;
         } elseif ($request->gambarPreview == null && $pengumuman->gambar != null) {
+            // If there is no file submitted and there is already an image, delete it
             unlink($pengumuman->gambar);
-
             $pengumuman->gambar = null;
         } elseif($request->gambarPreview != null && $pengumuman->gambar != null){
-            // get $pengumuman->gambar file extension
+            // Get the file extension of the existing image
             $file_ext = pathinfo($pengumuman->gambar, PATHINFO_EXTENSION);
 
+            // Generate a unique filename for the existing image
             $judul_tanpa_spasi = str_replace(' ', '-', $request->judul);
             $nama_file = $judul_tanpa_spasi.'-'.hexdec(uniqid()).'.'.$file_ext;
-            // rename file name
+
+            // Rename the existing image file
             rename(public_path($pengumuman->gambar), public_path('/upload/pengumuman/'.$nama_file));
 
+            // Update the model with the new image path
             $pengumuman->gambar = 'upload/pengumuman/'.$nama_file;
         }
 
-        // $pengumuman->save();
-
-        // $notification = array(
-        //     'message' => 'Pengumuman berhasil diubah!',
-        //     'alert-type' => 'success'
-        // );
-
-        // return redirect()->route('dashboard')->with($notification);
-
-        // jika berhasil diubah
+        // Save the model changes
         if ($pengumuman->save()) {
+            // If the model is successfully saved, return success response
             return response()->json(['status' => 'success', 'message' => 'Data berhasil diubah.']);
         } else {
+            // If the model fails to save, return error response
             return response()->json(['status' => 'error2', 'message' => 'Gagal mengubah data.']);
         }
+        // End of updating the model
     }
 
     public function update_pengumuman_for_siswa(Request $request, $id){
