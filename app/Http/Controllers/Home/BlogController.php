@@ -45,21 +45,30 @@ class BlogController extends Controller
         return view('backend.blog.tambah', compact('title', 'blog_categories'));
     }
 
+    /**
+     * Store a new blog post in the database.
+     *
+     * This function handles the logic for storing a new blog post in the database.
+     * It first validates the request data using the Laravel Validator class.
+     * If the validation fails, it returns a JSON response with an error status and the validation errors.
+     * If the validation passes, it creates a new Blog model instance and populates its properties with the request data.
+     * It also generates a unique filename for the blog image and saves it to the 'upload/blog/' directory.
+     * Finally, it saves the blog post to the database and returns a JSON response with a success status and a success message.
+     *
+     * @param Request $request The HTTP request object containing the blog post data.
+     * @param int $blog_category_id The ID of the blog category for the new blog post.
+     * @return \Illuminate\Http\JsonResponse A JSON response indicating the success or failure of the blog post creation.
+     */
     public function simpan(Request $request, $blog_category_id)
     {
-        // $request->validate([
-        //     'judul' => 'required',
-        //     'isi' => 'required',
-        // ]);
-
-        // validator
+        // Validate the request data
         $validator = Validator::make($request->all(), [
-            'kategori' => 'required',
-            'judul' => 'required|unique:blogs,blog_title',
-            'isi' => 'required',
+            'kategori' => 'required', // Blog category is required
+            'judul' => 'required|unique:blogs,blog_title', // Blog title must be unique
+            'isi' => 'required', // Blog content is required
         ]);
 
-        // jika validasi gagal
+        // If validation fails, return a JSON response with the validation errors
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
@@ -67,36 +76,24 @@ class BlogController extends Controller
             ]);
         }
 
+        // Create a new Blog model instance and populate its properties with the request data
         $blog = new Blog;
-        $blog->blog_title = $request->judul;
-        $blog->blog_description = $request->isi;
-        $blog->excerpt = Str::limit(strip_tags($request->isi), 200);
-        // $blog->blog_category_id = $blog_category_id;
-        $blog->blog_category_id = $request->kategori;
-        $blog->id_user_for_blog = auth()->user()->id;
+        $blog->blog_title = $request->judul; // Blog title
+        $blog->blog_description = $request->isi; // Blog content
+        $blog->excerpt = Str::limit(strip_tags($request->isi), 200); // Blog excerpt (first 200 characters)
+        $blog->blog_category_id = $request->kategori; // Blog category ID
+        $blog->id_user_for_blog = auth()->user()->id; // User ID of the blog author
 
+        // If a blog image is uploaded, generate a unique filename and save it to the 'upload/blog/' directory
         if ($request->hasFile('gambar')) {
+            $judul_tanpa_spasi = str_replace(' ', '-', $request->judul); // Remove spaces from the blog title
+            $nama_file = $judul_tanpa_spasi . '-' . hexdec(uniqid()) . '.' . $request->gambar->getClientOriginalExtension(); // Generate a unique filename
+            Image::make($request->gambar)->save('upload/blog/' . $nama_file); // Save the blog image to the 'upload/blog/' directory
 
-            // $nama_file = hexdec(uniqid()).'.'.$request->gambar->getClientOriginalExtension();
-            // nama file gambar sama dengan judul blog
-            $judul_tanpa_spasi = str_replace(' ', '-', $request->judul);
-            $nama_file = $judul_tanpa_spasi . '-' . hexdec(uniqid()) . '.' . $request->gambar->getClientOriginalExtension();
-            // Image::make($request->gambar)->resize(1920, 1088)->save('upload/blog/'.$nama_file);
-            Image::make($request->gambar)->save('upload/blog/' . $nama_file);
+            $blog->blog_image = 'upload/blog/' . $nama_file; // Set the blog image path
+        }
 
-            $blog->blog_image = 'upload/blog/' . $nama_file;
-        };
-
-        // $blog->save();
-
-        // $notification = array(
-        //     'message' => 'Blog Berhasil Ditambahkan!',
-        //     'alert-type' => 'success',
-        // );
-
-        // return redirect()->route('blog-index', $id)->with($notification);
-
-        // jike berhasil disimpan
+        // Save the blog post to the database and return a JSON response indicating the success or failure of the blog post creation
         if ($blog->save()) {
             return response()->json([
                 'status' => 'success',
@@ -242,21 +239,30 @@ class BlogController extends Controller
         }
     }
 
+    /**
+     * Update a blog post in the database.
+     *
+     * This function handles the logic for updating a blog post in the database.
+     * It first validates the request data using the Laravel Validator class.
+     * If the validation fails, it returns a JSON response with an error status and the validation errors.
+     * If the validation passes, it updates the blog post in the database with the new data.
+     * It also handles the logic for updating the blog image if a new image is uploaded.
+     * Finally, it returns a JSON response indicating the success or failure of the update.
+     *
+     * @param Request $request The HTTP request object containing the updated blog post data.
+     * @param int $id The ID of the blog post to be updated.
+     * @return \Illuminate\Http\JsonResponse A JSON response indicating the success or failure of the blog post update.
+     */
     public function update(Request $request, $id)
     {
-        // $request->validate([
-        //     'judul' => 'required',
-        //     'isi' => 'required',
-        // ]);
-
-        // validator
+        // Validate the request data
         $validator = Validator::make($request->all(), [
-            'kategori' => 'required',
-            'judul' => 'required|unique:blogs,blog_title,' . $id,
-            'isi' => 'required',
+            'kategori' => 'required', // Blog category is required
+            'judul' => 'required|unique:blogs,blog_title,' . $id, // Blog title must be unique
+            'isi' => 'required', // Blog content is required
         ]);
 
-        // jika validasi gagal
+        // If validation fails, return a JSON response with the validation errors
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
@@ -264,50 +270,52 @@ class BlogController extends Controller
             ]);
         }
 
+        // Find the blog post to be updated
         $blog = Blog::findOrFail($id);
-        $blog->blog_title = $request->judul;
-        $blog->blog_description = $request->isi;
-        $blog->blog_category_id = $request->kategori;
-        $blog->id_user_for_blog = auth()->user()->id;
-        $blog->excerpt = Str::limit(strip_tags($request->isi), 200);
 
+        // Update the blog post with the new data
+        $blog->blog_title = $request->judul; // Blog title
+        $blog->blog_description = $request->isi; // Blog content
+        $blog->blog_category_id = $request->kategori; // Blog category ID
+        $blog->id_user_for_blog = auth()->user()->id; // User ID of the blog author
+        $blog->excerpt = Str::limit(strip_tags($request->isi), 200); // Blog excerpt (first 200 characters)
+
+        // If a new image is uploaded, handle the logic for updating the blog image
         if ($request->hasFile('gambar')) {
 
+            // If the blog already has an image, delete it
             if ($blog->blog_image) {
                 unlink($blog->blog_image);
             }
 
+            // Generate a unique filename for the new blog image
             $judul_tanpa_spasi = str_replace(' ', '-', $request->judul);
             $nama_file = $judul_tanpa_spasi . '-' . hexdec(uniqid()) . '.' . $request->gambar->getClientOriginalExtension();
+
+            // Save the new blog image to the 'upload/blog/' directory
             Image::make($request->gambar)->save('upload/blog/' . $nama_file);
 
+            // Update the blog image path in the blog post
             $blog->blog_image = 'upload/blog/' . $nama_file;
         } elseif ($request->gambarPreview == null && $blog->blog_image != null) {
+            // If no new image is uploaded and the blog already has an image, delete the image
             unlink($blog->blog_image);
-
             $blog->blog_image = null;
         } elseif ($request->gambarPreview != null && $blog->blog_image != null) {
-            // get file extension
+            // If no new image is uploaded but the blog already has an image,
+            // get the file extension of the existing image and generate a new filename
             $file_ext = pathinfo($blog->blog_image, PATHINFO_EXTENSION);
-
             $judul_tanpa_spasi = str_replace(' ', '-', $request->judul);
             $nama_file = $judul_tanpa_spasi . '-' . hexdec(uniqid()) . '.' . $file_ext;
-            // rename file name
+
+            // Rename the existing image file with the new filename
             rename(public_path($blog->blog_image), public_path('upload/blog/' . $nama_file));
 
+            // Update the blog image path in the blog post with the new filename
             $blog->blog_image = 'upload/blog/' . $nama_file;
         }
 
-        // $blog->save();
-
-        // $notification = array(
-        //     'message' => 'Blog Berhasil Diubah!',
-        //     'alert-type' => 'success',
-        // );
-
-        // return redirect()->route('blog-index', $blog->blog_category_id)->with($notification);
-
-        // jika berhasil update
+        // If the blog post is successfully updated
         if ($blog->save()) {
             return response()->json([
                 'status' => 'success',
