@@ -84,35 +84,66 @@ $route = Route::currentRouteName();
                 @endif
 
                 {{-- kelas --}}
-                <div class="row mb-3">
-                    <label for="kelass" class="col-md-2 col-form-label">Kelas</label>
-                    <div class="col-md-10">
-                        <select class="form-select" id="kelass" name="kelas" required>
-                            <option value="">Pilih Kelas</option>
-                            @foreach ($semua_kelas as $kelas)
-                                @if (old('kelas') == $kelas->id)
-                                    <option value="{{ $kelas->id }}" selected>
-                                        {{ $kelas->nama }}</option>
-                                @else
-                                    <option value="{{ $kelas->id }}">{{ $kelas->nama }}
-                                    </option>
-                                @endif
-                            @endforeach
-                        </select>
-                        <div class="mt-2">
-                            <span class="text-danger error-text kelas_error"></span>
+                {{-- jika auth user id role == 3 --}}
+                @if (Auth::user()->id_role == '3')
+                    <input type="hidden" name="kelas" value="{{ Auth::user()->kelas->id }}">
+                @else
+                    <div class="row mb-3">
+                        <label for="kelass" class="col-md-2 col-form-label">Kelas</label>
+                        <div class="col-md-10">
+                            <select class="form-select" id="kelass" name="kelas" required>
+                                <option value="">Pilih Kelas</option>
+                                @foreach ($semua_kelas as $kelas)
+                                    @if (old('kelas') == $kelas->id)
+                                        <option value="{{ $kelas->id }}" selected>
+                                            {{ $kelas->nama }}</option>
+                                    @else
+                                        <option value="{{ $kelas->id }}">{{ $kelas->nama }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <div class="mt-2">
+                                <span class="text-danger error-text kelas_error"></span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)" id="judul-daftar-siswa">
-                    Daftar Siswa
-                </p>
+                @endif
 
-                <?php
-                ?>
 
-                <div id="daftar-siswa"></div>
+
+
+                @if (Auth::user()->id_role == '3')
+                    <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)"
+                        id="judul-daftar-siswa">
+                        Daftar Siswa {{ Auth::user()->kelas->nama }}
+                    </p>
+
+                    <div id="daftar-siswa">
+                        @foreach ($semua_siswa as $index => $siswa)
+                            <div class="row mb-3">
+                                <label for="nilai{{ $index + 1 }}"
+                                    class="col-md-2 col-form-label">{{ $siswa->name }}</label>
+                                <input type="hidden" name="siswa{{ $index + 1 }}" value="{{ $siswa->id }}"
+                                    required id="siswa{{ $index + 1 }}">
+                                <div class="col-md-10">
+                                    <input class="form-control" type="number" name="nilai{{ $index + 1 }}"
+                                        id="nilai{{ $index + 1 }}" required placeholder="nilai siswa"
+                                        value="{{ old('nilai.' . $index) ?? '' }}">
+                                    <div class="invalid-feedback" style="background-image: none;">Nilai tidak boleh
+                                        lebih dari 100</div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)"
+                        id="judul-daftar-siswa">
+                        Daftar Siswa
+                    </p>
+                    <div id="daftar-siswa"></div>
+                @endif
 
                 @if ($route == 'nilai-ulangan-harian-tambah')
                     <input type="hidden" name="tipe_nilai" value="Ulangan Harian">
@@ -143,44 +174,50 @@ $route = Route::currentRouteName();
         });
     });
 
-    $('#kelass').change(function() {
-        var kelas = $('#kelass').val();
+    @if (auth()->user()->id_role != '3')
+        $('#kelass').change(function() {
+            var kelas = $('#kelass').val();
 
-        if (kelas != '') {
-            $.ajax({
-                url: '/get-data-siswa?kelas=' + kelas,
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    $('#judul-daftar-siswa').html('Daftar Siswa ' + data.kelas);
-                    var siswa_html = '';
-                    $.each(data.siswa, function(index, siswa) {
-                        siswa_html += '<div class="row mb-3">';
-                        siswa_html += '<label for="nilai' + (index + 1) +
-                            '" class="col-md-2 col-form-label">' + siswa.name + '</label>';
-                        siswa_html += '<input type="hidden" name="siswa' + (index + 1) +
-                            '" value="' + siswa.id + '" required id="siswa' + (index + 1) +
-                            '">';
-                        siswa_html += '<div class="col-md-10">';
-                        siswa_html +=
-                            '<input class="form-control" type="number" name="nilai' + (
-                                index + 1) + '" id="nilai' + (index + 1) +
-                            '" required placeholder="nilai siswa" value="' + (data.nilai ?
-                                data.nilai[index] : '') + '">';
-                        siswa_html +=
-                            '<div class="invalid-feedback" style"background-image: none;">Nilai tidak boleh lebih dari 100</div>';
-                        siswa_html += '</div>'; // tambahkan tag penutup div
-                        siswa_html += '</div>'; // tambahkan tag penutup div
-                    });
+            if (kelas != '') {
+                $.ajax({
+                    url: '/get-data-siswa?kelas=' + kelas,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#judul-daftar-siswa').html('Daftar Siswa ' + data.kelas);
+                        var siswa_html = '';
+                        $.each(data.siswa, function(index, siswa) {
+                            siswa_html += '<div class="row mb-3">';
+                            siswa_html += '<label for="nilai' + (index + 1) +
+                                '" class="col-md-2 col-form-label">' + siswa.name +
+                                '</label>';
+                            siswa_html += '<input type="hidden" name="siswa' + (index + 1) +
+                                '" value="' + siswa.id + '" required id="siswa' + (index +
+                                    1) +
+                                '">';
+                            siswa_html += '<div class="col-md-10">';
+                            siswa_html +=
+                                '<input class="form-control" type="number" name="nilai' + (
+                                    index + 1) + '" id="nilai' + (index + 1) +
+                                '" required placeholder="nilai siswa" value="' + (data
+                                    .nilai ?
+                                    data.nilai[index] : '') + '">';
+                            siswa_html +=
+                                '<div class="invalid-feedback" style"background-image: none;">Nilai tidak boleh lebih dari 100</div>';
+                            siswa_html += '</div>'; // tambahkan tag penutup div
+                            siswa_html += '</div>'; // tambahkan tag penutup div
+                        });
 
-                    $('#daftar-siswa').html(siswa_html);
-                }
-            });
-        } else {
-            $('#judul-daftar-siswa').html('Daftar Siswa');
-            $('#daftar-siswa').html('');
-        }
-    });
+                        $('#daftar-siswa').html(siswa_html);
+                    }
+                });
+            } else {
+                $('#judul-daftar-siswa').html('Daftar Siswa');
+                $('#daftar-siswa').html('');
+            }
+        });
+    @endif
+
 
     $('#daftar-siswa').on('input', 'input[name^="nilai"]', function() {
         var inputValue = parseInt($(this).val());
