@@ -39,6 +39,10 @@ class NilaiController extends Controller
         // Fetch all the students
         $semua_siswa = User::where('id_role', '5')->get();
 
+        if (Auth::user()->id_role === 3) {
+            $semua_siswa = User::where('id_role', '5')->where('id_kelas', Auth::user()->id_kelas)->get();
+        }
+
         // Check the user's role and fetch the corresponding teachers
         if (Auth::user()->id_role === 1) {
             // If the user is an admin, fetch all the teachers and lecturers
@@ -82,6 +86,10 @@ class NilaiController extends Controller
         // semua siswa
         $semua_siswa = User::where('id_role', '5')->get();
 
+        if (Auth::user()->id_role === 3) {
+            $semua_siswa = User::where('id_role', '5')->where('id_kelas', Auth::user()->id_kelas)->get();
+        }
+
         if (Auth::user()->id_role === 1) {
             $semua_guru = User::where('id_role', '3')->orWhere('id_role', '4')->orWhere('id_role', '2')->get();
         } else if (Auth::user()->id_role === 2 || Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
@@ -119,6 +127,10 @@ class NilaiController extends Controller
         // semua siswa
         $semua_siswa = User::where('id_role', '5')->get();
 
+        if (Auth::user()->id_role === 3) {
+            $semua_siswa = User::where('id_role', '5')->where('id_kelas', Auth::user()->id_kelas)->get();
+        }
+
         if (Auth::user()->id_role === 1) {
             $semua_guru = User::where('id_role', '3')->orWhere('id_role', '4')->orWhere('id_role', '2')->get();
         } else if (Auth::user()->id_role === 2 || Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
@@ -155,6 +167,10 @@ class NilaiController extends Controller
 
         // semua siswa
         $semua_siswa = User::where('id_role', '5')->get();
+
+        if (Auth::user()->id_role === 3) {
+            $semua_siswa = User::where('id_role', '5')->where('id_kelas', Auth::user()->id_kelas)->get();
+        }
 
         if (Auth::user()->id_role === 1) {
             $semua_guru = User::where('id_role', '3')->orWhere('id_role', '4')->orWhere('id_role', '2')->get();
