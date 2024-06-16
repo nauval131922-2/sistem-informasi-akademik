@@ -36,21 +36,27 @@ class AdminController extends Controller
         return view('backend.profile.profile', compact('user', 'title'));
     }
 
+    /**
+     * Update the user profile.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function UpdateProfile(Request $request)
     {
-        // get id user
+        // Get the id of the authenticated user
         $id = Auth::user()->id;
         $user = User::find($id);
 
-        // validator
+        // Validate the request data
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'nullable|email|unique:users,email,'.$id,
-            'username' => 'required|unique:users,username,'.$id,
-            'profile_image' => 'nullable|image',
+            'name' => 'required', // User name is required
+            'email' => 'nullable|email|unique:users,email,'.$id, // Email is optional, unique, and must be a valid email format
+            'username' => 'required|unique:users,username,'.$id, // Username is required and must be unique
+            'profile_image' => 'nullable|image', // Profile image is optional and must be an image file
         ]);
 
-        // jika validasi gagal
+        // If validation fails, return error response
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
@@ -58,87 +64,84 @@ class AdminController extends Controller
             ]);
         }
 
-        // simpan data request yang required
+        // Save the required data from the request
         $user->name = $request->name;
         $user->username = $request->username;
 
-        // simpan data request yang nullable jika tidak kosong
+        // Save the nullable data from the request if it is not empty
         if ($request->email != null) {
             $user->email = $request->email;
         } else {
             $user->email = null;
         }
 
-        // validasi password
-        // cek new password sama dengan confirm password
+        // Validate password
+        // Check if new password, confirm password, and old password are not null
         if ($request->newpassword != null && $request->confirmpassword != null && $request->oldpassword != null) {
-            // cek old password sama dengan password di database
+            // Check if old password matches the password in the database
             if (Hash::check($request->oldpassword, $user->password)) {
-                // cek new password sama dengan confirm password
+                // Check if new password and confirm password match
                 if ($request->newpassword == $request->confirmpassword) {
-                    // simpan password baru
+                    // Save the new password
                     $user->password = bcrypt($request->newpassword);
                 } else {
-
+                    // Return error response if new password and confirm password do not match
                     return response()->json([
                         'status' => 'error2',
-                        'message' => 'New Password and Confirm Password does not match!'
+                        'message' => 'New Password and Confirm Password do not match!'
                     ]);
                 }
             } else {
-
-
+                // Return error response if old password does not match
                 return response()->json([
                     'status' => 'error2',
-                    'message' => 'Old Password is not match!'
+                    'message' => 'Old Password does not match!'
                 ]);
             }
         }
 
-        // simpan gambar jika ada
+        // Save the uploaded image if there is one
         if ($request->hasFile('gambar')) {
-
-            // jika menggunakkan gambar default jangan hapus gambar default
+            // If not using the default image, remove the old image
             if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
                 unlink($user->profile_image);
             }
 
-            // simpan nama file dengan $request->nama hexdec(uniqid())
+            // Save the uploaded image with a unique name
             $judul_tanpa_spasi = str_replace(' ', '-', $request->name);
             $nama_file = $judul_tanpa_spasi.'-'.hexdec(uniqid()).'.'.$request->gambar->getClientOriginalExtension();
 
-            // $nama_file = hexdec(uniqid()).'.'.$request->gambar->getClientOriginalExtension();
+            // Save the image
             Image::make($request->gambar)->save(public_path('/upload/profile_picture/'.$nama_file));
 
             $user->profile_image = 'upload/profile_picture/'.$nama_file;
         } elseif ($request->gambarPreview == null && $user->profile_image != null) {
-            // unlink($user->profile_image);
-
-            // jika menggunakkan gambar default jangan hapus gambar default
+            // If not using the default image, remove the old image
             if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
                 unlink($user->profile_image);
             }
 
             $user->profile_image = 'upload/profile_picture/default/1.jpg';
         } elseif ($request->gambarPreview != null && $user->profile_image != null && $user->profile_image != 'upload/profile_picture/default/1.jpg') {
-            // get file extension
+            // Get the file extension of the old image
             $file_ext = pathinfo($user->profile_image, PATHINFO_EXTENSION);
 
             $judul_tanpa_spasi = str_replace(' ', '-', $request->name);
             $nama_file = $judul_tanpa_spasi.'-'.hexdec(uniqid()).'.'.$file_ext;
-            // rename file name
+            // Rename the old image file
             rename(public_path($user->profile_image), public_path('upload/profile_picture/'.$nama_file));
 
             $user->profile_image = 'upload/profile_picture/'.$nama_file;
         }
 
-        // jika berhasil disimpan
+        // If the user profile is successfully updated, return success response
         if ($user->save()) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'User Profile Updated Successfully!'
             ]);
         } else {
+            // If the user profile update fails, return error response
             return response()->json([
                 'status' => 'error2',
                 'message' => 'User Profile Updated Failed!'
