@@ -263,7 +263,7 @@ $route = Route::current()->getName();
                     </li>
                 @endcanany
 
-                @canany(['admin', 'kepala_madrasah'])
+                @canany(['admin', 'kepala_madrasah', 'guru_wali', 'guru_mapel'])
                     <li>
                         {{-- <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="ri-file-list-line align-middle"></i>
