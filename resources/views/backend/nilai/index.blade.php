@@ -30,7 +30,7 @@
                                 </div>
 
                                 {{-- jika auth user id role tidak sama dengan 5 (siswa) --}}
-                                @if (Auth::user()->id_role != 5)
+                                @if (Auth::user()->id_role != 5 && Auth::user()->id_role != 2)
                                     <div class="col-auto mb-2">
                                         <div class="dropdown">
                                             <button class="btn btn-primary dropdown-toggle" id="dropdownMenuLink"
@@ -72,14 +72,6 @@
                                 </div>
                             </div>
                             <div class="row justify-content-start">
-                                @can('kepala_madrasah')
-                                    <div class="col-lg-2">
-                                        <select name="guru" id="guru" class="form-select mb-2" onchange="filterData()">
-                                            <option value="{{ Auth::user()->id }}">Saya</option>
-                                            <option value="">Semua Guru</option>
-                                        </select>
-                                    </div>
-                                @endcan
                                 <div class="col-lg-2">
                                     <select name="tipe_nilai" id="tipe_nilai" class="form-select mb-2"
                                         onchange="filterData()">
@@ -144,38 +136,12 @@
                                         <th>Mata Pelajaran</th>
                                         <th>Nilai</th>
                                         <th>Tipe Nilai</th>
-                                        @canany(['admin', 'kepala_madrasah', 'guru_wali', 'guru_mapel'])
+                                        @canany(['admin', 'guru_wali', 'guru_mapel'])
                                             <th>Action</th>
                                         @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @foreach ($semua_nilai as $no => $nilai)
-                                        <tr>
-                                            <td>{{ $no + 1 }}</td>
-                                            <td>{{ $nilai->kelas->nama }}</td>
-                                            <td>{{ $nilai->judul }}</td>
-                                            <td>{{ $nilai->siswa->name }}</td>
-                                            <td>{{ $nilai->guru->name }}</td>
-                                            <td>{{ $nilai->mapel->mata_pelajaran }}</td>
-                                            <td>{{ $nilai->nilai }}</td>
-                                            <td>{{ $nilai->tipe_nilai }}</td>
-                                            @canany(['admin', 'kepala_madrasah'])
-                                                <td>
-                                                    <a href="{{ route('nilai-edit', $nilai->id) }}"
-                                                        class="btn btn-info btn-sm">
-                                                        <i class="ri-edit-2-line align-middle me-1"></i>
-                                                        <span style="vertical-align: middle">Edit</span>
-                                                    </a>
-                                                    <a href="{{ route('nilai-hapus', $nilai->id) }}"
-                                                        class="btn btn-danger btn-sm" id="delete">
-                                                        <i class="ri-delete-bin-2-line align-middle me-1"></i>
-                                                        <span style="vertical-align: middle">Hapus</span>
-                                                    </a>
-                                                </td>
-                                            @endcanany
-                                        </tr>
-                                    @endforeach --}}
                                 </tbody>
                             </table>
                         </div>
