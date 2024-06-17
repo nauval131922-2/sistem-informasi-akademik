@@ -131,4 +131,16 @@ class KontakController extends Controller
             'data' => $semua_kontak
         ]);
     }
+
+    function filter(Request $request){
+        if ($request->statuss != null) {
+            $kontak = Kontak::where('status', '=', $request->statuss)->get();
+        } else {
+            $kontak = Kontak::all();
+        }
+
+        return response()->json([
+            'data' => $kontak
+        ]);
+    }
 }
