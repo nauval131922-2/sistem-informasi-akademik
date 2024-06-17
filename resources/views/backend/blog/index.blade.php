@@ -16,20 +16,6 @@ $route = Route::current()->getName();
                     <div class="card">
                         <div class="card-body">
 
-                            {{-- <h4 class="card-title">Semua {{ $title }}</h4>
-                            <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Berikut adalah semua
-                                {{ $title }}.
-                            </p>
-
-                            @can('admin')
-                                @if ($route != 'blog-all-index')
-                                    <a class="btn btn-primary mb-3" href="{{ route('blog-tambah', $blog_category) }}"
-                                        role="button">
-										<i class="ri-add-line align-middle me-1"></i>
-										<span style="vertical-align: middle">Tambah</span>
-									</a>
-                                @endif
-                            @endcan --}}
 
                             <div class="row">
                                 <div class="col-auto me-auto">
@@ -42,11 +28,6 @@ $route = Route::current()->getName();
 
                                 <div class="col-auto mb-2">
                                     <div class="dropdown">
-                                        {{-- <button class="btn btn-primary dropdown-toggle" id="dropdownMenuLink"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="ri-add-line align-middle me-1"></i>
-                                            <span style="vertical-align: middle">Tambah</span>
-                                        </button> --}}
                                         <div class="col-auto mb-2">
                                             <button class="btn btn-primary" role="button" data-bs-toggle="modal"
                                                 data-bs-target="#exampleModalScrollable" id="btnTambahData"
@@ -57,17 +38,6 @@ $route = Route::current()->getName();
                                         </div>
 
 
-                                        {{-- <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-
-                                            @foreach ($semua_kategori_blog as $kategori_blog)
-                                                <li><button class="dropdown-item"
-                                                        onclick="tambahData({{ $kategori_blog->id }})"
-                                                        data-bs-toggle="modal" data-bs-target="#exampleModalScrollable"
-                                                        id="buttonTambah">{{ $kategori_blog->blog_category }}</button>
-                                            @endforeach
-
-
-                                        </ul> --}}
                                     </div>
                                 </div>
 
@@ -98,7 +68,9 @@ $route = Route::current()->getName();
                                     <select name="kategori_blog" id="kategori_blog" class="form-select mb-2"
                                         onchange="filterData()">
                                         <option value="">Kategori Blog</option>
-                                        <option value="uncategorized">Uncategorized</option>
+                                        @if (auth()->user()->id_role === 1 || auth()->user()->id_role === 2)
+                                            <option value="uncategorized">Uncategorized</option>
+                                        @endif
                                         @foreach ($semua_kategori_blog as $kategori_blog)
                                             <option value="{{ $kategori_blog->id }}">{{ $kategori_blog->blog_category }}
                                             </option>
@@ -131,36 +103,10 @@ $route = Route::current()->getName();
                                         @if ($route == 'blog-all-index')
                                             <th>Kategori</th>
                                         @endif
-                                        {{-- @can('admin') --}}
                                         <th>Action</th>
-                                        {{-- @endcan --}}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @foreach ($semua_blog as $no => $blog)
-                                        <tr>
-                                            <td>{{ $no + 1 }}</td>
-                                            <td>{{ $blog->blog_title }}</td>
-                                            @if ($route == 'blog-all-index')
-                                                <td>{{ $blog->category->blog_category }}</td>
-                                            @endif
-                                            @can('admin')
-                                                <td>
-                                                    <a href="{{ route('blog-edit', $blog->id) }}" class="btn btn-info btn-sm">
-                                                        <i class="ri-edit-2-line align-middle me-1"></i>
-                                                        <span style="vertical-align: middle">Edit</span>
-                                                    </a>
-                                                    @if ($blog->id != 1)
-                                                        <a href="{{ route('blog-hapus', $blog->id) }}"
-                                                            class="btn btn-danger btn-sm" id="delete">
-                                                            <i class="ri-delete-bin-2-line align-middle me-1"></i>
-                                                            <span style="vertical-align: middle">Hapus</span>
-                                                        </a>
-                                                    @endif
-                                                </td>
-                                            @endcan
-                                        </tr>
-                                    @endforeach --}}
                                 </tbody>
                             </table>
 
@@ -234,8 +180,10 @@ $route = Route::current()->getName();
                             @elseif (Auth::user()->id_role == 2)
                                 (value.id_user_for_blog == '{{ Auth::user()->id }}' ?
                                     editButton + deleteButton : ''),
+                            @elseif (Auth::user()->id_role == 3 || Auth::user()->id_role == 4)
+                                (editButton + deleteButton),
                             @else
-                                ''
+                                '',
                             @endif
                         ]).draw(false);
                     });
