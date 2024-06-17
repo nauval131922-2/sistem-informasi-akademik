@@ -119,41 +119,26 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             });
         });
         // Route::middleware('kepala_madrasah_or_admin')->group(function () {
-            Route::controller(JadwalPelajaranController::class)->group(function () {
-                Route::get('/jadwal-all', 'index_all_jadwal')->name('jadwal-all');
-                Route::get('/jadwal-all/cetak', 'cetak_all_jadwal')->name('jadwal-print-all');
-                Route::get('/jadwal-pelajaran-all', 'index_all_jadwal_pelajaran')->name('jadwal-pelajaran-all');
-                Route::get('/jadwal-pelajaran-all/cetak', 'cetak_all_jadwal_pelajaran')->name('jadwal-pelajaran-print-all');
-                Route::get('/jadwal-ekstra-all', 'index_all_jadwal_ekstra')->name('jadwal-ekstra-all');
-                Route::get('/jadwal-ekstra-all/cetak', 'cetak_all_jadwal_ekstra')->name('jadwal-ekstra-print-all');
-                Route::get('/jadwal-pelajaran/{id}', 'index')->name('jadwal-pelajaran-index');
-                Route::get('/jadwal-pelajaran/{id}/print', 'cetak_jadwal_pelajaran')->name('jadwal-pelajaran-print');
-                Route::get('/jadwal-ekstra/{id}', 'index_ekstra')->name('jadwal-ekstra-index');
-                Route::get('/jadwal-ekstra/{id}/print', 'cetak_jadwal_ekstra')->name('jadwal-ekstra-print');
-                // tambah route filter
-                Route::get('/jadwal/filter', 'filter_jadwal')->name('jadwal-filter');
+        Route::controller(JadwalPelajaranController::class)->group(function () {
+            Route::get('/jadwal-all', 'index_all_jadwal')->name('jadwal-all');
+            Route::get('/jadwal-all/cetak', 'cetak_all_jadwal')->name('jadwal-print-all');
+            Route::get('/jadwal-pelajaran-all', 'index_all_jadwal_pelajaran')->name('jadwal-pelajaran-all');
+            Route::get('/jadwal-pelajaran-all/cetak', 'cetak_all_jadwal_pelajaran')->name('jadwal-pelajaran-print-all');
+            Route::get('/jadwal-ekstra-all', 'index_all_jadwal_ekstra')->name('jadwal-ekstra-all');
+            Route::get('/jadwal-ekstra-all/cetak', 'cetak_all_jadwal_ekstra')->name('jadwal-ekstra-print-all');
+            Route::get('/jadwal-pelajaran/{id}', 'index')->name('jadwal-pelajaran-index');
+            Route::get('/jadwal-pelajaran/{id}/print', 'cetak_jadwal_pelajaran')->name('jadwal-pelajaran-print');
+            Route::get('/jadwal-ekstra/{id}', 'index_ekstra')->name('jadwal-ekstra-index');
+            Route::get('/jadwal-ekstra/{id}/print', 'cetak_jadwal_ekstra')->name('jadwal-ekstra-print');
+            // tambah route filter
+            Route::get('/jadwal/filter', 'filter_jadwal')->name('jadwal-filter');
 
-                // route cek jumlah jadwal
-                Route::get('/jadwal/cek-jumlah', 'checkJumlahJadwal')->name('jadwal-check');
+            // route cek jumlah jadwal
+            Route::get('/jadwal/cek-jumlah', 'checkJumlahJadwal')->name('jadwal-check');
 
-                // route jadwal cetak
-                Route::get('/jadwal/print', 'cetak_jadwal')->name('jadwal-cetak');
-            });
-        // });
-
-        // Route::middleware('kepala_madrasah_only')->group(function () {
-        //     Route::controller(JadwalPelajaranController::class)->group(function () {
-        //         Route::get('/jadwal-kepala-madarasah', 'index_jawal_for_kepala_madrasah')->name('jadwal-for-kepala-madrasah-index');
-        //         Route::get('/jadwal-kepala-madarasah/cetak', 'cetak_jadwal_for_kepala_madrasah')->name('jadwal-for-kepala-madrasah-print');
-        //     });
-        // });
-
-        // Route::middleware('guru_wali_mapel_siswa')->group(function () {
-        //     Route::controller(JadwalPelajaranController::class)->group(function () {
-        //         Route::get('/jadwal', 'index_jawal_for_guru_wali_mapel_siswa')->name('jadwal-for-guru-wali-mapel-siswa-index');
-        //         Route::get('/jadwal/cetak', 'cetak_jadwal_for_guru_wali_mapel_siswa')->name('jadwal-for-guru-wali-mapel-siswa-print');
-        //     });
-        // });
+            // route jadwal cetak
+            Route::get('/jadwal/print', 'cetak_jadwal')->name('jadwal-cetak');
+        });
 
         // ekstrakurikuler
         Route::middleware('admin')->group(function () {
@@ -173,14 +158,14 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         });
 
         // nilai
-        // Route::middleware('kepala_madrasah_or_admin')->group(function () {
+        Route::controller(NilaiController::class)->group(function () {
+            Route::get('/data-nilai', 'index')->name('nilai-index');
+            // tambah route filter
+            Route::get('/data-nilai/filter', 'filter')->name('nilai-filter');
+        });
+
+        Route::middleware('admin_or_guru_wali_kelas_or_guru_mata_pelajaran')->group(function () {
             Route::controller(NilaiController::class)->group(function () {
-                Route::get('/data-nilai', 'index')->name('nilai-index');
-                Route::get('/data-nilai-ulangan-harian/{id}', 'index_nilai_ulangan_harian')->name('nilai-ulangan-harian-index-kelas');
-                Route::get('/data-nilai-tugas/{id}', 'index_nilai_tugas')->name('nilai-tugas-index-kelas');
-                Route::get('/data-nilai-uts/{id}', 'index_nilai_uts')->name('nilai-uts-index-kelas');
-                Route::get('/data-nilai-uas/{id}', 'index_nilai_uas')->name('nilai-uas-index-kelas');
-                Route::get('/data-nilai-rapor/{id}', 'index_nilai_rapor')->name('nilai-rapor-index-kelas');
                 Route::get('/data-nilai/ulangan-harian/tambah', 'tambah_nilai_ulangan_harian')->name('nilai-ulangan-harian-tambah');
                 Route::get('/data-nilai/tugas/tambah', 'tambah_nilai_tugas')->name('nilai-tugas-tambah');
                 Route::get('/data-nilai/uts/tambah', 'tambah_nilai_uts')->name('nilai-uts-tambah');
@@ -189,12 +174,10 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
                 Route::get('/data-nilai/hapus/{id}', 'hapus')->name('nilai-hapus');
                 Route::get('/data-nilai/edit/{id}', 'edit')->name('nilai-edit');
                 Route::post('/data-nilai/update/{id}', 'update')->name('nilai-update');
-                // tambah route filter
-                Route::get('/data-nilai/filter', 'filter')->name('nilai-filter');
-                // get daftar siswa
+                // get daftar siswa untuk tambah dan edit nilai
                 Route::get('/get-data-siswa', 'getDataSiswa')->name('get-data-siswa');
             });
-        // });
+        });
 
         // pengumuman
         Route::middleware('kepala_madrasah_or_admin')->group(function () {
@@ -203,7 +186,6 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
                 Route::post('/pengumuman/update/{id}', 'update')->name('pengumuman-update');
             });
         });
-        // sini
         Route::middleware('guru_wali')->group(function () {
             Route::controller(PengumumanController::class)->group(function () {
                 Route::get('/pengumuman-for-siswa', 'index_pengumuman_for_siswa')->name('pengumuman-for-siswa-index');
@@ -261,12 +243,11 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             Route::controller(BlogCategoryController::class)->group(function () {
                 Route::get('/blog-category', 'index')->name('blog-category-index');
                 Route::get('/blog-category/fetch', 'fetch')->name('blog-category-fetch');
-
             });
         });
 
         // blog
-        Route::middleware('kepala_madrasah_or_admin')->group(function () {
+        Route::middleware('admin_or_kepala_madrasah_or_guru_wali_kelas_or_guru_mata_pelajaran')->group(function () {
             Route::controller(BlogController::class)->group(function () {
                 Route::get('/blog/all', 'index_all')->name('blog-all-index');
                 Route::get('/blog/filter', 'filter_blog')->name('blog-filter');
@@ -291,6 +272,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             Route::controller(KontakController::class)->group(function () {
                 Route::get('/data-kontak', 'index_be')->name('kontak-index-be');
                 Route::get('/data-kontak/fetch', 'fetch')->name('kontak-fetch');
+                Route::get('/data-kontak/filter', 'filter')->name('kontak-filter');
             });
         });
 
