@@ -13,9 +13,36 @@
                         <div class="card-body">
 
                             <h4 class="card-title">Semua {{ $title }}</h4>
-                            <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Berikut adalah semua
+                            <p class="card-title-desc">Berikut adalah semua
                                 {{ $title }}.
                             </p>
+
+                            <hr style="margin: 0 0 1rem 0">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="filterJam">Filter</label>
+                                </div>
+                            </div>
+                            <div class="row justify-content-start">
+                                <div class="col-md-4">
+                                    <select name="statuss" id="statuss" class="form-select mb-2" onchange="filter()">
+                                        <option value="">Status</option>
+                                        <option value="Belum dibalas">Belum dibalas</option>
+                                        <option value="Sudah dibalas">Sudah dibalas</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    {{-- button reset filter --}}
+                                    <button class="btn btn-light" onclick="resetFilter()">
+                                        <i class="ri-refresh-line align-middle me-1"></i>
+                                        <span style="vertical-align: middle">Reset</span>
+                                    </button>
+                                </div>
+                            </div>
+
+
+                            <hr style="margin: 0.5rem 0 1rem 0">
 
                             <table id="datatable"
                                 class="table table-striped table-bordered dt-responsive nowrap dataTable no-footer dtr-inline collapsed"
@@ -47,14 +74,14 @@
     <script>
         $(document).ready(function() {
 
-            fetchData();
+            filter();
 
         });
 
         // buatkan function fecthData
-        function fetchData() {
+        function filter() {
             $.ajax({
-                url: '{{ route('kontak-fetch') }}',
+                url: '{{ route('kontak-filter') }}?statuss=' + $('#statuss').val(),
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
@@ -117,6 +144,11 @@
             });
         }
 
+        function resetFilter() {
+            $('#statuss').val('');
+            filter();
+        };
+
         function gantiStatus(id) {
             $.ajax({
                 url: '/kontak/ganti/status/' + id,
@@ -144,8 +176,7 @@
                         "hideMethod": "fadeOut"
                     });
 
-                    // fetch data
-                    fetchData();
+                    filter();
                 }
             });
         }
@@ -180,7 +211,7 @@
                             "hideMethod": "fadeOut"
                         });
 
-                        fetchData();
+                        filter();
                     }
                 });
             }
