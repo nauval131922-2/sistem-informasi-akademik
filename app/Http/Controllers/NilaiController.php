@@ -47,13 +47,10 @@ class NilaiController extends Controller
         if (Auth::user()->id_role === 1) {
             // If the user is an admin, fetch all the teachers and lecturers
             $semua_guru = User::where('id_role', '3')->orWhere('id_role', '4')->orWhere('id_role', '2')->get();
-        } else if (Auth::user()->id_role === 2 || Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
-            // If the user is a teacher or lecturer, fetch the user's data
-            $semua_guru = User::where('id', Auth::user()->id)->get();
         }
 
         // Check the user's role and fetch the list of subjects
-        if (Auth::user()->id_role === 1 || Auth::user()->id_role === 2) {
+        if (Auth::user()->id_role === 1) {
             // If the user is an admin or teacher, fetch all the subjects
             $semua_mapel = MataPelajaran::all();
         } else if (Auth::user()->id_role === 4) {
@@ -92,13 +89,11 @@ class NilaiController extends Controller
 
         if (Auth::user()->id_role === 1) {
             $semua_guru = User::where('id_role', '3')->orWhere('id_role', '4')->orWhere('id_role', '2')->get();
-        } else if (Auth::user()->id_role === 2 || Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
-            $semua_guru = User::where('id', Auth::user()->id)->get();
         }
 
         // $semua_mapel = MataPelajaran::all();
 
-        if (Auth::user()->id_role === 1 || Auth::user()->id_role === 2) {
+        if (Auth::user()->id_role === 1) {
             $semua_mapel = MataPelajaran::all();
         } else if (Auth::user()->id_role === 4) {
             // cari nama mapel di tabel MataPelajaran berdasarkan id_mapel di tabel user
@@ -133,13 +128,11 @@ class NilaiController extends Controller
 
         if (Auth::user()->id_role === 1) {
             $semua_guru = User::where('id_role', '3')->orWhere('id_role', '4')->orWhere('id_role', '2')->get();
-        } else if (Auth::user()->id_role === 2 || Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
-            $semua_guru = User::where('id', Auth::user()->id)->get();
         }
 
         // $semua_mapel = MataPelajaran::all();
 
-        if (Auth::user()->id_role === 1 || Auth::user()->id_role === 2) {
+        if (Auth::user()->id_role === 1) {
             $semua_mapel = MataPelajaran::all();
         } else if (Auth::user()->id_role === 4) {
             // cari nama mapel di tabel MataPelajaran berdasarkan id_mapel di tabel user
@@ -174,13 +167,11 @@ class NilaiController extends Controller
 
         if (Auth::user()->id_role === 1) {
             $semua_guru = User::where('id_role', '3')->orWhere('id_role', '4')->orWhere('id_role', '2')->get();
-        } else if (Auth::user()->id_role === 2 || Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
-            $semua_guru = User::where('id', Auth::user()->id)->get();
         }
 
         // $semua_mapel = MataPelajaran::all();
 
-        if (Auth::user()->id_role === 1 || Auth::user()->id_role === 2) {
+        if (Auth::user()->id_role === 1) {
             $semua_mapel = MataPelajaran::all();
         } else if (Auth::user()->id_role === 4) {
             // cari nama mapel di tabel MataPelajaran berdasarkan id_mapel di tabel user
@@ -503,11 +494,7 @@ class NilaiController extends Controller
         }
 
         // filter berdasarkan guru jika auth user id_role yang sedang login =2
-        if (Auth::user()->id_role === 2) {
-            if ($request->guru != null) {
-                $nilai->where('id_guru_for_nilai', $request->guru);
-            }
-        } else if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
+        if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
             $nilai->where('id_guru_for_nilai', Auth::user()->id);
         } else if (Auth::user()->id_role === 5) {
             $nilai->where('id_siswa_for_nilai', Auth::user()->id);
