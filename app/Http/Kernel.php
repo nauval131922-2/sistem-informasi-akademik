@@ -6,6 +6,7 @@ use App\Http\Middleware\KepalaMadrasahOrSiswa;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use App\Http\Middleware\AdminOrGuruWaliKelasOrGuruMapel;
 use App\Http\Middleware\AdminOrGuruWaliKelasOrGuruMataPelajaran;
+use App\Http\Middleware\AdminOrGuruWaliKelasOrGuruMataPelajaranOrSiswa;
 use App\Http\Middleware\AdminOrKepalaMadrasahOrGuruWaliKelasOrGuruMataPelajaran;
 
 class Kernel extends HttpKernel
@@ -79,5 +80,6 @@ class Kernel extends HttpKernel
         'admin_or_guru_wali_kelas_or_guru_mata_pelajaran' => AdminOrGuruWaliKelasOrGuruMataPelajaran::class,
         'kepala_madrasah_or_siswa' => KepalaMadrasahOrSiswa::class,
         'admin_or_kepala_madrasah_or_guru_wali_kelas_or_guru_mata_pelajaran' => AdminOrKepalaMadrasahOrGuruWaliKelasOrGuruMataPelajaran::class,
+        'admin_or_guru_wali_kelas_or_guru_mata_pelajaran_or_siswa' => AdminOrGuruWaliKelasOrGuruMataPelajaranOrSiswa::class,
     ];
 }
