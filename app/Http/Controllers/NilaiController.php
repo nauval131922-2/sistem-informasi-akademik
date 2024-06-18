@@ -47,6 +47,8 @@ class NilaiController extends Controller
         if (Auth::user()->id_role === 1) {
             // If the user is an admin, fetch all the teachers and lecturers
             $semua_guru = User::where('id_role', '3')->orWhere('id_role', '4')->orWhere('id_role', '2')->get();
+        }  else {
+            $semua_guru=[];
         }
 
         // Check the user's role and fetch the list of subjects
@@ -89,6 +91,8 @@ class NilaiController extends Controller
 
         if (Auth::user()->id_role === 1) {
             $semua_guru = User::where('id_role', '3')->orWhere('id_role', '4')->orWhere('id_role', '2')->get();
+        } else {
+            $semua_guru=[];
         }
 
         // $semua_mapel = MataPelajaran::all();
@@ -128,6 +132,8 @@ class NilaiController extends Controller
 
         if (Auth::user()->id_role === 1) {
             $semua_guru = User::where('id_role', '3')->orWhere('id_role', '4')->orWhere('id_role', '2')->get();
+        } else {
+            $semua_guru=[];
         }
 
         // $semua_mapel = MataPelajaran::all();
@@ -167,6 +173,8 @@ class NilaiController extends Controller
 
         if (Auth::user()->id_role === 1) {
             $semua_guru = User::where('id_role', '3')->orWhere('id_role', '4')->orWhere('id_role', '2')->get();
+        } else {
+            $semua_guru=[];
         }
 
         // $semua_mapel = MataPelajaran::all();
