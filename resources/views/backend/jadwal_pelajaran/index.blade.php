@@ -61,16 +61,6 @@ $semua_tahun_ajaran = App\Models\TahunAjaran::all();
                                 </div>
                             </div>
                             <div class="row justify-content-start">
-                                @can('kepala_madrasah')
-                                    <div class="col-lg-2">
-                                        <select name="kepemilikan_jadwal" id="kepemilikan_jadwal" class="form-select mb-2"
-                                            onchange="filterData()">
-                                            {{-- jika auth user id == 1 maka selected option nya adalah semua jadwal --}}
-                                            <option value="{{ auth()->user()->id }}">Jadwal Saya</option>
-                                            <option value="">Semua Jadwal</option>
-                                        </select>
-                                    </div>
-                                @endcan
 
                                 <div class="col-lg-2">
                                     <select name="tipe_jadwal" id="tipe_jadwal" class="form-select mb-2"
@@ -112,10 +102,12 @@ $semua_tahun_ajaran = App\Models\TahunAjaran::all();
                                     </button>
                                     {{-- button cetak filter --}}
 
-                                    <button class="btn btn-success" onclick="handleCetak()" id="btnCetak">
-                                        <i class="ri-printer-line align-middle me-1"></i>
-                                        <span style="vertical-align: middle">Cetak</span>
-                                    </button>
+                                    @if (auth()->user()->id_role != 2)
+                                        <button class="btn btn-success" onclick="handleCetak()" id="btnCetak">
+                                            <i class="ri-printer-line align-middle me-1"></i>
+                                            <span style="vertical-align: middle">Cetak</span>
+                                        </button>
+                                    @endif
 
                                 </div>
                             </div>
