@@ -289,11 +289,7 @@ class JadwalPelajaranController extends Controller
         }
 
         // filter berdasarkan kepemilikian jadwal
-        if (Auth::user()->id_role === 2) {
-            if ($request->kepemilikan_jadwal != null) {
-                $jadwal->where('id_guru_for_jadwal', $request->kepemilikan_jadwal);
-            }
-        } else if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
+        if (Auth::user()->id_role === 3 || Auth::user()->id_role === 4) {
             $jadwal->where('id_guru_for_jadwal', Auth::user()->id);
         } else if (Auth::user()->id_role === 5) {
             $jadwal->where('id_kelas_for_jadwal', Auth::user()->id_kelas);
