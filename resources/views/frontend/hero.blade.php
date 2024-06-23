@@ -9,7 +9,7 @@
                     <div class="carousel-item active" style="background-image: url({{ asset($blog_1->blog_image) }});">
                     @else
                         <div class="carousel-item active"
-                            style="background-image: url(https://source.unsplash.com/random/?quote);">
+                            style="background-image: url(https://picsum.photos/1920/1080?random);">
                 @endif
                 <div class="carousel-container">
                     <div class="carousel-content animate__animated animate__fadeInUp">
@@ -46,7 +46,7 @@
                 <div class="carousel-item" style="background-image: url({{ asset($blog->blog_image) }});">
                 @else
                     <div class="carousel-item"
-                        style="background-image: url(https://source.unsplash.com/random/?quote={{ $no + 1 }});">
+                        style="background-image: url(https://picsum.photos/1920/1080?random);">
             @endif
             <div class="carousel-container">
                 <div class="carousel-content animate__animated animate__fadeInUp">
