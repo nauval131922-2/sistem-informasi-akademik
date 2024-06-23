@@ -78,16 +78,7 @@
             <div class="dropdown d-inline-block user-dropdown">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    @if ($user_data->profile_image)
-                        <img src="" alt=""
-                            class="rounded header-profile-user" id="fotoUserLoginDiHeader">
-                    {{-- @else
-                        <div class="avatar-xs">
-                            <span class="avatar-title rounded-circle bg-soft-primary text-primary">
-                                {{ substr($user_data->name, 0, 1) }}
-                            </span>
-                        </div> --}}
-                    @endif
+                    <img src="" alt="" class="rounded header-profile-user" id="fotoUserLoginDiHeader">
                     <span class="d-none d-xl-inline-block ms-1" id="namaUserLoginDiHeader"></span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
@@ -95,23 +86,26 @@
                     <!-- item-->
                     <a class="dropdown-item" href="{{ route('profile') }}">
                         <i class="ri-user-line align-middle me-1"></i>
-                        <span style="
+                        <span
+                            style="
                             vertical-align: middle;
-                        " >Profile</span>
+                        ">Profile</span>
                     </a>
 
                     <a class="dropdown-item" href="{{ route('home') }}">
                         <i class="ri-earth-line align-middle me-1"></i>
-                        <span style="
+                        <span
+                            style="
                             vertical-align: middle;
-                        " >Website</span>
+                        ">Website</span>
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-danger" href="{{ route('logout') }}">
                         <i class="ri-logout-box-r-line align-middle me-1 text-danger"></i>
-                        <span style="
+                        <span
+                            style="
                             vertical-align: middle;
-                        " >Logout</span>
+                        ">Logout</span>
                     </a>
                 </div>
             </div>
@@ -142,5 +136,4 @@
 
         });
     }
-
 </script>
