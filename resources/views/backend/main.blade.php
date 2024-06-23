@@ -279,7 +279,7 @@
     </script>
 
     <script>
-        
+
         $(document).ready(function() {
 
             fetchDataHeader();
@@ -296,7 +296,11 @@
                     let profile = response.data;
                     // isi input dengan id name dengan data yang diambil dari database
                     $('#namaUserLoginDiHeader').text(profile.name);
-                    $('#fotoUserLoginDiHeader').attr('src', '{{ asset('') }}' + profile.profile_image);
+                    var profileImage = profile.profile_image ? '{{ asset('') }}' + profile.profile_image :
+                        'https://ui-avatars.com/api/?background=random&name=' + encodeURIComponent(profile
+                        .name);
+                    $('#fotoUserLoginDiHeader').show();
+                    $('#fotoUserLoginDiHeader').attr('src', profileImage);
                 }
 
             });
