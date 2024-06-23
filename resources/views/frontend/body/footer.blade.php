@@ -9,7 +9,7 @@
                         <img src="{{ asset($profil_sekolah->logo) }}" alt="{{ $profil_sekolah->nama }}"
                             class="img-fluid rounded">
                     @else
-                        <img src="https://source.unsplash.com/random/?quote" class="img-fluid rounded" alt="">
+                        <img src="https://ui-avatars.com/api/?background=random&name={{ $profil_sekolah->nama }}&size=500&length=2" class="img-fluid rounded" alt="">
                     @endif
                 </div>
 
