@@ -171,7 +171,11 @@
                     <label for="showImage" class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-10">
                         <img src="
-                                @if ($user->profile_image) {{ asset($user->profile_image) }} @endif"
+                                @if ($user->profile_image)
+                                    {{ asset($user->profile_image) }}
+                                @else
+                                   {{-- https://ui-avatars.com/api/?background=random&name={{ $user->name }}&size=500&length=2 --}}
+                                @endif"
                             alt="" class="img-thumbnail" width="200" id="showImage">
                         <input type="hidden" value="{{ $user->profile_image }}" id="gambarPreview"
                             name="gambarPreview">
