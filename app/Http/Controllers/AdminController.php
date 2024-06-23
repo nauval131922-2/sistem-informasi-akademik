@@ -103,7 +103,11 @@ class AdminController extends Controller
         // Save the uploaded image if there is one
         if ($request->hasFile('gambar')) {
             // If not using the default image, remove the old image
-            if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
+            // if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
+            //     unlink($user->profile_image);
+            // }
+
+            if ($user->profile_image != null) {
                 unlink($user->profile_image);
             }
 
@@ -121,7 +125,7 @@ class AdminController extends Controller
                 unlink($user->profile_image);
             }
 
-            $user->profile_image = 'upload/profile_picture/default/1.jpg';
+            $user->profile_image = '';
         } elseif ($request->gambarPreview != null && $user->profile_image != null && $user->profile_image != 'upload/profile_picture/default/1.jpg') {
             // Get the file extension of the old image
             $file_ext = pathinfo($user->profile_image, PATHINFO_EXTENSION);
