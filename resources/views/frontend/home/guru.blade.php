@@ -1,4 +1,4 @@
-  <?php 
+  <?php
     $kepala_madrasah = App\Models\User::where('id_role', 2)->first();
     // get 3 data dari tabel user dengan id 3 dan urutkan berdasarkan id_kelas asc
     $semua_guru_wali_kelas = App\Models\User::where('id_role', 3)->orderBy('id_kelas', 'asc')->limit(3)->get();
@@ -67,10 +67,10 @@
             </div>
           @endforeach
         </div>
-        
+
         <div>
           <div class="text-center"><a href="" class="btn-get-started">Selengkapnya</a></div>
         </div>
-        
+
       </div>
     </section><!-- End Our Team Section -->
