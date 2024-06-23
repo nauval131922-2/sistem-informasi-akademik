@@ -22,7 +22,7 @@
                   @if ($guru->profile_image)
                     <img src="{{ asset($guru->profile_image) }}" class="img-fluid" alt="">
                   @else
-                    <img src="https://source.unsplash.com/600x600/?quote={{ $no+1 }}" class="img-fluid" alt="">
+                    <img src="https://ui-avatars.com/api/?background=random&name={{ $guru->name }}&size=500&length=2"  class="img-fluid" alt="">
                   @endif
                 </div>
                 <div class="member-info">
