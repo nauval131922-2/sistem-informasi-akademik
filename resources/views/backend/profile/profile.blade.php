@@ -100,9 +100,10 @@
                                         {{-- tambahi kalimat kosongi jika tidak ingin mengubah password --}}
                                         <div class="mt-2">
                                             <small class="text-danger"
-                                                style="background: 
+                                                style="background:
                                         #f8f9fa; padding: 5px; border-radius: 5px;
-                                        ">*kosongi jika tidak ingin mengubah password</small>
+                                        ">*kosongi
+                                                jika tidak ingin mengubah password</small>
 
                                         </div>
 
@@ -182,22 +183,18 @@
                 dataType: 'json',
                 success: function(response) {
                     let profile = response.data;
-                    // isi input dengan id name dengan data yang diambil dari database
                     $('#name').val(profile.name);
                     $('#email').val(profile.email);
                     $('#username').val(profile.username);
-                    $('#gambarPreview').val(profile.profile_image);
-                    $('#showImage').attr('src', '{{ asset('') }}' + profile.profile_image);
-                    $('#namaUserLoginDiHeader').text(profile.name);
-                    // jika tidak ada gambar maka hidden tag img, jika ada maka tampilkan tag img dan ganti src dengan gambar yang diambil dari database
-                    if (profile.profile_image == null) {
-                        $('#fotoUserLoginDiHeader').hide();
-                    } else {
-                        $('#fotoUserLoginDiHeader').show();
-                        $('#fotoUserLoginDiHeader').attr('src', '{{ asset('') }}' + profile.profile_image);
-                    }
+                    var profileImage = profile.profile_image ? '{{ asset('') }}' + profile.profile_image :
+                        'https://ui-avatars.com/api/?background=random&name=' + encodeURIComponent(profile
+                        .name);
+                    profile.profile_image ? $('#gambarPreview').val(profileImage) : '';
+                    profile.profile_image ? $('#showImage').attr('src', profileImage) : '';
 
-                    // $('#fotoUserLoginDiHeader').attr('src', '{{ asset('') }}' + profile.profile_image);
+                    $('#namaUserLoginDiHeader').text(profile.name);
+                    $('#fotoUserLoginDiHeader').show();
+                    $('#fotoUserLoginDiHeader').attr('src', profileImage);
                 }
 
             });
