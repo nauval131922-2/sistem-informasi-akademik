@@ -139,7 +139,6 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('12345678'),
             'username' => 'admin',
             'id_mapel' => null,
-            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
         User::factory()->create([
@@ -148,7 +147,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'email@gmail.com',
             'password' => bcrypt('12345678'),
             'username' => 'kepala_madrasah',
-            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
         User::factory(50)->create();
@@ -160,7 +158,6 @@ class DatabaseSeeder extends Seeder
             // 'id_mapel' => 1,
             'password' => bcrypt('12345678'),
             'username' => 'guru_wali_kelas_1',
-            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
         User::factory()->create([
@@ -170,7 +167,6 @@ class DatabaseSeeder extends Seeder
             // 'id_mapel' => 2,
             'password' => bcrypt('12345678'),
             'username' => 'guru_wali_kelas_2',
-            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
         User::factory()->create([
@@ -180,7 +176,6 @@ class DatabaseSeeder extends Seeder
             // 'id_mapel' => 3,
             'password' => bcrypt('12345678'),
             'username' => 'guru_wali_kelas_3',
-            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
         User::factory()->create([
@@ -190,7 +185,6 @@ class DatabaseSeeder extends Seeder
             // 'id_mapel' => 4,
             'password' => bcrypt('12345678'),
             'username' => 'guru_wali_kelas_4',
-            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
         User::factory()->create([
@@ -200,7 +194,6 @@ class DatabaseSeeder extends Seeder
             // 'id_mapel' => 5,
             'password' => bcrypt('12345678'),
             'username' => 'guru_wali_kelas_5',
-            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
         User::factory()->create([
@@ -210,7 +203,6 @@ class DatabaseSeeder extends Seeder
             // 'id_mapel' => 6,
             'password' => bcrypt('12345678'),
             'username' => 'guru_wali_kelas_6',
-            'profile_image' => 'upload/profile_picture/default/1.jpg'
         ]);
 
         // blog
