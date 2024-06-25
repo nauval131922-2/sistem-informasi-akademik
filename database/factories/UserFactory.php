@@ -44,7 +44,6 @@ class UserFactory extends Factory
                 return $attributes['id_role'] == 4 ? rand(1, 8) : null;
             },
             'username' => $this->faker->unique()->userName,
-            'profile_image' => 'upload/profile_picture/default/1.jpg',
         ];
 
     }
