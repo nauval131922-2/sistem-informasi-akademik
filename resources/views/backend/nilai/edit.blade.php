@@ -208,10 +208,28 @@ $route = Route::currentRouteName();
 
 
                 <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)" id="judul-daftar-siswa">
-                    Daftar Siswa
+                    Siswa
                 </p>
 
                 <div id="daftar-siswa">
+                    {{-- old nilai --}}
+                    <input type="hidden" name="old_nilai" id="old_nilai" value="{{ $nilai->nilai }}">
+
+                    {{-- old siswa --}}
+                    <input type="hidden" name="siswa" id="siswa" value="{{ $nilai->id_siswa_for_nilai }}">
+
+                    <div class="row mb-3">
+                        <label for="nilai" class="col-md-2 col-form-label">{{ $nama_siswa }}</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" name="nilai" id="nilai"
+                                placeholder="Ubah nilai" value="{{ old('nilai') ?? $nilai->nilai }}" required>
+                            <div class="invalid-feedback" style="background-image: none;">Nilai tidak boleh lebih dari
+                                100</div>
+                            <div class="mt-2">
+                                <span class="text-danger error-text nilai_error"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 @if ($nilai->tipe_nilai == 'Ulangan Harian')
@@ -242,130 +260,10 @@ $route = Route::currentRouteName();
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
-        var id = $('#id').val();
-        var judul = $('#old_judul').val();
-        var guru = $('#old_guru').val();
-        var mapel = $('#old_mapel').val();
-        var kelas = $('#kelass').val();
-        var tipe_nilai = $('#tipe_nilaii').val();
-        var tahun_ajaran = $('#old_tahun_ajaran').val();
-        var kompetensi_dasar = $('#old_kompetensi_dasar').val();
-
-        var url;
-        if (tipe_nilai === 'Ulangan Harian') {
-            url = '/get-data-siswa?id=' + id + '&old_judul=' + judul + '&old_guru=' + guru +
-                '&old_mapel=' + mapel + '&kelas=' + kelas + '&tipe_nilaii=' + tipe_nilai +
-                '&old_tahun_ajaran=' + tahun_ajaran + '&old_kompetensi_dasar=' + kompetensi_dasar;
-        } else {
-            url = '/get-data-siswa?id=' + id + '&old_judul=' + judul + '&old_guru=' + guru +
-                '&old_mapel=' + mapel + '&kelas=' + kelas + '&tipe_nilaii=' + tipe_nilai +
-                '&old_tahun_ajaran=' + tahun_ajaran;
-        }
-
-        // var kelas = $('#kelass').val();
-        if (kelas != '') {
-            $.ajax({
-                url: url,
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    $('#judul-daftar-siswa').html('Daftar Siswa ' + data.kelas);
-                    var siswa_html = '';
-                    var siswa_html = '';
-                    $.each(data.siswa, function(index, siswa) {
-                        siswa_html += '<div class="row mb-3">';
-                        siswa_html += '<label for="nilai' + (index + 1) +
-                            '" class="col-md-2 col-form-label">' + siswa.name + '</label>';
-                        siswa_html += '<input type="hidden" name="siswa' + (index + 1) +
-                            '" value="' + siswa.id + '" required id="siswa' + (index + 1) +
-                            '">';
-                        siswa_html += '<div class="col-md-10">';
-                        siswa_html +=
-                            '<input class="form-control" type="number" name="nilai' + (
-                                index + 1) + '" id="nilai' + (index + 1) +
-                            '" required placeholder="Masukkan nilai siswa" value="' + (data
-                                .nilai ? data.nilai[index] : '') + '">';
-                        siswa_html +=
-                            '<div class="invalid-feedback" style"background-image: none;">Nilai tidak boleh lebih dari 100</div>';
-                        siswa_html += '</div>'; // tambahkan tag penutup div
-                        siswa_html += '</div>'; // tambahkan tag penutup div
-                        // tambah input id nilai
-                        siswa_html += '<input type="hidden" name="id_nilai' + (index + 1) +
-                            '" value="' + (data.id_nilai ? data.id_nilai[index] : '') +
-                            '"  id="id_nilai' + (index + 1) +
-                            '">';
-
-                    });
-
-                    $('#daftar-siswa').html(siswa_html);
-                }
-            });
-        } else {
-            $('#judul-daftar-siswa').html('Daftar Siswa');
-            $('#daftar-siswa').html('');
-        }
-
     });
 
-    $('#kelass').change(function() {
-        var id = $('#id').val();
-        var judul = $('#old_judul').val();
-        var guru = $('#old_guru').val();
-        var mapel = $('#old_mapel').val();
-        var kelas = $('#kelass').val();
-        var tipe_nilai = $('#tipe_nilaii').val();
-        var tahun_ajaran = $('#old_tahun_ajaran').val();
-
-        // var kelas = $('#kelass').val();
-        if (kelas != '') {
-            $.ajax({
-                url: '/get-data-siswa?id=' + id + '&old_judul=' + judul + '&old_guru=' + guru +
-                    '&old_mapel=' + mapel +
-                    '&kelas=' + kelas + '&tipe_nilaii=' + tipe_nilai + '&old_tahun_ajaran=' +
-                    tahun_ajaran,
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    $('#judul-daftar-siswa').html('Daftar Siswa ' + data.kelas);
-                    var siswa_html = '';
-                    var siswa_html = '';
-                    $.each(data.siswa, function(index, siswa) {
-                        siswa_html += '<div class="row mb-3">';
-                        siswa_html += '<label for="nilai' + (index + 1) +
-                            '" class="col-md-2 col-form-label">' + siswa.name + '</label>';
-                        siswa_html += '<input type="hidden" name="siswa' + (index + 1) +
-                            '" value="' + siswa.id + '" required id="siswa' + (index + 1) +
-                            '">';
-                        siswa_html += '<div class="col-md-10">';
-                        siswa_html +=
-                            '<input class="form-control" type="number" name="nilai' + (
-                                index + 1) + '" id="nilai' + (index + 1) +
-                            '" required placeholder="Masukkan nilai siswa" value="' + (data
-                                .nilai ? data.nilai[index] : '') + '">';
-                        siswa_html +=
-                            '<div class="invalid-feedback" style"background-image: none;">Nilai tidak boleh lebih dari 100</div>';
-                        siswa_html += '</div>'; // tambahkan tag penutup div
-                        siswa_html += '</div>'; // tambahkan tag penutup div
-                        // tambah input id nilai
-                        siswa_html += '<input type="hidden" name="id_nilai' + (index + 1) +
-                            '" value="' + (data.id_nilai ? data.id_nilai[index] : '') +
-                            '"  id="id_nilai' + (index + 1) +
-                            '">';
-
-                    });
-
-                    $('#daftar-siswa').html(siswa_html);
-                }
-            });
-        } else {
-            $('#judul-daftar-siswa').html('Daftar Siswa');
-            $('#daftar-siswa').html('');
-        }
-    });
-
-    $('#daftar-siswa').on('input', 'input[name^="nilai"]', function() {
-        var inputValue = parseInt($(this).val());
+    $('#nilai').on('input', function() {
+        var inputValue = $(this).val();
         if (inputValue > 100) {
             $(this).val(100);
             $(this).addClass('is-invalid');
