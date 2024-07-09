@@ -56,6 +56,10 @@
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#exampleModalScrollable">Nilai
                                                         UAS</button></li>
+                                                <li><button class="dropdown-item" onclick="tambahDataNilaiUjian()"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModalScrollable">Nilai
+                                                        Ujian</button></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -80,6 +84,7 @@
                                         <option value="Tugas">Tugas</option>
                                         <option value="UTS">UTS</option>
                                         <option value="UAS">UAS</option>
+                                        <option value="Ujian">Ujian</option>
                                     </select>
                                 </div>
                                 {{-- jika auth user id role tidak sama dengan 5 (siswa) --}}
@@ -121,6 +126,26 @@
 
 
                             <hr style="margin: 0.5rem 0 1rem 0">
+                            {{-- tahun ajaran aktif --}}
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    @if ($tahun_ajaran_aktif_semester != '' && $tahun_ajaran_aktif_tahun != '')
+                                        <label for="">Tahun ajaran aktif:
+                                            <span class="badge bg-success" style="font-size: 14px; font-weight:bold">
+                                                {{ $tahun_ajaran_aktif_semester }} {{ $tahun_ajaran_aktif_tahun }}
+                                            </span>
+                                        </label>
+                                    @else
+                                        <label for="">Tahun ajaran aktif:
+                                            <span class="badge bg-danger" style="font-size: 14px; font-weight:bold">
+                                                Belum ada tahun ajaran aktif
+                                            </span>
+                                        </label>
+                                    @endif
+                                </div>
+
+                            </div>
+                            <hr style="margin: 0.5rem 0 1rem 0">
 
                             <table id="datatable"
                                 class="table table-striped table-bordered dt-responsive nowrap dataTable no-footer dtr-inline collapsed"
@@ -130,12 +155,14 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Kelas</th>
+                                        <th>KD</th>
                                         <th>Judul</th>
                                         <th>Siswa</th>
                                         <th>Guru</th>
                                         <th>Mata Pelajaran</th>
                                         <th>Nilai</th>
                                         <th>Tipe Nilai</th>
+                                        <th>Tahun Ajaran</th>
                                         @canany(['admin', 'guru_wali', 'guru_mapel'])
                                             <th>Action</th>
                                         @endcanany
@@ -205,30 +232,17 @@
                             ')"><i class="ri-delete-bin-2-line align-middle me-1"></i><span style="vertical-align: middle">Hapus</span></button>';
 
                         table.row.add([
-                            // '<tr>' +
-                            // '<td>' + (key + 1) + '</td>' +
-                            // '<td>' + value.kelas.nama + '</td>' +
-                            // '<td>' + value.judul + '</td>' +
-                            // '<td>' + value.siswa.name + '</td>' +
-                            // '<td>' + value.guru.name + '</td>' +
-                            // '<td>' + value.mapel.mata_pelajaran + '</td>' +
-                            // '<td>' + value.nilai + '</td>' +
-                            // '<td>' + value.tipe_nilai + '</td>' +
-                            // @if (Auth::user()->id_role == 1)
-                            //     '<td>' + editButton + deleteButton + '</td>' +
-                            // @elseif (Auth::user()->id_role == 2 || Auth::user()->id_role == 3 || Auth::user()->id_role == 4)
-                            //     '<td>' + (value.id_guru_for_nilai == '{{ Auth::user()->id }}' ?
-                            //         editButton + deleteButton : '') + '</td>' +
-                            // @endif
-                            // '</tr>'
                             (key + 1),
                             value.kelas.nama,
+                            value.kompetensi_dasar,
                             value.judul,
                             value.siswa.name,
                             value.guru.name,
                             value.mapel.mata_pelajaran,
                             value.nilai,
                             value.tipe_nilai,
+                            (value.id_tahun_ajaran_for_nilai ? value.tahun_ajaran.semester +
+                                ' ' + value.tahun_ajaran.tahun : '-'),
                             @if (Auth::user()->id_role == 1)
                                 '<td>' + editButton + deleteButton + '</td>',
                             @elseif (Auth::user()->id_role == 2 || Auth::user()->id_role == 3 || Auth::user()->id_role == 4)
@@ -310,6 +324,19 @@
             });
         }
 
+        function tambahDataNilaiUjian() {
+
+            $.ajax({
+                url: '{{ route('nilai-ujian-tambah') }}',
+                type: 'GET',
+                success: function(response) {
+                    $('#content').html(response);
+                    // modal title
+                    $('#exampleModalScrollableTitle').html('Tambah Data Nilai Ujian');
+                }
+            });
+        }
+
         // make delete function
         function deleteData(id) {
             if (confirm('Apakah anda yakin ingin menghapus data ini?')) {
@@ -364,6 +391,8 @@
                         $('#exampleModalScrollableTitle').html('Ubah Data Nilai UTS');
                     } else if (response.includes('Data Nilai UAS')) {
                         $('#exampleModalScrollableTitle').html('Ubah Data Nilai UAS');
+                    } else if (response.includes('Data Nilai Ujian')) {
+                        $('#exampleModalScrollableTitle').html('Ubah Data Nilai Ujian');
                     }
                 }
             });
