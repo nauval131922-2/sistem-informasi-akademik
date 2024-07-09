@@ -14,22 +14,96 @@ $route = Route::currentRouteName();
                 {{-- id --}}
                 <input type="hidden" name="id" id="id" value="{{ $nilai->id }}">
 
-                {{-- old judul --}}
-                <input type="hidden" name="old_judul" id="old_judul" value="{{ $nilai->judul }}">
+
+
+                @if ($nilai->tipe_nilai == 'Ulangan Harian')
+                    {{-- old kompetensi dasar --}}
+                    <input type="hidden" name="old_kompetensi_dasar" id="old_kompetensi_dasar"
+                        value="{{ $nilai->kompetensi_dasar }}">
 
 
 
-                <div class="row mb-3">
-                    <label for="judul" class="col-md-2 col-form-label">Judul</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="judul" id="judul"
-                            placeholder="Ubah judul {{ $title }}" value="{{ old('judul') ?? $nilai->judul }}"
-                            required>
-                        <div class="mt-2">
-                            <span class="text-danger error-text judul_error"></span>
+                    <div class="row mb-3">
+                        <label for="kompetensi_dasar" class="col-md-2 col-form-label">Kompetensi Dasar</label>
+                        <div class="col-md-10">
+                            <select class="form-select" id="kompetensi_dasar" name="kompetensi_dasar" required>
+                                <option value="">Pilih Kompetensi Dasar</option>
+                                @foreach ($semua_kompetensi_dasar as $kompetensi_dasar)
+                                    @if ($nilai->kompetensi_dasar == $kompetensi_dasar ?? old('kompetensi_dasar') == $kompetensi_dasar)
+                                        <option value="{{ $kompetensi_dasar }}" selected>{{ $kompetensi_dasar }}
+                                        </option>
+                                    @else
+                                        <option value="{{ $kompetensi_dasar }}">{{ $kompetensi_dasar }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <div class="mt-2">
+                                <span class="text-danger error-text kompetensi_dasar_error"></span>
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    {{-- old judul --}}
+                    <input type="hidden" name="old_judul" id="old_judul" value="{{ $nilai->judul }}">
+
+                    <div class="row mb-3">
+                        <label for="judul" class="col-md-2 col-form-label">Judul</label>
+                        <div class="col-md-10">
+                            <select class="form-select" id="judul" name="judul" required>
+                                <option value="">Pilih Judul</option>
+                                @foreach ($semua_judul as $judul)
+                                    @if ($nilai->judul == $judul ?? old('judul') == $judul)
+                                        <option value="{{ $judul }}" selected>{{ $judul }}
+                                        </option>
+                                    @else
+                                        <option value="{{ $judul }}">{{ $judul }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <div class="mt-2">
+                                <span class="text-danger error-text judul_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                @elseif ($nilai->tipe_nilai == 'Ujian')
+                    {{-- old judul --}}
+                    <input type="hidden" name="old_judul" id="old_judul" value="{{ $nilai->judul }}">
+
+                    <div class="row mb-3">
+                        <label for="judul" class="col-md-2 col-form-label">Judul</label>
+                        <div class="col-md-10">
+                            <select class="form-select" id="judul" name="judul" required>
+                                <option value="">Pilih Judul</option>
+                                @foreach ($semua_judul_ujian as $judul)
+                                    @if ($nilai->judul == $judul ?? old('judul') == $judul)
+                                        <option value="{{ $judul }}" selected>{{ $judul }}
+                                        </option>
+                                    @else
+                                        <option value="{{ $judul }}">{{ $judul }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <div class="mt-2">
+                                <span class="text-danger error-text judul_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    {{-- old judul --}}
+                    <input type="hidden" name="old_judul" id="old_judul" value="{{ $nilai->judul }}">
+
+                    <div class="row mb-3">
+                        <label for="judul" class="col-md-2 col-form-label">Judul</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" name="judul" id="judul"
+                                placeholder="Ubah judul {{ $title }}"
+                                value="{{ old('judul') ?? $nilai->judul }}" required>
+                            <div class="mt-2">
+                                <span class="text-danger error-text judul_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 @if (Auth::user()->id_role == '1')
                     {{-- old guru --}}
@@ -148,6 +222,8 @@ $route = Route::currentRouteName();
                     <input type="hidden" name="tipe_nilai" id="tipe_nilaii" value="UTS">
                 @elseif ($nilai->tipe_nilai == 'UAS')
                     <input type="hidden" name="tipe_nilai" id="tipe_nilaii" value="UAS">
+                @elseif ($nilai->tipe_nilai == 'Ujian')
+                    <input type="hidden" name="tipe_nilai" id="tipe_nilaii" value="Ujian">
                 @endif
                 <button type="submit" class="btn btn-info waves-effect waves-light">
                     <i class="ri-refresh-line align-middle me-1"></i>
@@ -174,14 +250,23 @@ $route = Route::currentRouteName();
         var kelas = $('#kelass').val();
         var tipe_nilai = $('#tipe_nilaii').val();
         var tahun_ajaran = $('#old_tahun_ajaran').val();
+        var kompetensi_dasar = $('#old_kompetensi_dasar').val();
+
+        var url;
+        if (tipe_nilai === 'Ulangan Harian') {
+            url = '/get-data-siswa?id=' + id + '&old_judul=' + judul + '&old_guru=' + guru +
+                '&old_mapel=' + mapel + '&kelas=' + kelas + '&tipe_nilaii=' + tipe_nilai +
+                '&old_tahun_ajaran=' + tahun_ajaran + '&old_kompetensi_dasar=' + kompetensi_dasar;
+        } else {
+            url = '/get-data-siswa?id=' + id + '&old_judul=' + judul + '&old_guru=' + guru +
+                '&old_mapel=' + mapel + '&kelas=' + kelas + '&tipe_nilaii=' + tipe_nilai +
+                '&old_tahun_ajaran=' + tahun_ajaran;
+        }
 
         // var kelas = $('#kelass').val();
         if (kelas != '') {
             $.ajax({
-                url: '/get-data-siswa?id=' + id + '&old_judul=' + judul + '&old_guru=' + guru +
-                    '&old_mapel=' + mapel +
-                    '&kelas=' + kelas + '&tipe_nilaii=' + tipe_nilai + '&old_tahun_ajaran=' +
-                    tahun_ajaran,
+                url: url,
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
