@@ -10,16 +10,79 @@ $route = Route::currentRouteName();
                 berikut untuk menambah {{ $title }}.</p>
             <form enctype="multipart/form-data" id="formTambahData" method="POST">
                 @csrf
-                <div class="row mb-3">
-                    <label for="judul" class="col-md-2 col-form-label">Judul</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="judul" id="judul"
-                            placeholder="Masukkan judul {{ $title }}" value="{{ old('judul') }}" required>
-                        <div class="mt-2">
-                            <span class="text-danger error-text judul_error"></span>
+
+                @if ($route == 'nilai-ulangan-harian-tambah')
+                    <div class="row mb-3">
+                        <label for="kompetensi_dasar" class="col-md-2 col-form-label">Kompetensi Dasar</label>
+                        <div class="col-md-10">
+                            <select class="form-select" id="kompetensi_dasar" name="kompetensi_dasar" required>
+                                <option value="">Pilih Kompetensi Dasar</option>
+                                @foreach ($semua_kompetensi_dasar as $kompetensi_dasar)
+                                    @if (old('kompetensi_dasar') == $kompetensi_dasar)
+                                        <option value="{{ $kompetensi_dasar }}" selected>{{ $kompetensi_dasar }}
+                                        </option>
+                                    @else
+                                        <option value="{{ $kompetensi_dasar }}">{{ $kompetensi_dasar }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <div class="mt-2">
+                                <span class="text-danger error-text kompetensi_dasar_error"></span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    <div class="row mb-3">
+                        <label for="judul" class="col-md-2 col-form-label">Judul</label>
+                        <div class="col-md-10">
+                            <select class="form-select" id="judul" name="judul" required>
+                                <option value="">Pilih Judul</option>
+                                @foreach ($semua_judul as $judul)
+                                    @if (old('judul') == $judul)
+                                        <option value="{{ $judul }}" selected>{{ $judul }}
+                                        </option>
+                                    @else
+                                        <option value="{{ $judul }}">{{ $judul }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <div class="mt-2">
+                                <span class="text-danger error-text judul_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                @elseif ($route == 'nilai-ujian-tambah')
+                    <div class="row mb-3">
+                        <label for="judul" class="col-md-2 col-form-label">Judul</label>
+                        <div class="col-md-10">
+                            <select class="form-select" id="judul" name="judul" required>
+                                <option value="">Pilih Judul</option>
+                                @foreach ($semua_judul as $judul)
+                                    @if (old('judul') == $judul)
+                                        <option value="{{ $judul }}" selected>{{ $judul }}
+                                        </option>
+                                    @else
+                                        <option value="{{ $judul }}">{{ $judul }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <div class="mt-2">
+                                <span class="text-danger error-text judul_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <div class="row mb-3">
+                        <label for="judul" class="col-md-2 col-form-label">Judul</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" name="judul" id="judul"
+                                placeholder="Masukkan judul {{ $title }}" value="{{ old('judul') }}" required>
+                            <div class="mt-2">
+                                <span class="text-danger error-text judul_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
 
                 @if (Auth::user()->id_role == '1')
                     <div class="row mb-3">
@@ -146,13 +209,15 @@ $route = Route::currentRouteName();
                 @endif
 
                 @if ($route == 'nilai-ulangan-harian-tambah')
-                    <input type="hidden" name="tipe_nilai" value="Ulangan Harian">
+                    <input type="hidden" name="tipe_nilaii" value="Ulangan Harian">
                 @elseif ($route == 'nilai-tugas-tambah')
-                    <input type="hidden" name="tipe_nilai" value="Tugas">
+                    <input type="hidden" name="tipe_nilaii" value="Tugas">
                 @elseif ($route == 'nilai-uts-tambah')
-                    <input type="hidden" name="tipe_nilai" value="UTS">
+                    <input type="hidden" name="tipe_nilaii" value="UTS">
                 @elseif ($route == 'nilai-uas-tambah')
-                    <input type="hidden" name="tipe_nilai" value="UAS">
+                    <input type="hidden" name="tipe_nilaii" value="UAS">
+                @elseif ($route == 'nilai-ujian-tambah')
+                    <input type="hidden" name="tipe_nilaii" value="Ujian">
                 @endif
 
                 <button type="submit" class="btn btn-info waves-effect waves-light">
