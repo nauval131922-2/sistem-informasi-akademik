@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use Dompdf\Dompdf;
 use App\Models\Guru;
+use App\Models\Hobi;
 use App\Models\User;
 use App\Models\Kelas;
+use App\Models\Nilai;
 use App\Models\Siswa;
 use App\Models\Jabatan;
+use App\Models\CitaCita;
+use App\Models\Pekerjaan;
 use App\Models\MediaSosial;
+use App\Models\TahunAjaran;
+use App\Models\JenisKelamin;
 use Illuminate\Http\Request;
 use App\Models\MataPelajaran;
 use App\Models\ProfilSekolah;
@@ -41,7 +49,20 @@ class UserController extends Controller
 
         $mapel = MataPelajaran::all();
 
-        return view('backend.user.index', compact('semua_user', 'title', 'semua_role', 'kelas', 'mapel'));
+        $tahun_ajaran_aktif = TahunAjaran::where('status', "Aktif")->first();
+        // nama tahun ajaran aktif
+
+
+        // jika tidak ada tahun ajaran aktif
+        if (!$tahun_ajaran_aktif) {
+            $tahun_ajaran_aktif_semester = '';
+            $tahun_ajaran_aktif_tahun = '';
+        } else {
+            $tahun_ajaran_aktif_semester = $tahun_ajaran_aktif->semester;
+            $tahun_ajaran_aktif_tahun = $tahun_ajaran_aktif->tahun;
+        }
+
+        return view('backend.user.index', compact('semua_user', 'title', 'semua_role', 'kelas', 'mapel', 'tahun_ajaran_aktif', 'tahun_ajaran_aktif_semester', 'tahun_ajaran_aktif_tahun'));
     }
 
     public function tambah($id)
@@ -51,22 +72,20 @@ class UserController extends Controller
         $id_role = $id;
         $role = Jabatan::where('id', $id)->first();
         $title = 'Data ' . $role->nama;
+        $semua_jenis_kelamin = ['Laki-laki', 'Perempuan'];
+        $semua_cita_cita = CitaCita::all();
+        $semua_hobi = Hobi::all();
+        $semua_jenjang_sebelumnya = ['RA', 'TK', 'PAUD', 'LOT'];
+        $semua_jenis_mutasi = ['Mutasi Masuk', 'Mutasi Keluar', 'Lulus'];
+        $semua_pekerjaan = Pekerjaan::all();
+        $semua_pendidikan_terakhir = ['SD', 'SMP', 'SLTA', 'D1', 'D2', 'D3', 'D4', 'S1', 'S2', 'S3'];
+        $semua_status = ['Masih Hidup', 'Meninggal', 'Tidak diketahui'];
 
-        return view('backend.user.tambah', compact('semua_kelas', 'semua_mapel', 'title', 'id_role', 'role'));
+        return view('backend.user.tambah', compact('semua_kelas', 'semua_mapel', 'title', 'id_role', 'role', 'semua_jenis_kelamin', 'semua_cita_cita', 'semua_hobi', 'semua_jenjang_sebelumnya', 'semua_jenis_mutasi', 'semua_pekerjaan', 'semua_pendidikan_terakhir', 'semua_status'));
     }
 
     public function simpan(Request $request, $id_role)
     {
-        // validasi
-        // $request->validate([
-        //     'nama' => 'required',
-        //     'username' => 'required|unique:users,username',
-        //     'email' => 'nullable|email|unique:users,email',
-        //     'password' => 'required|min:6',
-        //     'confirm_password' => 'required|same:password',
-        //     'kelas' => 'required_if:id_role,3,5',
-        //     'mapel' => 'required_if:id_role,4',
-        // ]);
 
         // validator
         $validator = Validator::make($request->all(), [
@@ -77,6 +96,7 @@ class UserController extends Controller
             'confirm_password' => 'required|same:password',
             'kelas' => 'required_if:id_role,3,5',
             'mapel' => 'required_if:id_role,4',
+            'nis_lokal' => 'required_if:id_role,5',
         ]);
 
         // jika validasi gagal
@@ -87,14 +107,17 @@ class UserController extends Controller
             ]);
         }
 
+        // cek jika $id = 5 (siswa) dan ada nis lokal yang sama
+        $nis_lokal = Siswa::where('nis_lokal', $request->nis_lokal)->count();
+        if ($id_role == 5 && $nis_lokal > 0) {
+            return response()->json([
+                'status' => 'error2',
+                'message' => 'NIS lokal yang sama sudah ada'
+            ]);
+        }
+
         // cek jika $id = 3 (guru wali kelas) dan ada guru wali kelas dengan kelas yang sama
         if ($id_role == 3 && User::where('id_role', 3)->where('id_kelas', $request->kelas)->count() > 0) {
-            // $notification = array(
-            //     'message' => 'Guru wali kelas dengan kelas yang sama sudah ada',
-            //     'alert-type' => 'error'
-            // );
-
-            // return redirect()->back()->withInput()->with($notification);
 
             return response()->json([
                 'status' => 'error2',
@@ -119,15 +142,10 @@ class UserController extends Controller
             Image::make($request->gambar)->save(public_path('/upload/profile_picture/' . $nama_file));
 
             $user->profile_image = 'upload/profile_picture/' . $nama_file;
-        } else {
-            $user->profile_image = 'upload/profile_picture/default/1.jpg';
         }
 
-        // simpan data
         $user->save();
 
-        // jika id_role = 3 (guru wali kelas) atau 4 (guru mapel) maka simpan ke tabel guru
-        // jika id_role = 5 (siswa) maka simpan ke tabel siswa
         if ($id_role == 3 || $id_role == 4) {
             $guru = new Guru();
             $guru->id_user_for_guru = $user->id;
@@ -136,18 +154,60 @@ class UserController extends Controller
         } else if ($id_role == 5) {
             $siswa = new Siswa();
             $siswa->id_user_for_siswa = $user->id;
+            $siswa->nisn = $request->nisn;
+            $siswa->nis_lokal = $request->nis_lokal;
+            $siswa->nik = $request->nik;
+            $siswa->jenis_kelamin = $request->jenis_kelamin;
+            $siswa->jumlah_saudara = $request->jumlah_saudara;
+            $siswa->tempat_lahir = $request->tempat_lahir;
+            $siswa->id_cita_cita_for_siswa = $request->cita_cita;
+            $siswa->tanggal_lahir = $request->tanggal_lahir;
+            $siswa->id_hobi_for_siswa = $request->hobi;
+            $siswa->alamat = $request->alamat;
+            $siswa->jarak_rumah = $request->jarak_rumah;
+            $siswa->nomor_hp = $request->nomor_hp;
+            $siswa->nomor_kk = $request->nomor_kk;
+            $siswa->tanggal_masuk = $request->tanggal_masuk;
+            $siswa->nomor_kip = $request->nomor_kip;
+            $siswa->jenjang_sebelumnya = $request->jenjang_sebelumnya;
+            $siswa->jenis_mutasi = $request->jenis_mutasi;
+            $siswa->sekolah_pra_sekolah = $request->sekolah_pra_sekolah;
+            $siswa->sekolah_mutasi = $request->sekolah_mutasi;
+            $siswa->npsn_pra_sekolah = $request->npsn_pra_sekolah;
+            $siswa->npsn_mutasi = $request->npsn_mutasi;
+            $siswa->nism_pra_sekolah = $request->nism_pra_sekolah;
+            $siswa->nism_mutasi = $request->nism_mutasi;
+            $siswa->nomor_ijazah = $request->nomor_ijazah;
+            $siswa->tanggal_mutasi = $request->tanggal_mutasi;
+            $siswa->ayah_kandung = $request->ayah_kandung;
+            $siswa->ibu_kandung = $request->ibu_kandung;
+            $siswa->status_ayah = $request->status_ayah;
+            $siswa->status_ibu = $request->status_ibu;
+            $siswa->nik_ayah = $request->nik_ayah;
+            $siswa->nik_ibu = $request->nik_ibu;
+            $siswa->tempat_lahir_ayah = $request->tempat_lahir_ayah;
+            $siswa->tempat_lahir_ibu = $request->tempat_lahir_ibu;
+            $siswa->tanggal_lahir_ayah = $request->tanggal_lahir_ayah;
+            $siswa->tanggal_lahir_ibu = $request->tanggal_lahir_ibu;
+            $siswa->pendidikan_ayah = $request->pendidikan_ayah;
+            $siswa->pendidikan_ibu = $request->pendidikan_ibu;
+            $siswa->id_pekerjaan_ayah_for_siswa = $request->pekerjaan_ayah;
+            $siswa->id_pekerjaan_ibu_for_siswa = $request->pekerjaan_ibu;
+            $siswa->nomor_kks = $request->nomor_kks;
+            $siswa->nomor_pkh = $request->nomor_pkh;
+            $siswa->id_diterima_di_kelas_for_siswa = $request->diterima_di_kelas;
+
+            if ($request->hasFile('ijazah')) {
+                $judul_tanpa_spasi = str_replace(' ', '-', $request->nama);
+                $nama_file = $judul_tanpa_spasi . '-' . hexdec(uniqid()) . '.' . $request->ijazah->getClientOriginalExtension();
+                Image::make($request->ijazah)->save(public_path('/upload/ijazah/' . $nama_file));
+
+                $siswa->ijazah = 'upload/ijazah/' . $nama_file;
+            }
 
             $siswa->save();
         }
 
-        // // notifikasi
-        // $notification = array(
-        //     'message' => 'Data berhasil disimpan!',
-        //     'alert-type' => 'success',
-        // );
-        // return redirect()->route('user-index', $id_role)->with($notification);
-
-        // jika berhasil disimpan
         return response()->json([
             'status' => 'success',
             'message' => 'Data berhasil disimpan'
@@ -192,8 +252,18 @@ class UserController extends Controller
         $user = User::find($id);
 
         // cek jika ada gambar
-        if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
+        if ($user->profile_image != null) {
             unlink($user->profile_image);
+        }
+
+        // jika role siswa
+        if ($user->id_role == 5) {
+            $siswa = Siswa::where('id_user_for_siswa', $user->id)->first();
+
+            // cek jika ada gambar ijazah
+            if ($siswa->ijazah != null) {
+                unlink($siswa->ijazah);
+            }
         }
 
         $user->delete();
@@ -214,27 +284,30 @@ class UserController extends Controller
         $role = Jabatan::where('id', $id_role)->first();
         $title = 'Data ' . $role->nama;
 
-        return view('backend.user.edit', compact('user', 'semua_kelas', 'semua_mapel', 'title', 'id_role', 'role'));
+        $siswa = Siswa::where('id_user_for_siswa', $id)->first();
+
+        $semua_jenis_kelamin = ['Laki-laki', 'Perempuan'];
+        $semua_cita_cita = CitaCita::all();
+        $semua_hobi = Hobi::all();
+        $semua_jenjang_sebelumnya = ['RA', 'TK', 'PAUD', 'LOT'];
+        $semua_jenis_mutasi = ['Mutasi Masuk', 'Mutasi Keluar', 'Lulus'];
+        $semua_pekerjaan = Pekerjaan::all();
+        $semua_pendidikan_terakhir = ['SD', 'SMP', 'SLTA', 'D1', 'D2', 'D3', 'D4', 'S1', 'S2', 'S3'];
+        $semua_status = ['Masih Hidup', 'Meninggal', 'Tidak diketahui'];
+
+        return view('backend.user.edit', compact('user', 'semua_kelas', 'semua_mapel', 'title', 'id_role', 'role', 'semua_jenis_kelamin', 'semua_cita_cita', 'semua_hobi', 'semua_jenjang_sebelumnya', 'semua_jenis_mutasi', 'semua_pekerjaan', 'semua_pendidikan_terakhir', 'semua_status', 'siswa'));
     }
 
     public function update(Request $request, $id)
     {
-        // validasi (oke)
-        // $request->validate([
-        //     'nama' => 'required',
-        //     'username' => 'required|unique:users,username,' . $id,
-        //     'email' => 'nullable|email|unique:users,email,' . $id,
-        //     'kelas' => 'required_if:id_role,3,5',
-        //     'mapel' => 'required_if:id_role,4'
-        // ]);
-
         // validator
         $validator = Validator::make($request->all(), [
             'nama' => 'required',
             'username' => 'required|unique:users,username,' . $id,
             'email' => 'nullable|email|unique:users,email,' . $id,
             'kelas' => 'required_if:id_role,3,5',
-            'mapel' => 'required_if:id_role,4'
+            'mapel' => 'required_if:id_role,4',
+            'nis_lokal' => 'required_if:id_role,5',
         ]);
 
         // jika validasi gagal
@@ -245,17 +318,21 @@ class UserController extends Controller
             ]);
         }
 
+        // cek jika $id = 5 (siswa) dan ada nis lokal yang sama dan bukan yang sedang di edit
+        $nis_lokal = Siswa::where('nis_lokal', $request->nis_lokal)->where('id_user_for_siswa', '!=', $id)->count();
+        $id_role = $request->id_role;
+        if ($id_role == 5 && $nis_lokal > 0) {
+            return response()->json([
+                'status' => 'error2',
+                'message' => 'NIS lokal yang sama sudah ada'
+            ]);
+        }
+
         // validasi guru wali kelas dengan kelas yang sama sudah ada atau belum (oke)
         if ($request->id_role == 3) {
             $cek_guru_wali_kelas = User::where('id_kelas', '=', $request->kelas)->where('id_role', '=', '3')->where('id', '!=', $id)->first();
 
             if ($cek_guru_wali_kelas) {
-                // $notification = array(
-                //     'message' => 'Guru wali kelas dengan kelas yang sama sudah ada!',
-                //     'alert-type' => 'error'
-                // );
-
-                // return redirect()->back()->withInput()->with($notification);
 
                 return response()->json([
                     'status' => 'error2',
@@ -277,18 +354,11 @@ class UserController extends Controller
         if ($request->password != null && $request->confirm_password != null) {
             // validasi password dan confirm password harus sama (oke)
             if ($request->password != $request->confirm_password) {
-                // $notification = array(
-                //     'message' => 'Password dan Confirm Password harus sama!',
-                //     'alert-type' => 'error'
-                // );
-
-                // return redirect()->back()->withInput()->with($notification);
 
                 return response()->json([
                     'status' => 'error3',
                     'message' => 'Password dan Confirm Password harus sama'
                 ]);
-
             } else {
                 $user->password = bcrypt($request->password);
             }
@@ -297,12 +367,7 @@ class UserController extends Controller
         // simpan data gambar jika ada gambar yang diupload (oke)
         if ($request->hasFile('gambar')) {
 
-            // if ($user->profile_image) {
-            //     unlink($user->profile_image);
-            // }
-
-            // jika menggunakkan gambar default jangan hapus gambar default
-            if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
+            if ($user->profile_image != null) {
                 unlink($user->profile_image);
             }
 
@@ -314,16 +379,7 @@ class UserController extends Controller
             Image::make($request->gambar)->save(public_path('/upload/profile_picture/' . $nama_file));
 
             $user->profile_image = 'upload/profile_picture/' . $nama_file;
-        } elseif ($request->gambarPreview == null && $user->profile_image != null) {
-            // unlink($user->profile_image);
-
-            // jika menggunakkan gambar default jangan hapus gambar default
-            if ($user->profile_image != 'upload/profile_picture/default/1.jpg') {
-                unlink($user->profile_image);
-            }
-
-            $user->profile_image = 'upload/profile_picture/default/1.jpg';
-        } elseif ($request->gambarPreview != null && $user->profile_image != null && $user->profile_image != 'upload/profile_picture/default/1.jpg') {
+        } elseif ($request->gambarPreview != null && $user->profile_image != null) {
             // get file extension
             $file_ext = pathinfo($user->profile_image, PATHINFO_EXTENSION);
 
@@ -333,13 +389,17 @@ class UserController extends Controller
             rename(public_path($user->profile_image), public_path('upload/profile_picture/' . $nama_file));
 
             $user->profile_image = 'upload/profile_picture/' . $nama_file;
+        } elseif ($request->gambarPreview == null) {
+            if ($user->profile_image != null) {
+                unlink($user->profile_image);
+            }
+
+            $user->profile_image = null;
         }
 
         // simpan data ke database (oke)
         $user->save();
 
-        // jika id_role = 3 (guru wali kelas) atau 4 (guru) maka simpan data ke tabel guru (oke)
-        // jika id_role = 5 (siswa) maka simpan data ke tabel siswa (oke)
         if ($request->id_role == 3 || $request->id_role == 4) {
             $guru = Guru::where('id_user_for_guru', $id)->first();
             // jika guru belum ada di tabel guru
@@ -356,20 +416,88 @@ class UserController extends Controller
             if (!$siswa) {
                 $siswa = new Siswa();
             }
-
             $siswa->id_user_for_siswa = $user->id;
+            $siswa->nisn = $request->nisn;
+            $siswa->nis_lokal = $request->nis_lokal;
+            $siswa->nik = $request->nik;
+            $siswa->jenis_kelamin = $request->jenis_kelamin;
+            $siswa->jumlah_saudara = $request->jumlah_saudara;
+            $siswa->tempat_lahir = $request->tempat_lahir;
+            $siswa->id_cita_cita_for_siswa = $request->cita_cita;
+            $siswa->tanggal_lahir = $request->tanggal_lahir;
+            $siswa->id_hobi_for_siswa = $request->hobi;
+            $siswa->alamat = $request->alamat;
+            $siswa->jarak_rumah = $request->jarak_rumah;
+            $siswa->nomor_hp = $request->nomor_hp;
+            $siswa->nomor_kk = $request->nomor_kk;
+            $siswa->tanggal_masuk = $request->tanggal_masuk;
+            $siswa->nomor_kip = $request->nomor_kip;
+            $siswa->jenjang_sebelumnya = $request->jenjang_sebelumnya;
+            $siswa->jenis_mutasi = $request->jenis_mutasi;
+            if ($siswa->jenis_mutasi == 'Mutasi Keluar'){
+                $user = User::find($id);
+                $user->id_kelas = null;
+
+                $user->save();
+            };
+            $siswa->sekolah_pra_sekolah = $request->sekolah_pra_sekolah;
+            $siswa->sekolah_mutasi = $request->sekolah_mutasi;
+            $siswa->npsn_pra_sekolah = $request->npsn_pra_sekolah;
+            $siswa->npsn_mutasi = $request->npsn_mutasi;
+            $siswa->nism_pra_sekolah = $request->nism_pra_sekolah;
+            $siswa->nism_mutasi = $request->nism_mutasi;
+            $siswa->nomor_ijazah = $request->nomor_ijazah;
+            $siswa->tanggal_mutasi = $request->tanggal_mutasi;
+            $siswa->ayah_kandung = $request->ayah_kandung;
+            $siswa->ibu_kandung = $request->ibu_kandung;
+            $siswa->status_ayah = $request->status_ayah;
+            $siswa->status_ibu = $request->status_ibu;
+            $siswa->nik_ayah = $request->nik_ayah;
+            $siswa->nik_ibu = $request->nik_ibu;
+            $siswa->tempat_lahir_ayah = $request->tempat_lahir_ayah;
+            $siswa->tempat_lahir_ibu = $request->tempat_lahir_ibu;
+            $siswa->tanggal_lahir_ayah = $request->tanggal_lahir_ayah;
+            $siswa->tanggal_lahir_ibu = $request->tanggal_lahir_ibu;
+            $siswa->pendidikan_ayah = $request->pendidikan_ayah;
+            $siswa->pendidikan_ibu = $request->pendidikan_ibu;
+            $siswa->id_pekerjaan_ayah_for_siswa = $request->pekerjaan_ayah;
+            $siswa->id_pekerjaan_ibu_for_siswa = $request->pekerjaan_ibu;
+            $siswa->nomor_kks = $request->nomor_kks;
+            $siswa->nomor_pkh = $request->nomor_pkh;
+            $siswa->id_diterima_di_kelas_for_siswa = $request->diterima_di_kelas;
+
+            if ($request->hasFile('ijazah')) {
+
+                if ($siswa->ijazah != null) {
+                    unlink($siswa->ijazah);
+                }
+
+                $judul_tanpa_spasi = str_replace(' ', '-', $request->nama);
+                $nama_file = $judul_tanpa_spasi . '-' . hexdec(uniqid()) . '.' . $request->ijazah->getClientOriginalExtension();
+
+                Image::make($request->ijazah)->save(public_path('/upload/ijazah/' . $nama_file));
+
+                $siswa->ijazah = 'upload/ijazah/' . $nama_file;
+            } elseif ($request->ijazahPreview != null && $siswa->ijazah != null) {
+                $file_ext = pathinfo($siswa->ijazah, PATHINFO_EXTENSION);
+
+                $judul_tanpa_spasi = str_replace(' ', '-', $request->nama);
+                $nama_file = $judul_tanpa_spasi . '-' . hexdec(uniqid()) . '.' . $file_ext;
+                rename(public_path($siswa->ijazah), public_path('upload/ijazah/' . $nama_file));
+
+                $siswa->ijazah = 'upload/ijazah/' . $nama_file;
+            } elseif ($request->ijazahPreview == null) {
+                if ($siswa->ijazah != null) {
+                    unlink($siswa->ijazah);
+                }
+
+                $siswa->ijazah = null;
+            }
 
             $siswa->save();
+
         }
 
-        // notifikasi (oke)
-        // $notification = array(
-        //     'message' => 'Data berhasil diubah!',
-        //     'alert-type' => 'success'
-        // );
-
-        // // redirect (oke)
-        // return redirect()->route('user-index', $user->id_role)->with($notification);
 
         // jika berhasil
         return response()->json([
@@ -403,4 +531,116 @@ class UserController extends Controller
             'data' => $user
         ]);
     }
+
+    function cetak(Request $request)
+    {
+        $id_siswa = $request->id_siswa;
+
+        $foto = User::where('id', $id_siswa)->first()->profile_image;
+
+        $nama_lengkap = User::where('id', $id_siswa)->first()->name;
+        $nisn = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nisn;
+        $nis_lokal = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nis_lokal;
+        $nik = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nik;
+
+        $jenis_kelamin = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jenis_kelamin;
+        $tempat_lahir = Siswa::where('id_user_for_siswa', $id_siswa)->first()->tempat_lahir;
+        $tanggal_lahir = Carbon::parse(Siswa::where('id_user_for_siswa', $id_siswa)->first()->tanggal_lahir)->format('d-m-Y');
+        $alamat = Siswa::where('id_user_for_siswa', $id_siswa)->first()->alamat;
+        $nomor_hp = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_hp;
+        $tanggal_masuk = Carbon::parse(Siswa::where('id_user_for_siswa', $id_siswa)->first()->tanggal_masuk)->format('d-m-Y');
+        $kelas = Kelas::where('id', User::where('id', $id_siswa)->first()->id_kelas)->first()->id;
+        $diterima_di_kelas = Kelas::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_diterima_di_kelas_for_siswa)->first()->id;
+
+        $jumlah_saudara = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jumlah_saudara;
+        $cita_cita = Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_cita_cita_for_siswa;
+        $cita_cita = CitaCita::where('id', $cita_cita)->first()->cita_cita;
+        $hobi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_hobi_for_siswa;
+        $hobi = Hobi::where('id', $hobi)->first()->hobi;
+        $jarak_rumah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jarak_rumah;
+        $nomor_kk = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_kk;
+        $nomor_kip = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_kip;
+
+        $jenjang_sebelumnya = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jenjang_sebelumnya;
+        $jenis_mutasi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jenis_mutasi;
+
+        $sekolah_pra = Siswa::where('id_user_for_siswa', $id_siswa)->first()->sekolah_pra_sekolah;
+        $sekolah_mutasi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->sekolah_mutasi;
+
+        $npsn_pra = Siswa::where('id_user_for_siswa', $id_siswa)->first()->npsn_pra_sekolah;
+        $npsn_mutasi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->npsn_mutasi;
+
+        $nism_pra = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nism_pra_sekolah;
+        $nism_mutasi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nism_mutasi;
+
+        $nomor_ijazah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_ijazah;
+        $tanggal_mutasi = Carbon::parse(Siswa::where('id_user_for_siswa', $id_siswa)->first()->tanggal_mutasi)->format('d-m-Y');
+
+        $ayah_kandung = Siswa::where('id_user_for_siswa', $id_siswa)->first()->ayah_kandung;
+        $ibu_kandung = Siswa::where('id_user_for_siswa', $id_siswa)->first()->ibu_kandung;
+
+        $status_ayah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->status_ayah;
+        $status_ibu = Siswa::where('id_user_for_siswa', $id_siswa)->first()->status_ibu;
+
+        $nik_ayah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nik_ayah;
+        $nik_ibu = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nik_ibu;
+
+        $tempat_lahir_ayah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->tempat_lahir_ayah;
+        $tempat_lahir_ibu = Siswa::where('id_user_for_siswa', $id_siswa)->first()->tempat_lahir_ibu;
+
+        $tanggal_lahir_ayah = Carbon::parse(Siswa::where('id_user_for_siswa', $id_siswa)->first()->tanggal_lahir_ayah)->format('d-m-Y');
+        $tanggal_lahir_ibu = Carbon::parse(Siswa::where('id_user_for_siswa', $id_siswa)->first()->tanggal_lahir_ibu)->format('d-m-Y');
+
+        $pendidikan_ayah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->pendidikan_ayah;
+        $pendidikan_ibu = Siswa::where('id_user_for_siswa', $id_siswa)->first()->pendidikan_ibu;
+
+        $pekerjaan_ayah = Pekerjaan::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_pekerjaan_ayah_for_siswa)->first()->pekerjaan;
+        $pekerjaan_ibu = Pekerjaan::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_pekerjaan_ibu_for_siswa)->first()->pekerjaan;
+
+        $nomor_kks = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_kks;
+        $nomor_pkh = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_pkh;
+
+        $semua_mata_pelajaran = MataPelajaran::all();
+
+        // get semua data nama kelas
+        $semua_kelas = Kelas::all();
+
+        $nama_file = 'Cetak Data Siswa' . '.pdf';
+
+        $semua_nilai = Nilai::where('id_siswa_for_nilai', $id_siswa)->get();
+
+        $semua_semester = ['Gasal', 'Genap'];
+
+        return view('backend.user.cetak', compact('id_siswa', 'nama_file', 'nama_lengkap', 'nisn', 'kelas', 'nis_lokal', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'alamat', 'cita_cita', 'jumlah_saudara', 'foto', 'hobi', 'jarak_rumah', 'nomor_hp', 'tanggal_masuk', 'nomor_kk', 'nomor_kip', 'ayah_kandung', 'ibu_kandung', 'status_ayah', 'status_ibu', 'nik_ayah', 'nik_ibu', 'tempat_lahir_ayah', 'tempat_lahir_ibu', 'tanggal_lahir_ayah', 'tanggal_lahir_ibu', 'pendidikan_ayah', 'pendidikan_ibu', 'pekerjaan_ayah', 'pekerjaan_ibu', 'nomor_kks', 'nomor_pkh','jenjang_sebelumnya', 'jenis_mutasi','sekolah_pra', 'sekolah_mutasi', 'npsn_pra', 'npsn_mutasi', 'nism_pra', 'nism_mutasi', 'nomor_ijazah', 'tanggal_mutasi', 'semua_mata_pelajaran', 'semua_nilai','diterima_di_kelas', 'semua_kelas', 'semua_semester'));
+
+    }
+
+    public function naik()
+    {
+        // jika tidak ada user dengan role siswa yang id kelas 1, maka gagal naik
+        if (User::where('id_role', '=', 5)->where('id_kelas', '=', 1)->count() == 0) {
+            return response()->json(['status' => 'warning', 'message' => 'Gagal menaikkan kelas, kelas 1 masih kosong']);
+        }
+
+        // jika id_kelas 6 maka kosongkan id_kelas dan isi kolom lulus dengan 1
+        User::where('id_role', '=', 5)->where('id_kelas', '=', 6)->update(['id_kelas' => null, 'lulus' => 1]);
+
+        // Hanya menaikkan kelas untuk pengguna yang kelasnya kurang dari 6
+        User::where('id_kelas', '<', 6)->where('id_role', '=', 5)->increment('id_kelas');
+
+        return response()->json(['status' => 'success', 'message' => 'Berhasil menaikkan kelas']);
+    }
+
+    public function turun(){
+        // jika ada user dengan role siswa yang id kelas 1, maka gagal turun
+        if (User::where('id_role', '=', 5)->where('id_kelas', '=', 1)->count() > 0) {
+            return response()->json(['status' => 'warning', 'message' => 'Gagal menurunkan kelas, kelas 1 tidak kosong']);
+        }
+
+        // Hanya menaikkan kelas untuk pengguna yang kelasnya lebih dari 1
+        User::where('id_kelas', '>', 1)->where('id_role', '=', 5)->decrement('id_kelas');
+
+        return response()->json(['status' => 'success', 'message' => 'Berhasil menaikkan kelas']);
+    }
+
 }
