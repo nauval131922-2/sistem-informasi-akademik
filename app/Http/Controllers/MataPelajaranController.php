@@ -51,18 +51,7 @@ class MataPelajaranController extends Controller
         // simpan ke database
         $mata_pelajaran = new MataPelajaran;
         $mata_pelajaran->mata_pelajaran = $request->mata_pelajaran;
-
-        // $mata_pelajaran->save();
-
-        // $notification = array(
-        //     'message' => 'Mata pelajaran berhasil ditambahkan',
-        //     'alert-type' => 'success'
-        // );
-
-        // return redirect()->route('mata-pelajaran')->with($notification);
-
-        // notifikasi menggunakan alert javascript biasa
-        // return redirect()->route('mata-pelajaran')->with('success', 'Mata pelajaran berhasil ditambahkan');
+        $mata_pelajaran->nilai_batas_kelulusan = $request->nilai_batas_kelulusan;
 
         // jika berhasil tersimpan
         if ($mata_pelajaran->save()) {
@@ -99,18 +88,7 @@ class MataPelajaranController extends Controller
         // update ke database
         $mata_pelajaran = MataPelajaran::find($id);
         $mata_pelajaran->mata_pelajaran = $request->mata_pelajaran;
-
-        // $mata_pelajaran->save();
-
-        // $notification = array(
-        //     'message' => 'Mata pelajaran berhasil diubah',
-        //     'alert-type' => 'success'
-        // );
-
-        // return redirect()->route('mata-pelajaran')->with($notification);
-
-        // notifikasi menggunakan alert javascript biasa
-        // return redirect()->route('mata-pelajaran')->with('success', 'Mata pelajaran berhasil diubah');
+        $mata_pelajaran->nilai_batas_kelulusan = $request->nilai_batas_kelulusan;
 
         // jika berhasil diubah
         if ($mata_pelajaran->save()) {
