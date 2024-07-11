@@ -115,6 +115,26 @@ $semua_tahun_ajaran = App\Models\TahunAjaran::all();
 
 
                             <hr style="margin: 0.5rem 0 1rem 0">
+                            {{-- tahun ajaran aktif --}}
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    @if ($tahun_ajaran_aktif_semester != '' && $tahun_ajaran_aktif_tahun != '')
+                                        <label for="">Tahun ajaran aktif:
+                                            <span class="badge bg-success" style="font-size: 14px; font-weight:bold">
+                                                {{ $tahun_ajaran_aktif_semester }} {{ $tahun_ajaran_aktif_tahun }}
+                                            </span>
+                                        </label>
+                                    @else
+                                        <label for="">Tahun ajaran aktif:
+                                            <span class="badge bg-danger" style="font-size: 14px; font-weight:bold">
+                                                Belum ada tahun ajaran aktif
+                                            </span>
+                                        </label>
+                                    @endif
+                                </div>
+
+                            </div>
+                            <hr style="margin: 0.5rem 0 1rem 0">
 
                             <table id="datatable"
                                 class="table table-striped table-bordered dt-responsive nowrap dataTable no-footer dtr-inline collapsed"
@@ -140,6 +160,7 @@ $semua_tahun_ajaran = App\Models\TahunAjaran::all();
                                         <th>Jam ke</th>
                                         <th>Jam Mulai</th>
                                         <th>Jam Selesai</th>
+                                        <th>Tahun Ajaran</th>
                                         @can('admin')
                                             <th>Action</th>
                                         @endcan
@@ -239,24 +260,6 @@ $semua_tahun_ajaran = App\Models\TahunAjaran::all();
                             ')"><i class="ri-delete-bin-2-line align-middle me-1"></i><span style="vertical-align: middle">Hapus</span></button>';
 
                         table.row.add([
-                            // '<tr>' +
-                            // '<td>' + (key + 1) + '</td>' +
-                            // '<td>' + value.hari + '</td>' +
-                            // '<td>' + value.kelas.nama + '</td>' +
-                            // '<td>' + (value.id_mapel_for_jadwal ? value.mapel.mata_pelajaran :
-                            //     value
-                            //     .ekstra.nama) + '</td>' +
-                            // '<td>' + value.user.name + '</td>' +
-                            // '<td>' + (value.id_jam_for_jadwal ? value.jam.jam_ke : '-') +
-                            // '</td>' +
-                            // '<td>' + (value.id_jam_for_jadwal ? value.jam.jam_mulai : '-') +
-                            // '</td>' +
-                            // '<td>' + (value.id_jam_for_jadwal ? value.jam.jam_selesai : '-') +
-                            // '</td>' +
-                            // @can('admin')
-                            //     '<td>' + editButton + deleteButton + '</td>' +
-                            // @endcan
-                            // '</tr>'
                             (key + 1),
                             value.hari,
                             value.kelas.nama,
@@ -266,6 +269,8 @@ $semua_tahun_ajaran = App\Models\TahunAjaran::all();
                             (value.id_jam_for_jadwal ? value.jam.jam_ke : '-'),
                             (value.id_jam_for_jadwal ? value.jam.jam_mulai : '-'),
                             (value.id_jam_for_jadwal ? value.jam.jam_selesai : '-'),
+                            (value.id_tahun_ajaran_for_jadwal ? value.tahun_ajaran.semester +
+                                ' ' + value.tahun_ajaran.tahun : '-'),
                             @if (auth()->user()->can('admin'))
                                 editButton + deleteButton
                             @else
