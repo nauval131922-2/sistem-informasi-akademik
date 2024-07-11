@@ -30,4 +30,10 @@ class JadwalPelajaran extends Model
     public function jam(){
         return $this->belongsTo(JamPelajaran::class, 'id_jam_for_jadwal', 'id');
     }
+
+    public function tahun_ajaran(){
+        return $this->belongsTo(TahunAjaran::class, 'id_tahun_ajaran_for_jadwal', 'id');
+    }
+
+
 }
