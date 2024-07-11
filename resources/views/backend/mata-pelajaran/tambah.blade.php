@@ -13,10 +13,17 @@
                         <input class="form-control" type="text" placeholder="Masukkan nama mata pelajaran"
                             id="mata_pelajaran" name="mata_pelajaran" value="{{ old('mata_pelajaran') }}" required>
                         <div class="mt-2">
-                            {{-- @error('mata_pelajaran')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text mata_pelajaran_error"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="nilai_batas_kelulusan" class="col-sm-2 col-form-label">Nilai batas kelulusan</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" type="number" placeholder="Masukkan nilai batas kelulusan"
+                            id="nilai_batas_kelulusan" name="nilai_batas_kelulusan" value="{{ old('nilai_batas_kelulusan') }}" required>
+                        <div class="mt-2">
+                            <span class="text-danger error-text nilai_batas_kelulusan_error"></span>
                         </div>
                     </div>
                 </div>
