@@ -5,6 +5,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CitaCitaController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\Home\BlogController;
@@ -13,13 +14,16 @@ use App\Http\Controllers\DashboardHomeController;
 use App\Http\Controllers\MataPelajaranController;
 use App\Http\Controllers\ProfilSekolahController;
 use App\Http\Controllers\EkstrakurikulerController;
+use App\Http\Controllers\HobiController;
 use App\Http\Controllers\Home\HomeSliderController;
 use App\Http\Controllers\JadwalPelajaranController;
 use App\Http\Controllers\SaranaPrasaranaController;
 use App\Http\Controllers\Home\BlogCategoryController;
 use App\Http\Controllers\JamPelajaranController;
+use App\Http\Controllers\PekerjaanController;
 use App\Http\Controllers\SambutanKepalaMadrasahController;
 use App\Http\Controllers\TahunAjaranController;
+use App\Models\CitaCita;
 
 require __DIR__ . '/auth.php';
 
@@ -47,6 +51,10 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         // user
         Route::middleware('admin')->group(function () {
             Route::controller(UserController::class)->group(function () {
+                // route naik kelas
+                Route::post('/data-user/naik-kelas', 'naik')->name('user-naik-kelas');
+                // route turun kelas
+                Route::post('/data-user/turun-kelas', 'turun')->name('user-turun-kelas');
                 Route::get('/data-user/tambah/{id}', 'tambah')->name('user-tambah');
                 // Route::get('/admin/tambah', 'admin_tambah')->name('admin-tambah');
                 Route::post('/data-user/simpan/{id}', 'simpan')->name('user-simpan');
@@ -58,6 +66,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::middleware('kepala_madrasah_or_admin')->group(function () {
             Route::controller(UserController::class)->group(function () {
                 Route::get('/data-user/all', 'index_all')->name('user-index-all');
+                Route::get('/data-user/print', 'cetak')->name('user-cetak');
                 Route::get('/data-user/{id}', 'index')->name('user-index');
                 Route::get('/data-guru/wali-kelas', 'guru_wali_kelas_index')->name('user-guru-wali-kelas-index');
                 Route::get('/data-siswa/{id}', 'siswa_index')->name('user-siswa-index');
@@ -81,6 +90,57 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             Route::controller(MataPelajaranController::class)->group(function () {
                 Route::get('/mata-pelajaran', 'index')->name('mata-pelajaran');
                 Route::get('/mata-pelajaran/fetch', 'fetch')->name('mata-pelajaran-fetch');
+            });
+        });
+
+        // cita-cita
+        Route::middleware('admin')->group(function () {
+            Route::controller(CitaCitaController::class)->group(function () {
+                Route::get('/cita-cita/tambah', 'tambah')->name('cita-cita-tambah');
+                Route::post('/cita-cita/simpan', 'simpan')->name('cita-cita-simpan');
+                Route::get('/cita-cita/edit/{id}', 'edit')->name('cita-cita-edit');
+                Route::post('/cita-cita/update/{id}', 'update')->name('cita-cita-update');
+                Route::get('/cita-cita/hapus/{id}', 'hapus')->name('cita-cita-hapus');
+            });
+        });
+        Route::middleware('kepala_madrasah_or_admin')->group(function () {
+            Route::controller(CitaCitaController::class)->group(function () {
+                Route::get('/cita-cita', 'index')->name('cita-cita');
+                Route::get('/cita-cita/fetch', 'fetch')->name('cita-cita-fetch');
+            });
+        });
+
+        // hobi
+        Route::middleware('admin')->group(function () {
+            Route::controller(HobiController::class)->group(function () {
+                Route::get('/hobi/tambah', 'tambah')->name('hobi-tambah');
+                Route::post('/hobi/simpan', 'simpan')->name('hobi-simpan');
+                Route::get('/hobi/edit/{id}', 'edit')->name('hobi-edit');
+                Route::post('/hobi/update/{id}', 'update')->name('hobi-update');
+                Route::get('/hobi/hapus/{id}', 'hapus')->name('hobi-hapus');
+            });
+        });
+        Route::middleware('kepala_madrasah_or_admin')->group(function () {
+            Route::controller(HobiController::class)->group(function () {
+                Route::get('/hobi', 'index')->name('hobi');
+                Route::get('/hobi/fetch', 'fetch')->name('hobi-fetch');
+            });
+        });
+
+        // pekerjaan
+        Route::middleware('admin')->group(function () {
+            Route::controller(PekerjaanController::class)->group(function () {
+                Route::get('/pekerjaan/tambah', 'tambah')->name('pekerjaan-tambah');
+                Route::post('/pekerjaan/simpan', 'simpan')->name('pekerjaan-simpan');
+                Route::get('/pekerjaan/edit/{id}', 'edit')->name('pekerjaan-edit');
+                Route::post('/pekerjaan/update/{id}', 'update')->name('pekerjaan-update');
+                Route::get('/pekerjaan/hapus/{id}', 'hapus')->name('pekerjaan-hapus');
+            });
+        });
+        Route::middleware('kepala_madrasah_or_admin')->group(function () {
+            Route::controller(PekerjaanController::class)->group(function () {
+                Route::get('/pekerjaan', 'index')->name('pekerjaan');
+                Route::get('/pekerjaan/fetch', 'fetch')->name('pekerjaan-fetch');
             });
         });
 
@@ -157,6 +217,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
                 Route::get('/data-nilai/tugas/tambah', 'tambah_nilai_tugas')->name('nilai-tugas-tambah');
                 Route::get('/data-nilai/uts/tambah', 'tambah_nilai_uts')->name('nilai-uts-tambah');
                 Route::get('/data-nilai/uas/tambah', 'tambah_nilai_uas')->name('nilai-uas-tambah');
+                Route::get('/data-nilai/ujian/tambah', 'tambah_nilai_ujian')->name('nilai-ujian-tambah');
                 Route::post('/data-nilai/simpan', 'simpan')->name('nilai-simpan');
                 Route::get('/data-nilai/hapus/{id}', 'hapus')->name('nilai-hapus');
                 Route::get('/data-nilai/edit/{id}', 'edit')->name('nilai-edit');

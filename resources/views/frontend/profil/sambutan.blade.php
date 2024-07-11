@@ -5,7 +5,7 @@
 @endsection
 
 @section('main')
-    <?php 
+    <?php
       $sambutan = App\Models\SambutanKepalaMadrasah::find(1);
     ?>
 
@@ -23,7 +23,7 @@
               @if ($sambutan->gambar)
                 <img src="{{ asset($sambutan->gambar) }}" alt="" class="img-fluid rounded">
               @else
-                <img src="https://source.unsplash.com/500x500/?quote" class="img-fluid rounded" alt="">
+                <img src="https://ui-avatars.com/api/?background=random&name={{ $sambutan->judul }}&size=500&length=2" class="img-fluid rounded" alt="">
               @endif
             </div>
           </div>
@@ -38,7 +38,7 @@
               أَشْهَدُ اَنْ لاإِلَهَ إِلاَّ اللهُ وَأَشْهَدُ اَنَّ مُحَمَّدًا رَسُوْلُ الله. أَمَّا بَعْدُ.
             </p>
             <br>
-            <span style="line-height: 30px"> 
+            <span style="line-height: 30px">
               {{-- {!! \Illuminate\Support\Str::limit($sambutan->isi, 550, '...') !!} --}}
               {!! $sambutan->isi !!}
             </span>

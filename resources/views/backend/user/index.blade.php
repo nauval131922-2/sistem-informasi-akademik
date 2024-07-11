@@ -107,6 +107,53 @@ $jabatan = App\Models\Jabatan::all();
 
                             <hr style="margin: 0.5rem 0 1rem 0">
 
+
+                            {{-- tahun ajaran aktif --}}
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    @if ($tahun_ajaran_aktif_semester != '' && $tahun_ajaran_aktif_tahun != '')
+                                        <label for="">Tahun ajaran aktif:
+                                            <span class="badge bg-success" style="font-size: 14px; font-weight:bold">
+                                                {{ $tahun_ajaran_aktif_semester }} {{ $tahun_ajaran_aktif_tahun }}
+                                            </span>
+                                        </label>
+                                    @else
+                                        <label for="">Tahun ajaran aktif:
+                                            <span class="badge bg-danger" style="font-size: 14px; font-weight:bold">
+                                                Belum ada tahun ajaran aktif
+                                            </span>
+                                        </label>
+                                    @endif
+                                </div>
+
+                            </div>
+                            <hr style="margin: 0.5rem 0 1rem 0">
+
+                            @can('admin')
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="filterData">Kenaikan Kelas</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="col-md-12">
+                                            <button class="btn btn-outline-warning" style="margin-right: 5px"
+                                                onclick="naikKelas()">
+                                                <i class="ri-arrow-up-line align-middle me-1"></i>
+                                                <span style="vertical-align: middle">Naik Kelas</span>
+                                            </button>
+                                            <button class="btn btn-outline-danger" style="margin-right: 5px"
+                                                onclick="turunKelas()">
+                                                <i class="ri-arrow-down-line align-middle me-1"></i>
+                                                <span style="vertical-align: middle">Turun Kelas</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr style="margin: 1rem 0 1rem 0">
+                            @endcan
+
                             <table id="datatable"
                                 class="table table-striped table-bordered dt-responsive nowrap dataTable no-footer dtr-inline collapsed"
                                 style="border-collapse: collapse; border-spacing: 0px; width: 100%;" role="grid"
@@ -197,11 +244,17 @@ $jabatan = App\Models\Jabatan::all();
                     $.each(data, function(key, value) {
                         var editButton = '';
                         var deleteButton = '';
+                        var detailButton = '';
 
                         editButton =
                             '<button class="btn btn-info btn-sm" id="btnEditData" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable" style="margin-right: 5px;" onclick="editData(' +
                             value.id +
                             ')"><i class="ri-edit-2-line align-middle me-1"></i><span style="vertical-align: middle">Edit</span></button>';
+
+                        detailButton =
+                            '<button class="btn btn-warning btn-sm" id="btnEditData" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable" style="margin-right: 5px;" onclick="editData(' +
+                            value.id +
+                            ')"><i class="ri-edit-2-line align-middle me-1"></i><span style="vertical-align: middle">Detail</span></button>';
 
                         deleteButton =
                             '<button class="btn btn-danger btn-sm" id="delete" onclick="deleteData(' +
@@ -214,12 +267,15 @@ $jabatan = App\Models\Jabatan::all();
                             value.email == null ? '' : value.email,
                             value.username,
                             value.role.nama,
-                            (value.id_role == '3' || value.id_role == '5') ? value.kelas.nama :
+                            (value.id_role == '3' || value.id_role == '5') ? (value.kelas ?
+                                value.kelas.nama : null) :
                             '',
                             ((value.id_role == '4' || value.id_role == '3') && value.mapel !=
                                 null) ? value.mapel.mata_pelajaran : '',
                             @if (Auth::user()->id_role == 1)
-                                (value.id != '{{ Auth::user()->id }}' && value.id_role != '2' ?
+                                (value.id != '{{ Auth::user()->id }}' && value.id_role == '5' ?
+                                    detailButton + deleteButton : value.id !=
+                                    '{{ Auth::user()->id }}' && value.id_role != '2' ?
                                     editButton + deleteButton : editButton)
                             @else
                                 ''
@@ -301,10 +357,132 @@ $jabatan = App\Models\Jabatan::all();
                     } else if (response.includes('Guru Mata Pelajaran')) {
                         $('#exampleModalScrollableTitle').html('Ubah Data Guru Mata Pelajaran');
                     } else if (response.includes('Siswa')) {
-                        $('#exampleModalScrollableTitle').html('Ubah Data Siswa');
+                        $('#exampleModalScrollableTitle').html('Detail Data Siswa');
                     }
                 }
             });
+        }
+
+        // naik kelas function
+        function naikKelas() {
+            if (confirm('Apakah anda yakin?')) {
+                $.ajax({
+                    url: '{{ route('user-naik-kelas') }}',
+                    type: 'post',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            toastr.success(response.message, "", {
+                                closeButton: false,
+                                debug: false,
+                                newestOnTop: true,
+                                progressBar: false,
+                                positionClass: "toast-top-right",
+                                preventDuplicates: false,
+                                onclick: null,
+                                showDuration: "100",
+                                hideDuration: "100",
+                                timeOut: "1500",
+                                extendedTimeOut: "1000",
+                                showEasing: "swing",
+                                hideEasing: "linear",
+                                showMethod: "fadeIn",
+                                hideMethod: "fadeOut"
+                            });
+
+                            filterData();
+
+                        } else if (response.status == 'warning') {
+                            toastr.warning(response.message, "", {
+                                closeButton: false,
+                                debug: false,
+                                newestOnTop: true,
+                                progressBar: false,
+                                positionClass: "toast-top-right",
+                                preventDuplicates: false,
+                                onclick: null,
+                                showDuration: "100",
+                                hideDuration: "100",
+                                timeOut: "1500",
+                                extendedTimeOut: "1000",
+                                showEasing: "swing",
+                                hideEasing: "linear",
+                                showMethod: "fadeIn",
+                                hideMethod: "fadeOut"
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error('Terjadi kesalahan. Silakan coba lagi.');
+                        console.error(xhr.responseText);
+                        console.error(status);
+                        console.error(error);
+                    }
+                });
+            }
+        }
+
+        // turun kelas function
+        function turunKelas() {
+            if (confirm('Apakah anda yakin?')) {
+                $.ajax({
+                    url: '{{ route('user-turun-kelas') }}',
+                    type: 'post',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            toastr.success(response.message, "", {
+                                closeButton: false,
+                                debug: false,
+                                newestOnTop: true,
+                                progressBar: false,
+                                positionClass: "toast-top-right",
+                                preventDuplicates: false,
+                                onclick: null,
+                                showDuration: "100",
+                                hideDuration: "100",
+                                timeOut: "1500",
+                                extendedTimeOut: "1000",
+                                showEasing: "swing",
+                                hideEasing: "linear",
+                                showMethod: "fadeIn",
+                                hideMethod: "fadeOut"
+                            });
+
+                            filterData();
+
+                        } else if (response.status == 'warning') {
+                            toastr.warning(response.message, "", {
+                                closeButton: false,
+                                debug: false,
+                                newestOnTop: true,
+                                progressBar: false,
+                                positionClass: "toast-top-right",
+                                preventDuplicates: false,
+                                onclick: null,
+                                showDuration: "100",
+                                hideDuration: "100",
+                                timeOut: "1500",
+                                extendedTimeOut: "1000",
+                                showEasing: "swing",
+                                hideEasing: "linear",
+                                showMethod: "fadeIn",
+                                hideMethod: "fadeOut"
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error('Terjadi kesalahan. Silakan coba lagi.');
+                        console.error(xhr.responseText);
+                        console.error(status);
+                        console.error(error);
+                    }
+                });
+            }
         }
     </script>
 @endsection
