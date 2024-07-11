@@ -26,4 +26,8 @@ class Nilai extends Model
     public function mapel(){
         return $this->belongsTo(MataPelajaran::class, 'id_mapel_for_nilai', 'id');
     }
+
+    public function tahun_ajaran(){
+        return $this->belongsTo(TahunAjaran::class, 'id_tahun_ajaran_for_nilai', 'id');
+    }
 }
