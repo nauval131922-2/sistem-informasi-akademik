@@ -236,8 +236,9 @@
                             value.kelas.nama,
                             value.kompetensi_dasar,
                             value.judul,
-                            value.siswa.name,
-                            value.guru.name,
+                            value.siswa ? value.siswa.name :
+                            null, // Check if value.siswa exists
+                            value.guru ? value.guru.name : null, // Check if value.guru exists
                             value.mapel.mata_pelajaran,
                             value.nilai,
                             value.tipe_nilai,
