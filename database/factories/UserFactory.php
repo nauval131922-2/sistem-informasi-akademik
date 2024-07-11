@@ -34,14 +34,14 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail,
             'password' => bcrypt('12345678'), // password
-            'id_role' => rand(4, 5), // random 4 or 5 (guru or siswa)
+            'id_role' => 4, // random 4 or 5 (guru or siswa)
             // jika id_role 5 (siswa) maka id_kelas diisi random 1-6
             // jika id_role 4 (guru) maka id_kelas diisi null dan id_mapel diisi random 1-8
-            'id_kelas' => function (array $attributes) {
-                return $attributes['id_role'] == 5 ? rand(1, 6) : null;
-            },
+            // 'id_kelas' => function (array $attributes) {
+            //     return $attributes['id_role'] == 5 ? rand(1, 6) : null;
+            // },
             'id_mapel' => function (array $attributes) {
-                return $attributes['id_role'] == 4 ? rand(1, 8) : null;
+                return $attributes['id_role'] == 4 ? rand(1, 4) : null;
             },
             'username' => $this->faker->unique()->userName,
         ];
