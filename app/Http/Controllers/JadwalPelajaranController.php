@@ -32,12 +32,25 @@ class JadwalPelajaranController extends Controller
             $jadwal_pelajaran = JadwalPelajaran::where('id_kelas_for_jadwal', Auth::user()->id_kelas)->get();
         }
 
+        $tahun_ajaran_aktif = TahunAjaran::where('status', "Aktif")->first();
+        // nama tahun ajaran aktif
+
+
+        // jika tidak ada tahun ajaran aktif
+        if (!$tahun_ajaran_aktif) {
+            $tahun_ajaran_aktif_semester = '';
+            $tahun_ajaran_aktif_tahun = '';
+        } else {
+            $tahun_ajaran_aktif_semester = $tahun_ajaran_aktif->semester;
+            $tahun_ajaran_aktif_tahun = $tahun_ajaran_aktif->tahun;
+        }
+
         // $jadwal_pelajaran = JadwalPelajaran::all();
         $title = 'Data Jadwal';
 
         $id_kelas = '';
 
-        return view('backend.jadwal_pelajaran.index', compact('jadwal_pelajaran', 'title', 'id_kelas'));
+        return view('backend.jadwal_pelajaran.index', compact('jadwal_pelajaran', 'title', 'id_kelas', 'tahun_ajaran_aktif', 'tahun_ajaran_aktif_semester', 'tahun_ajaran_aktif_tahun'));
     }
     // public function jadwal_pelajaran_tambah($id)
     public function jadwal_pelajaran_tambah()
@@ -266,7 +279,7 @@ class JadwalPelajaranController extends Controller
     // filter_jadwal
     function filter_jadwal(Request $request)
     {
-        $jadwal = JadwalPelajaran::with('kelas', 'mapel', 'ekstra', 'user', 'jam');
+        $jadwal = JadwalPelajaran::with('kelas', 'mapel', 'ekstra', 'user', 'jam', 'tahun_ajaran');
 
         // filter berdasarkan tipe jadwal
         if ($request->tipe_jadwal != null) {
@@ -321,6 +334,15 @@ class JadwalPelajaranController extends Controller
     {
         $query = JadwalPelajaran::with('kelas', 'mapel', 'ekstra', 'user', 'jam');
 
+        // tahun ajaran aktif
+        $tahun_ajaran = TahunAjaran::where('status', "Aktif")->first();
+        if (!$tahun_ajaran) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Tidak ada tahun ajaran aktif!'
+            ]);
+        };
+
         if ($request->tipe_jadwal != null) {
             $query->where('tipe_jadwal', $request->tipe_jadwal);
         }
@@ -360,6 +382,8 @@ class JadwalPelajaranController extends Controller
                 'message' => 'Tidak ada jadwal!'
             ]);
         }
+
+
 
         return response()->json([
             'status' => 'success',
