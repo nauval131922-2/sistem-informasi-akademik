@@ -7,6 +7,7 @@ use App\Models\BlogCategory;
 use App\Models\Ekstrakurikuler;
 use App\Models\Jabatan;
 use App\Models\JamPelajaran;
+use App\Models\JenisKelamin;
 use App\Models\Kelas;
 use App\Models\MataPelajaran;
 use App\Models\Pengumuman;
@@ -98,36 +99,16 @@ class DatabaseSeeder extends Seeder
 
         MataPelajaran::factory()->create([
             'id' => 2,
-            'mata_pelajaran' => 'Bahasa Indonesia',
-        ]);
-
-        MataPelajaran::factory()->create([
-            'id' => 3,
-            'mata_pelajaran' => 'Matematika',
-        ]);
-
-        MataPelajaran::factory()->create([
-            'id' => 4,
-            'mata_pelajaran' => 'Ilmu Pengetahuan Alam',
-        ]);
-
-        MataPelajaran::factory()->create([
-            'id' => 5,
-            'mata_pelajaran' => 'Ilmu Pengetahuan Sosial',
-        ]);
-
-        MataPelajaran::factory()->create([
-            'id' => 6,
             'mata_pelajaran' => 'Pendidikan Jasmani, Olahraga, dan Kesehatan',
         ]);
 
         MataPelajaran::factory()->create([
-            'id' => 7,
+            'id' => 3,
             'mata_pelajaran' => 'Seni Budaya',
         ]);
 
         MataPelajaran::factory()->create([
-            'id' => 8,
+            'id' => 4,
             'mata_pelajaran' => 'Bahasa Inggris',
         ]);
 
@@ -149,7 +130,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'kepala_madrasah',
         ]);
 
-        User::factory(50)->create();
+        User::factory(5)->create();
 
         User::factory()->create([
             'id_role' => 3,
@@ -390,6 +371,16 @@ class DatabaseSeeder extends Seeder
             'isi' => 'Isi Pengumuman',
             'id_role_for_pengumuman' => 3,
             'id_kelas_for_pengumuman' => 6,
+        ]);
+
+        JenisKelamin::factory()->create([
+            'id' => 1,
+            'nama' => 'Laki-laki',
+        ]);
+
+        JenisKelamin::factory()->create([
+            'id' => 2,
+            'nama' => 'Perempuan',
         ]);
 
     }
