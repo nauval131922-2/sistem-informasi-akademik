@@ -15,18 +15,6 @@
                             {{-- session message --}}
                             <div class="session"></div>
 
-                            {{-- <h4 class="card-title">Semua {{ $title }}</h4>
-                            <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Berikut adalah semua
-                                {{ $title }}.
-                            </p> --}}
-
-                            {{-- @can('admin')
-                                <a class="btn btn-primary mb-3" role="button" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModalScrollable" id="btnTambahData">
-                                    <i class="ri-add-line align-middle me-1"></i>
-                                    <span style="vertical-align: middle">Tambah</span>
-                                </a>
-                            @endcan --}}
 
                             <div class="row">
                                 <div class="col-auto me-auto">
@@ -59,6 +47,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Mata Pelajaran</th>
+                                        <th>Nilai batas kelulusan</th>
                                         @can('admin')
                                             <th>Action</th>
                                         @endcan
@@ -135,6 +124,7 @@
                         table.row.add([
                             (key + 1),
                             value.mata_pelajaran,
+                            value.nilai_batas_kelulusan,
                             @if (Auth::user()->id_role == 1)
                                 editButton + deleteButton
                             @else
