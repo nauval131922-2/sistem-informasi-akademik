@@ -10,7 +10,7 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="{{ asset('frontend/assets/img/icons8-school-96.png') }}" rel="icon">
+    <link href="{{ asset('logo/madrasah.png') }}" rel="icon">
 
     <!-- Google Fonts -->
     {{-- <link
