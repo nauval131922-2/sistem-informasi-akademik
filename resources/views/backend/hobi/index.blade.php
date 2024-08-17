@@ -46,7 +46,7 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>hobi</th>
+                                        <th>Hobi</th>
                                         @can('admin')
                                             <th>Action</th>
                                         @endcan
