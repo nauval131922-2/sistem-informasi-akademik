@@ -20,14 +20,14 @@
               @if ($ekstra->gambar)
                 <img src="{{ asset($ekstra->gambar) }}" class="img-fluid rounded" alt="">
               @else
-                <img src="https://source.unsplash.com/random/?quote={{ $no+1 }}" class="img-fluid rounded" alt="">
+                <img src="https://ui-avatars.com/api/?background=random&name={{ $ekstra->nama }}&size=500&length=2" class="img-fluid rounded" alt="">
               @endif
               <div class="portfolio-info">
                 <h4>{{ $ekstra->nama }}</h4>
                 @if ($ekstra->gambar)
                   <a href="{{ asset($ekstra->gambar) }}" data-gall="portfolioGallery" class="venobox preview-link" title="{{ $ekstra->nama }}"><i class="bx bx-plus"></i></a>
                 @else
-                  <a href="https://source.unsplash.com/random/?quote={{ $no+1 }}" data-gall="portfolioGallery" class="venobox preview-link" title="{{ $ekstra->nama }}"><i class="bx bx-plus"></i></a>
+                  <a href="https://ui-avatars.com/api/?background=random&name={{ $ekstra->nama }}&size=500&length=2" data-gall="portfolioGallery" class="venobox preview-link" title="{{ $ekstra->nama }}"><i class="bx bx-plus"></i></a>
                 @endif
               </div>
           </div>
