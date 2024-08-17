@@ -22,17 +22,17 @@
 										border-color: rgb(37,43,59);
 										">
                                 <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                <span style="vertical-align: middle">Back to List</span>    
+                                <span style="vertical-align: middle">Back to List</span>
                                     </a>
 
                             <h4 class="card-title">Ubah {{ $title }}</h4> --}}
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                berikut untuk mengubah {{ $title }}.</p>
+                berikut untuk mengubah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
             {{-- <form action="{{ route('blog-category-update', $blog_category->id) }}" method="POST"> --}}
             <form method="POST" id="formUbahData">
                 @csrf
                 <div class="row mb-3">
-                    <label for="blog_category" class="col-sm-2 col-form-label">Nama</label>
+                    <label for="blog_category" class="col-sm-2 col-form-label">Nama <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input class="form-control" type="text" placeholder="Masukkan kategori blog"
                             id="blog_category" name="blog_category"

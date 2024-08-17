@@ -2,19 +2,16 @@
     <div class="row">
         <div class="col-lg-12">
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                berikut untuk mengubah {{ $title }}.</p>
+                berikut untuk mengubah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
             <form enctype="multipart/form-data" id="formUbahData" method="POST">
                 @csrf
                 <div class="row mb-3">
-                    <label for="nama" class="col-sm-2 col-form-label">Ekstrakurikuler</label>
+                    <label for="nama" class="col-sm-2 col-form-label">Ekstrakurikuler <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="nama" name="ekstrakurikuler"
                             value="{{ $ekstra->nama ?? old('ekstrakurikuler') }}"
                             placeholder="Masukkan nama ekstrakurikuler" required>
                         <div class="mt-2">
-                            {{-- @error('nama')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text ekstrakurikuler_error"></span>
                         </div>
                     </div>
@@ -30,9 +27,6 @@
                                 <span style="vertical-align: middle">Clear Image</span>
                             </button>
                             <div class="mt-2">
-                                {{-- @error('gambar')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
                                 <span class="text-danger error-text gambar_error"></span>
                             </div>
                         </div>

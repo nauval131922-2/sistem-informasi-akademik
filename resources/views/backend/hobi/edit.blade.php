@@ -4,19 +4,16 @@
 
 
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                berikut untuk mengubah {{ $title }}.</p>
+                berikut untuk mengubah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
             <form method="POST" id="formUbahData">
                 @csrf
                 <div class="row mb-3">
-                    <label for="hobi" class="col-sm-2 col-form-label">Hobi</label>
+                    <label for="hobi" class="col-sm-2 col-form-label">Hobi <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input class="form-control" type="text" placeholder="Masukkan Hobi"
                             id="hobi" name="hobi"
                             value="{{ $hobi->hobi ?? old('hobi') }}" required>
                         <div class="mt-2">
-                            {{-- @error('hobi')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text hobi_error"></span>
                         </div>
                     </div>
