@@ -23,24 +23,6 @@ $route = Route::current()->getName();
                 </li>
                 @canany(['admin', 'kepala_madrasah'])
                     <li>
-                        <a href="{{ route('cita-cita') }}" class="waves-effect">
-                            <i class="ri-star-line align-middle"></i>
-                            <span style="vertical-align: middle">Cita-cita</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('hobi') }}" class="waves-effect">
-                            <i class="ri-football-line align-middle"></i>
-                            <span style="vertical-align: middle">Hobi</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('pekerjaan') }}" class="waves-effect">
-                            <i class="ri-briefcase-line align-middle"></i>
-                            <span style="vertical-align: middle">Pekerjaan</span>
-                        </a>
-                    </li>
-                    <li>
 
                         <a href="{{ route('user-index-all') }}" class="waves-effect">
                             <i class="ri-group-line align-middle"></i>
