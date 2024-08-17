@@ -21,6 +21,8 @@ use App\Http\Controllers\SaranaPrasaranaController;
 use App\Http\Controllers\Home\BlogCategoryController;
 use App\Http\Controllers\JamPelajaranController;
 use App\Http\Controllers\PekerjaanController;
+use App\Http\Controllers\PrestasiSiswa;
+use App\Http\Controllers\PrestasiSiswaController;
 use App\Http\Controllers\SambutanKepalaMadrasahController;
 use App\Http\Controllers\TahunAjaranController;
 use App\Models\CitaCita;
@@ -51,6 +53,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         // user
         Route::middleware('admin')->group(function () {
             Route::controller(UserController::class)->group(function () {
+                // route import excel
+                Route::post('/data-user/siswa/import', 'fileImportDataSiswa')->name('file-import-data-siswa');
                 // route naik kelas
                 Route::post('/data-user/naik-kelas', 'naik')->name('user-naik-kelas');
                 // route turun kelas
@@ -73,6 +77,17 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
                 Route::get('/data-guru/mata-pelajaran', 'guru_mapel_index')->name('user-guru-mapel-index');
                 // tambah route filter
                 Route::get('/user/filter', 'filter_user')->name('user-filter');
+            });
+        });
+        Route::middleware('admin_or_kepala_madrasah_or_guru_wali')->group(function () {
+            Route::controller(UserController::class)->group(function () {
+                Route::get('/data-rapor/print', 'cetakRapor')->name('user-cetak-rapor');
+            });
+        });
+        Route::middleware('guru_wali')->group(function () {
+            Route::controller(UserController::class)->group(function () {
+                Route::get('/rapor', 'index_rapor')->name('rapor-index');
+                Route::get('/rapor/fetch', 'fetch_rapor')->name('rapor-fetch');
             });
         });
 
@@ -172,15 +187,23 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
                 Route::get('/jadwal/edit/{id}', 'jadwal_edit')->name('jadwal-edit');
                 Route::post('/jadwal/update/{id}', 'jadwal_update')->name('jadwal-update');
                 Route::get('/jadwal/hapus/{id}', 'jadwal_hapus')->name('jadwal-hapus');
+                Route::get('/getGuruInfo/{id}', 'getGuruInfo')->name('guru-info');
+                Route::get('/getGuruInfoTambah/{guruId}', 'getGuruInfoTambah')->name('guru-info-tambah');
                 Route::post('/jadwal/simpan', 'jadwal_simpan')->name('jadwal-simpan');
             });
         });
-        Route::middleware('admin_or_guru_wali_kelas_or_guru_mata_pelajaran_or_siswa')->group(function () {
-            Route::controller(JadwalPelajaranController::class)->group(function () {
-                Route::get('/jadwal/cek-jumlah', 'checkJumlahJadwal')->name('jadwal-check');
-                Route::get('/jadwal/print', 'cetak_jadwal')->name('jadwal-cetak');
-            });
+        // Route::middleware('admin_or_guru_wali_kelas_or_guru_mata_pelajaran_or_siswa')->group(function () {
+        //     Route::controller(JadwalPelajaranController::class)->group(function () {
+        //         Route::get('/jadwal/cek-jumlah', 'checkJumlahJadwal')->name('jadwal-check');
+        //         Route::get('/jadwal/print', 'cetak_jadwal')->name('jadwal-cetak');
+        //     });
+        // });
+
+        Route::controller(JadwalPelajaranController::class)->group(function () {
+            Route::get('/jadwal/cek-jumlah', 'checkJumlahJadwal')->name('jadwal-check');
+            Route::get('/jadwal/print', 'cetak_jadwal')->name('jadwal-cetak');
         });
+
         Route::controller(JadwalPelajaranController::class)->group(function () {
             Route::get('/jadwal-all', 'index_all_jadwal')->name('jadwal-all');
             Route::get('/jadwal/filter', 'filter_jadwal')->name('jadwal-filter');
@@ -291,6 +314,23 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             Route::controller(BlogCategoryController::class)->group(function () {
                 Route::get('/blog-category', 'index')->name('blog-category-index');
                 Route::get('/blog-category/fetch', 'fetch')->name('blog-category-fetch');
+            });
+        });
+
+        // prestasi siswa
+        Route::middleware('admin')->group(function () {
+            Route::controller(PrestasiSiswaController::class)->group(function () {
+                Route::get('/prestasi-siswa/tambah', 'tambah')->name('prestasi-siswa-tambah');
+                Route::post('/prestasi-siswa/simpan', 'simpan')->name('prestasi-siswa-simpan');
+                Route::get('/prestasi-siswa/edit/{id}', 'edit')->name('prestasi-siswa-edit');
+                Route::post('/prestasi-siswa/update/{id}', 'update')->name('prestasi-siswa-update');
+                Route::get('/prestasi-siswa/hapus/{id}', 'hapus')->name('prestasi-siswa-hapus');
+            });
+        });
+        Route::middleware('kepala_madrasah_or_admin')->group(function () {
+            Route::controller(PrestasiSiswaController::class)->group(function () {
+                Route::get('/prestasi-siswa', 'index')->name('prestasi-siswa');
+                Route::get('/prestasi-siswa/fetch', 'fetch')->name('prestasi-siswa-fetch');
             });
         });
 
