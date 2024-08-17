@@ -6,14 +6,11 @@ use App\Imports\UsersImport;
 use Carbon\Carbon;
 use Dompdf\Dompdf;
 use App\Models\Guru;
-use App\Models\Hobi;
 use App\Models\User;
 use App\Models\Kelas;
 use App\Models\Nilai;
 use App\Models\Siswa;
 use App\Models\Jabatan;
-use App\Models\CitaCita;
-use App\Models\Pekerjaan;
 use App\Models\MediaSosial;
 use App\Models\TahunAjaran;
 use App\Models\JenisKelamin;
@@ -75,15 +72,12 @@ class UserController extends Controller
         $role = Jabatan::where('id', $id)->first();
         $title = 'Data ' . $role->nama;
         $semua_jenis_kelamin = ['Laki-laki', 'Perempuan'];
-        $semua_cita_cita = CitaCita::all();
-        $semua_hobi = Hobi::all();
         $semua_jenjang_sebelumnya = ['RA', 'TK', 'PAUD', 'LOT'];
         $semua_jenis_mutasi = ['Mutasi Masuk', 'Mutasi Keluar', 'Lulus'];
-        $semua_pekerjaan = Pekerjaan::all();
         $semua_pendidikan_terakhir = ['SD', 'SMP', 'SLTA', 'D1', 'D2', 'D3', 'D4', 'S1', 'S2', 'S3'];
         $semua_status = ['Masih Hidup', 'Meninggal', 'Tidak diketahui'];
 
-        return view('backend.user.tambah', compact('semua_kelas', 'semua_mapel', 'title', 'id_role', 'role', 'semua_jenis_kelamin', 'semua_cita_cita', 'semua_hobi', 'semua_jenjang_sebelumnya', 'semua_jenis_mutasi', 'semua_pekerjaan', 'semua_pendidikan_terakhir', 'semua_status'));
+        return view('backend.user.tambah', compact('semua_kelas', 'semua_mapel', 'title', 'id_role', 'role', 'semua_jenis_kelamin', 'semua_jenjang_sebelumnya', 'semua_jenis_mutasi', 'semua_pendidikan_terakhir', 'semua_status'));
     }
 
     public function simpan(Request $request, $id_role)
@@ -163,9 +157,9 @@ class UserController extends Controller
             $siswa->jenis_kelamin = $request->jenis_kelamin;
             $siswa->jumlah_saudara = $request->jumlah_saudara;
             $siswa->tempat_lahir = $request->tempat_lahir;
-            $siswa->id_cita_cita_for_siswa = $request->cita_cita;
+            $siswa->cita_cita = $request->cita_cita;
             $siswa->tanggal_lahir = $request->tanggal_lahir;
-            $siswa->id_hobi_for_siswa = $request->hobi;
+            $siswa->hobi = $request->hobi;
             $siswa->alamat = $request->alamat;
             $siswa->jarak_rumah = $request->jarak_rumah;
             $siswa->nomor_hp = $request->nomor_hp;
@@ -194,8 +188,8 @@ class UserController extends Controller
             $siswa->tanggal_lahir_ibu = $request->tanggal_lahir_ibu;
             $siswa->pendidikan_ayah = $request->pendidikan_ayah;
             $siswa->pendidikan_ibu = $request->pendidikan_ibu;
-            $siswa->id_pekerjaan_ayah_for_siswa = $request->pekerjaan_ayah;
-            $siswa->id_pekerjaan_ibu_for_siswa = $request->pekerjaan_ibu;
+            $siswa->pekerjaan_ayah = $request->pekerjaan_ayah;
+            $siswa->pekerjaan_ibu = $request->pekerjaan_ibu;
             $siswa->nomor_kks = $request->nomor_kks;
             $siswa->nomor_pkh = $request->nomor_pkh;
             $siswa->id_diterima_di_kelas_for_siswa = $request->diterima_di_kelas;
@@ -212,7 +206,7 @@ class UserController extends Controller
             $siswa->alamat_ibu = $request->alamat_ibu;
 
             $siswa->nama_wali = $request->nama_wali;
-            $siswa->id_pekerjaan_wali_for_siswa = $request->pekerjaan_wali;
+            $siswa->pekerjaan_wali = $request->pekerjaan_wali;
             $siswa->nomor_telepon_wali = $request->nomor_telepon_wali;
             $siswa->alamat_wali = $request->alamat_wali;
 
@@ -306,15 +300,12 @@ class UserController extends Controller
         $siswa = Siswa::where('id_user_for_siswa', $id)->first();
 
         $semua_jenis_kelamin = ['Laki-laki', 'Perempuan'];
-        $semua_cita_cita = CitaCita::all();
-        $semua_hobi = Hobi::all();
         $semua_jenjang_sebelumnya = ['RA', 'TK', 'PAUD', 'LOT'];
         $semua_jenis_mutasi = ['Mutasi Masuk', 'Mutasi Keluar', 'Lulus'];
-        $semua_pekerjaan = Pekerjaan::all();
         $semua_pendidikan_terakhir = ['SD', 'SMP', 'SLTA', 'D1', 'D2', 'D3', 'D4', 'S1', 'S2', 'S3'];
         $semua_status = ['Masih Hidup', 'Meninggal', 'Tidak diketahui'];
 
-        return view('backend.user.edit', compact('user', 'semua_kelas', 'semua_mapel', 'title', 'id_role', 'role', 'semua_jenis_kelamin', 'semua_cita_cita', 'semua_hobi', 'semua_jenjang_sebelumnya', 'semua_jenis_mutasi', 'semua_pekerjaan', 'semua_pendidikan_terakhir', 'semua_status', 'siswa'));
+        return view('backend.user.edit', compact('user', 'semua_kelas', 'semua_mapel', 'title', 'id_role', 'role', 'semua_jenis_kelamin', 'semua_jenjang_sebelumnya', 'semua_jenis_mutasi', 'semua_pendidikan_terakhir', 'semua_status', 'siswa'));
     }
 
     public function update(Request $request, $id)
@@ -443,9 +434,9 @@ class UserController extends Controller
             $siswa->jenis_kelamin = $request->jenis_kelamin;
             $siswa->jumlah_saudara = $request->jumlah_saudara;
             $siswa->tempat_lahir = $request->tempat_lahir;
-            $siswa->id_cita_cita_for_siswa = $request->cita_cita;
+            $siswa->cita_cita = $request->cita_cita;
             $siswa->tanggal_lahir = $request->tanggal_lahir;
-            $siswa->id_hobi_for_siswa = $request->hobi;
+            $siswa->hobi = $request->hobi;
             $siswa->alamat = $request->alamat;
             $siswa->jarak_rumah = $request->jarak_rumah;
             $siswa->nomor_hp = $request->nomor_hp;
@@ -480,8 +471,8 @@ class UserController extends Controller
             $siswa->tanggal_lahir_ibu = $request->tanggal_lahir_ibu;
             $siswa->pendidikan_ayah = $request->pendidikan_ayah;
             $siswa->pendidikan_ibu = $request->pendidikan_ibu;
-            $siswa->id_pekerjaan_ayah_for_siswa = $request->pekerjaan_ayah;
-            $siswa->id_pekerjaan_ibu_for_siswa = $request->pekerjaan_ibu;
+            $siswa->pekerjaan_ayah = $request->pekerjaan_ayah;
+            $siswa->pekerjaan_ibu = $request->pekerjaan_ibu;
             $siswa->nomor_kks = $request->nomor_kks;
             $siswa->nomor_pkh = $request->nomor_pkh;
             $siswa->id_diterima_di_kelas_for_siswa = $request->diterima_di_kelas;
@@ -498,7 +489,7 @@ class UserController extends Controller
             $siswa->alamat_ibu = $request->alamat_ibu;
 
             $siswa->nama_wali = $request->nama_wali;
-            $siswa->id_pekerjaan_wali_for_siswa = $request->pekerjaan_wali;
+            $siswa->pekerjaan_wali = $request->pekerjaan_wali;
             $siswa->nomor_telepon_wali = $request->nomor_telepon_wali;
             $siswa->alamat_wali = $request->alamat_wali;
 
@@ -588,10 +579,8 @@ class UserController extends Controller
         $diterima_di_kelas = Kelas::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_diterima_di_kelas_for_siswa)->first()->id;
 
         $jumlah_saudara = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jumlah_saudara;
-        $cita_cita = Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_cita_cita_for_siswa;
-        $cita_cita = CitaCita::where('id', $cita_cita)->first()->cita_cita;
-        $hobi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_hobi_for_siswa;
-        $hobi = Hobi::where('id', $hobi)->first()->hobi;
+        $cita_cita = Siswa::where('id_user_for_siswa', $id_siswa)->first()->cita_cita;
+        $hobi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->hobi;
         $jarak_rumah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jarak_rumah;
         $nomor_kk = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_kk;
         $nomor_kip = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_kip;
@@ -629,8 +618,8 @@ class UserController extends Controller
         $pendidikan_ayah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->pendidikan_ayah;
         $pendidikan_ibu = Siswa::where('id_user_for_siswa', $id_siswa)->first()->pendidikan_ibu;
 
-        $pekerjaan_ayah = Pekerjaan::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_pekerjaan_ayah_for_siswa)->first()->pekerjaan;
-        $pekerjaan_ibu = Pekerjaan::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_pekerjaan_ibu_for_siswa)->first()->pekerjaan;
+        $pekerjaan_ayah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->pekerjaan_ayah;
+        $pekerjaan_ibu = Siswa::where('id_user_for_siswa', $id_siswa)->first()->pekerjaan_ibu;
 
         $nomor_kks = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_kks;
         $nomor_pkh = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_pkh;
@@ -706,7 +695,8 @@ class UserController extends Controller
         }
     }
 
-    public function index_rapor(){
+    public function index_rapor()
+    {
         $semua_user = User::all();
         $kelas = Auth::user()->id_kelas;
         $title = 'Data Siswa Kelas ' . $kelas;
@@ -762,10 +752,8 @@ class UserController extends Controller
         $diterima_di_kelas = Kelas::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_diterima_di_kelas_for_siswa)->first()->id ?? null;
 
         $jumlah_saudara = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jumlah_saudara ?? null;
-        $cita_cita = Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_cita_cita_for_siswa ?? null;
-        $cita_cita = CitaCita::where('id', $cita_cita)->first()->cita_cita ?? null;
-        $hobi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_hobi_for_siswa ?? null;
-        $hobi = Hobi::where('id', $hobi)->first()->hobi ?? null;
+        $cita_cita = Siswa::where('id_user_for_siswa', $id_siswa)->first()->cita_cita ?? null;
+        $hobi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->hobi ?? null;
         $jarak_rumah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jarak_rumah ?? null;
         $nomor_kk = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_kk ?? null;
         $nomor_kip = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_kip ?? null;
@@ -803,8 +791,8 @@ class UserController extends Controller
         $pendidikan_ayah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->pendidikan_ayah ?? null;
         $pendidikan_ibu = Siswa::where('id_user_for_siswa', $id_siswa)->first()->pendidikan_ibu ?? null;
 
-        $pekerjaan_ayah = Pekerjaan::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_pekerjaan_ayah_for_siswa)->first()->pekerjaan ?? null;
-        $pekerjaan_ibu = Pekerjaan::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_pekerjaan_ibu_for_siswa)->first()->pekerjaan ?? null;
+        $pekerjaan_ayah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->pekerjaan_ayah ?? null;
+        $pekerjaan_ibu = Siswa::where('id_user_for_siswa', $id_siswa)->first()->pekerjaan_ibu ?? null;
 
         $nomor_kks = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_kks ?? null;
         $nomor_pkh = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_pkh ?? null;
