@@ -20,14 +20,14 @@
               @if ($sarana_prasarana->gambar)
                 <img src="{{ asset($sarana_prasarana->gambar) }}" class="img-fluid rounded" alt="">
               @else
-                <img src="https://source.unsplash.com/random/?quote={{ $no+1 }}" class="img-fluid rounded" alt="">
+                <img src="https://ui-avatars.com/api/?background=random&name={{ $sarana_prasarana->nama }}&size=500&length=2" class="img-fluid rounded" alt="">
               @endif
               <div class="portfolio-info">
                 <h4>{{ $sarana_prasarana->nama }}</h4>
                 @if ($sarana_prasarana->gambar)
                   <a href="{{ asset($sarana_prasarana->gambar) }}" data-gall="portfolioGallery" class="venobox preview-link" title="{{ $sarana_prasarana->nama }}"><i class="bx bx-plus"></i></a>
                 @else
-                  <a href="https://source.unsplash.com/random/?quote={{ $no+1 }}" data-gall="portfolioGallery" class="venobox preview-link" title="{{ $sarana_prasarana->nama }}"><i class="bx bx-plus"></i></a>
+                  <a href="https://ui-avatars.com/api/?background=random&name={{ $sarana_prasarana->nama }}&size=500&length=2" data-gall="portfolioGallery" class="venobox preview-link" title="{{ $sarana_prasarana->nama }}"><i class="bx bx-plus"></i></a>
                 @endif
               </div>
           </div>
