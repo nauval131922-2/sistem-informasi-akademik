@@ -100,6 +100,22 @@ $route = Route::current()->getName();
                     </a>
                 </li>
 
+                <li>
+                    <a href="{{ route('prestasi-siswa') }}" class="waves-effect">
+                        <i class="ri-file-list-line align-middle"></i>
+                        <span style="vertical-align: middle">Prestasi Siswa</span>
+                    </a>
+                </li>
+
+                @can('guru_wali')
+                    <li>
+                        <a href="{{ route('rapor-index') }}" class="waves-effect">
+                            <i class="ri-file-list-line align-middle"></i>
+                            <span style="vertical-align: middle">Rapor</span>
+                        </a>
+                    </li>
+                @endcan
+
 
                 @can('guru_wali')
                     <li>
