@@ -426,51 +426,29 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row mb-3">
                                 <label for="cita_cita" class="col-sm-2 col-form-label">Cita-cita</label>
                                 <div class="col-sm-10">
-                                    <select class="form-select" id="cita_cita" name="cita_cita">
-                                        <option value="">Pilih Cita-cita</option>
-                                        @foreach ($semua_cita_cita as $cita_cita)
-                                            @if (
-                                                (isset($siswa->id_cita_cita_for_siswa) && $siswa->id_cita_cita_for_siswa == $cita_cita->id) ||
-                                                    (!isset($siswa->id_cita_cita_for_siswa) && old('cita_cita') == $cita_cita->id))
-                                                <option value="{{ $cita_cita->id }}" selected>
-                                                    {{ $cita_cita->cita_cita }}</option>
-                                            @else
-                                                <option value="{{ $cita_cita->id }}">{{ $cita_cita->cita_cita }}
-                                                </option>
-                                            @endif
-                                        @endforeach
-
-                                    </select>
+                                    <input class="form-control" type="text" placeholder="Masukkkan Cita-cita"
+                                        id="cita_cita" name="cita_cita" value="{{ $siswa->cita_cita ?? old('cita_cita') }}">
                                     <div class="mt-2">
                                         <span class="text-danger error-text cita_cita_error"></span>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row mb-3">
                                 <label for="hobi" class="col-sm-2 col-form-label">Hobi</label>
                                 <div class="col-sm-10">
-                                    <select class="form-select" id="hobi" name="hobi">
-                                        <option value="">Pilih Hobi</option>
-                                        @foreach ($semua_hobi as $hobi)
-                                            @if (
-                                                (isset($siswa->id_hobi_for_siswa) && $siswa->id_hobi_for_siswa == $hobi->id) ||
-                                                    (!isset($siswa->id_hobi_for_siswa) && old('hobi') == $hobi->id))
-                                                <option value="{{ $hobi->id }}" selected>{{ $hobi->hobi }}
-                                                </option>
-                                            @else
-                                                <option value="{{ $hobi->id }}">{{ $hobi->hobi }}</option>
-                                            @endif
-                                        @endforeach
-
-                                    </select>
+                                    <input class="form-control" type="text" placeholder="Masukkkan Hobi"
+                                        id="hobi" name="hobi" value="{{ $siswa->hobi ?? old('hobi') }}">
                                     <div class="mt-2">
                                         <span class="text-danger error-text hobi_error"></span>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row mb-3">
                                 <label for="jarak_rumah" class="col-sm-2 col-form-label">Jarak Rumah-Madrasah</label>
                                 <div class="col-sm-10">
@@ -754,24 +732,12 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row mb-3">
                                 <label for="pekerjaan_ayah" class="col-sm-2 col-form-label">Pekerjaan</label>
                                 <div class="col-sm-10">
-                                    <select class="form-select" id="pekerjaan_ayah" name="pekerjaan_ayah">
-                                        <option value="">Pilih pekerjaan</option>
-                                        @foreach ($semua_pekerjaan as $pekerjaan_ayah)
-                                            @if (
-                                                $siswa->id_pekerjaan_ayah_for_siswa ??
-                                                    (null == $pekerjaan_ayah->id ?? old('pekerjaan_ayah') == $pekerjaan_ayah->id))
-                                                <option value="{{ $pekerjaan_ayah->id }}" selected>
-                                                    {{ $pekerjaan_ayah->pekerjaan }}
-                                                </option>
-                                            @else
-                                                <option value="{{ $pekerjaan_ayah->id }}">
-                                                    {{ $pekerjaan_ayah->pekerjaan }}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
+                                    <input class="form-control" type="text" placeholder="Masukkkan Pekerjaan"
+                                        id="pekerjaan_ayah" name="pekerjaan_ayah" value="{{ $siswa->pekerjaan_ayah ?? old('pekerjaan_ayah') }}">
                                     <div class="mt-2">
                                         <span class="text-danger error-text pekerjaan_ayah_error"></span>
                                     </div>
@@ -907,24 +873,12 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row mb-3">
                                 <label for="pekerjaan_ibu" class="col-sm-2 col-form-label">Pekerjaan</label>
                                 <div class="col-sm-10">
-                                    <select class="form-select" id="pekerjaan_ibu" name="pekerjaan_ibu">
-                                        <option value="">Pilih pekerjaan</option>
-                                        @foreach ($semua_pekerjaan as $pekerjaan_ibu)
-                                            @if (
-                                                (isset($siswa->id_pekerjaan_ibu_for_siswa) && $siswa->id_pekerjaan_ibu_for_siswa == $pekerjaan_ibu->id) ||
-                                                    (!isset($siswa->id_pekerjaan_ibu_for_siswa) && old('pekerjaan_ibu') == $pekerjaan_ibu->id))
-                                                <option value="{{ $pekerjaan_ibu->id }}" selected>
-                                                    {{ $pekerjaan_ibu->pekerjaan }}</option>
-                                            @else
-                                                <option value="{{ $pekerjaan_ibu->id }}">
-                                                    {{ $pekerjaan_ibu->pekerjaan }}</option>
-                                            @endif
-                                        @endforeach
-
-                                    </select>
+                                    <input class="form-control" type="text" placeholder="Masukkkan Pekerjaan"
+                                        id="pekerjaan_ibu" name="pekerjaan_ibu" value="{{ $siswa->pekerjaan_ibu ?? old('pekerjaan_ibu') }}">
                                     <div class="mt-2">
                                         <span class="text-danger error-text pekerjaan_ibu_error"></span>
                                     </div>
@@ -983,29 +937,18 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row mb-3">
                                 <label for="pekerjaan_wali" class="col-sm-2 col-form-label">Pekerjaan</label>
                                 <div class="col-sm-10">
-                                    <select class="form-select" id="pekerjaan_wali" name="pekerjaan_wali">
-                                        <option value="">Pilih pekerjaan</option>
-                                        @foreach ($semua_pekerjaan as $pekerjaan_wali)
-                                            @if (
-                                                $siswa->id_pekerjaan_wali_for_siswa ??
-                                                    (null == $pekerjaan_wali->id ?? old('pekerjaan_wali') == $pekerjaan_wali->id))
-                                                <option value="{{ $pekerjaan_wali->id }}" selected>
-                                                    {{ $pekerjaan_wali->pekerjaan }}
-                                                </option>
-                                            @else
-                                                <option value="{{ $pekerjaan_wali->id }}">
-                                                    {{ $pekerjaan_wali->pekerjaan }}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
+                                    <input class="form-control" type="text" placeholder="Masukkkan Pekerjaan"
+                                        id="pekerjaan_wali" name="pekerjaan_wali" value="{{ $siswa->pekerjaan_wali ?? old('pekerjaan_wali') }}">
                                     <div class="mt-2">
                                         <span class="text-danger error-text pekerjaan_wali_error"></span>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row mb-3">
                                 <label for="nomor_telepon_wali" class="col-sm-2 col-form-label">No. Telepon</label>
                                 <div class="col-sm-10">
