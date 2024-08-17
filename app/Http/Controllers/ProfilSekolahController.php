@@ -58,6 +58,12 @@ class ProfilSekolahController extends Controller
         $profil_sekolah->visi = $request->visi;
         $profil_sekolah->misi = $request->misi;
         $profil_sekolah->tujuan = $request->tujuan;
+        $profil_sekolah->npsn = $request->npsn;
+        $profil_sekolah->desa_kelurahan = $request->desa_kelurahan;
+        $profil_sekolah->kecamatan = $request->kecamatan;
+        $profil_sekolah->kota_kabupaten = $request->kota_kabupaten;
+        $profil_sekolah->provinsi = $request->provinsi;
+        $profil_sekolah->website = $request->website;
 
         // jika belum ada folder upload/logo_sekolah, maka buat folder
         if (!file_exists(public_path('/upload/logo_sekolah'))) {
