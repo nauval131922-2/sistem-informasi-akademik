@@ -1,61 +1,19 @@
-{{-- @extends('backend.main')
+@php
 
-@section('title')
-    Dashboard | Ubah {{ $title }}
-@endsection --}}
+@endphp
 
-{{-- @section('content')
-
-    <?php
-    $route = Route::current()->getName();
-    ?> --}}
-
-{{-- <div class="page-content"> --}}
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            {{-- <div class="card">
-                <div class="card-body"> --}}
-
-            {{-- tambah tombol back to list --}}
-            {{-- @if ($jadwal->tipe_jadwal == 'Pelajaran')
-                                <a href="{{ route('jadwal-pelajaran-index', $kelas) }}" class="btn btn-light mb-3"
-                                    style="
-                        /* taruh di samping kanan */
-                        float: right;
-                        /* background-color lebih muda lagi */
-                        /* background-color: rgb(37,43,59); */
-                        border-color: rgb(37,43,59);
-                        ">
-                                    <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                    <span style="vertical-align: middle">Back to List</span>
-                                </a>
-                            @elseif ($jadwal->tipe_jadwal == 'Ekstrakurikuler')
-                                <a href="{{ route('jadwal-ekstra-index', $kelas) }}" class="btn btn-light mb-3"
-                                    style="
-                        /* taruh di samping kanan */
-                        float: right;
-                        /* background-color lebih muda lagi */
-                        /* background-color: rgb(37,43,59); */
-                        border-color: rgb(37,43,59);
-                        ">
-                                    <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                    <span style="vertical-align: middle">Back to List</span>
-                                </a>
-                            @endif --}}
-
-
-            {{-- <h4 class="card-title">Ubah {{ $title }}</h4> --}}
 
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                berikut untuk mengubah {{ $title }}.</p>
+                berikut untuk mengubah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
 
-            {{-- <form action="{{ route('jadwal-update', $jadwal->id) }}" method="POST"> --}}
             <form enctype="multipart/form-data" id="formUbahData" method="POST">
                 @csrf
-
+                <input type="hidden" name="id" id="id" value="{{ $jadwal->id }}"">
                 <div class="row mb-3">
-                    <label for="kelas" class="col-sm-2 col-form-label">Kelas</label>
+                    <label for="kelas" class="col-sm-2 col-form-label">Kelas <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <select class="form-select" id="kelas" name="kelas" required>
                             <option value="">Pilih Kelas</option>
@@ -68,16 +26,13 @@
                             @endforeach
                         </select>
                         <div class="mt-2">
-                            {{-- @error('kelas')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text kelas_error"></span>
                         </div>
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <label for="hari" class="col-sm-2 col-form-label">Hari</label>
+                    <label for="hari" class="col-sm-2 col-form-label">Hari <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <select class="form-select" class="form-control" id="hari" name="hari" required>
                             <option value="">Pilih Hari</option>
@@ -91,65 +46,13 @@
                             @endforeach
                         </select>
                         <div class="mt-2">
-                            {{-- @error('hari')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text hari_error"></span>
                         </div>
                     </div>
                 </div>
-                @if ($jadwal->tipe_jadwal == 'Pelajaran')
-                    <div class="row mb-3">
-                        <label for="mapel" class="col-sm-2 col-form-label">Mata Pelajaran</label>
-                        <div class="col-sm-10">
-                            <select class="form-select" id="mapel" name="mapel" required>
-                                <option value="">Pilih Mata Pelajaran</option>
-                                @foreach ($semua_mapel as $mapel)
-                                    @if ($jadwal->id_mapel_for_jadwal == $mapel->id ?? old('mapel') == $mapel->id)
-                                        <option value="{{ $mapel->id }}" selected>
-                                            {{ $mapel->mata_pelajaran }}</option>
-                                    @else
-                                        <option value="{{ $mapel->id }}">{{ $mapel->mata_pelajaran }}
-                                        </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            <div class="mt-2">
-                                {{-- @error('mapel')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
-                                <span class="text-danger error-text mapel_error"></span>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-                @if ($jadwal->tipe_jadwal == 'Ekstrakurikuler')
-                    <div class="row mb-3">
-                        <label for="ekstra" class="col-sm-2 col-form-label">Ekstrakurikuler</label>
-                        <div class="col-sm-10">
-                            <select class="form-select" id="ekstra" name="ekstra" required>
-                                <option value="">Pilih Eksrakuriler</option>
-                                @foreach ($semua_ekstra as $ekstra)
-                                    @if ($jadwal->id_ekstra_for_jadwal == $ekstra->id ?? old('ekstra') == $ekstra->id)
-                                        <option value="{{ $ekstra->id }}" selected>{{ $ekstra->nama }}
-                                        </option>
-                                    @else
-                                        <option value="{{ $ekstra->id }}">{{ $ekstra->nama }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            <div class="mt-2">
-                                {{-- @error('ekstra')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
-                                <span class="text-danger error-text ekstra_error"></span>
-                            </div>
-                        </div>
-                    </div>
-                @endif
 
                 <div class="row mb-3">
-                    <label for="guru" class="col-sm-2 col-form-label">Guru</label>
+                    <label for="guru" class="col-sm-2 col-form-label">Guru <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <select class="form-select" id="guru" name="guru" required>
                             <option value="">Pilih Guru</option>
@@ -163,15 +66,39 @@
                             @endforeach
                         </select>
                         <div class="mt-2">
-                            {{-- @error('guru')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text guru_error"></span>
                         </div>
                     </div>
                 </div>
+
+                @if ($jadwal->tipe_jadwal == 'Pelajaran')
+                    <div id="mapel-container"></div>
+                @endif
+                @if ($jadwal->tipe_jadwal == 'Ekstrakurikuler')
+                    <div class="row mb-3">
+                        <label for="ekstra" class="col-sm-2 col-form-label">Ekstrakurikuler <span class="text-danger">*</span></label>
+                        <div class="col-sm-10">
+                            <select class="form-select" id="ekstra" name="ekstra" required>
+                                <option value="">Pilih Eksrakuriler</option>
+                                @foreach ($semua_ekstra as $ekstra)
+                                    @if ($jadwal->id_ekstra_for_jadwal == $ekstra->id ?? old('ekstra') == $ekstra->id)
+                                        <option value="{{ $ekstra->id }}" selected>{{ $ekstra->nama }}
+                                        </option>
+                                    @else
+                                        <option value="{{ $ekstra->id }}">{{ $ekstra->nama }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <div class="mt-2">
+                                <span class="text-danger error-text ekstra_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+
                 <div class="row mb-3">
-                    <label for="jam_ke" class="col-sm-2 col-form-label">Jam ke</label>
+                    <label for="jam_ke" class="col-sm-2 col-form-label">Jam ke <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <select class="form-select" id="jam_ke" name="jam_ke" required>
                             <option value="">Pilih Jam ke</option>
@@ -186,15 +113,11 @@
                             @endforeach
                         </select>
                         <div class="mt-2">
-                            {{-- @error('jam_ke')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text jam_ke_error"></span>
                         </div>
                     </div>
                 </div>
 
-                {{-- <input type="submit" value="Update" class="btn btn-info waves-effect waves-light"> --}}
                 <button type="submit" class="btn btn-info waves-effect waves-light">
                     <i class="ri-refresh-line align-middle me-1"></i>
                     <span style="vertical-align: middle">Update</span>
@@ -204,10 +127,6 @@
         </div>
     </div>
 </div> <!-- end col -->
-{{-- </div>
-</div>
-</div>
-@endsection --}}
 
 <script>
     $(document).ready(function() {
@@ -217,6 +136,132 @@
             }
         });
 
+        var id = $('#id').val();
+
+        if (id) {
+            $.ajax({
+                url: '/getGuruInfo/' +
+                    id, // Ganti dengan URL yang sesuai untuk mendapatkan data guru
+                type: 'GET',
+                success: function(response) {
+                    $('#mapel-container').html('');
+
+                    if (response.id_role == 4) {
+                        $('#mapel-container').html(`
+                                <input type="hidden" name="mapel" value="${response.id_mapel}">
+                                <div class="row mb-3">
+                                    <label for="mapell" class="col-md-2 col-form-label">Mata Pelajaran <span class="text-danger">*</span></label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" name="mapell" id="mapell"
+                                            placeholder="Masukkan mata pelajaran" value="${response.mapel}"
+                                            required disabled>
+                                        <div class="mt-2">
+                                            <span class="text-danger error-text mapell_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                    } else {
+                        var mapelOptions =
+                                '<option value="">Pilih Mata Pelajaran</option>';
+                            response.semua_mapel.forEach(function(mapel) {
+                                var selected = '';
+                                if (response.selected_mapel_id && response.selected_mapel_id == mapel.id) {
+                                    selected = 'selected';
+                                }
+                                mapelOptions += `
+                                    <option value="${mapel.id}" ${selected}>${mapel.mata_pelajaran}</option>
+                                `;
+                            });
+
+                        $('#mapel-container').html(`
+                                <input type="hidden" name="tipe_jadwal" value="Pelajaran">
+                                <div class="row mb-3">
+                                    <label for="mapel" class="col-sm-2 col-form-label">Mata Pelajaran <span class="text-danger">*</span></label>
+                                    <div class="col-sm-10">
+                                        <select class="form-select" id="mapel" name="mapel" required>
+                                            ${mapelOptions}
+                                        </select>
+                                        <div class="mt-2">
+                                            <span class="text-danger error-text mapel_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        } else {
+            $('#mapel-container').html('');
+        }
+
+    });
+
+    $('#guru').change(function() {
+        var id = $('#id').val();
+
+        if (id) {
+            $.ajax({
+                url: '/getGuruInfo/' +
+                    id, // Ganti dengan URL yang sesuai untuk mendapatkan data guru
+                type: 'GET',
+                success: function(response) {
+                    $('#mapel-container').html('');
+
+                    if (response.id_role == 4) {
+                        $('#mapel-container').html(`
+                                <input type="hidden" name="mapel" value="${response.id_mapel}">
+                                <div class="row mb-3">
+                                    <label for="mapell" class="col-md-2 col-form-label">Mata Pelajaran <span class="text-danger">*</span></label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" name="mapell" id="mapell"
+                                            placeholder="Masukkan mata pelajaran" value="${response.mapel}"
+                                            required disabled>
+                                        <div class="mt-2">
+                                            <span class="text-danger error-text mapell_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                    } else {
+                        var mapelOptions =
+                                '<option value="">Pilih Mata Pelajaran</option>';
+                            response.semua_mapel.forEach(function(mapel) {
+                                var selected = '';
+                                if (response.selected_mapel_id && response.selected_mapel_id == mapel.id) {
+                                    selected = 'selected';
+                                }
+                                mapelOptions += `
+                                    <option value="${mapel.id}" ${selected}>${mapel.mata_pelajaran}</option>
+                                `;
+                            });
+
+                        $('#mapel-container').html(`
+                                <input type="hidden" name="tipe_jadwal" value="Pelajaran">
+                                <div class="row mb-3">
+                                    <label for="mapel" class="col-sm-2 col-form-label">Mata Pelajaran <span class="text-danger">*</span></label>
+                                    <div class="col-sm-10">
+                                        <select class="form-select" id="mapel" name="mapel" required>
+                                            ${mapelOptions}
+                                        </select>
+                                        <div class="mt-2">
+                                            <span class="text-danger error-text mapel_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        } else {
+            $('#mapel-container').html('');
+        }
     });
 
     // update data
