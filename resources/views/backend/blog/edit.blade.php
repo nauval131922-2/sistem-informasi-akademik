@@ -29,14 +29,14 @@
 
                             <h4 class="card-title">Ubah {{ $title }}</h4> --}}
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                berikut untuk mengubah {{ $title }}.</p>
+                berikut untuk mengubah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
             {{-- <form action="{{ route('blog-update', $blog->id) }}" method="POST"
                                 enctype="multipart/form-data"> --}}
             <form enctype="multipart/form-data" id="formUbahData" method="POST">
                 @csrf
                 {{-- dropdown kategori blog  --}}
                 <div class="row mb-3">
-                    <label for="kategori" class="col-sm-2 col-form-label">Kategori</label>
+                    <label for="kategori" class="col-sm-2 col-form-label">Kategori <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <select class="form-select" id="kategori" name="kategori" required>
                             <option value="">Pilih Kategori</option>
@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="judul" class="col-sm-2 col-form-label">Judul</label>
+                    <label for="judul" class="col-sm-2 col-form-label">Judul <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="judul" name="judul"
                             value="{{ $blog->blog_title ?? old('judul') }}" placeholder="Masukkan judul blog" required>
@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <label for="isi" class="col-sm-2 col-form-label">Isi</label>
+                    <label for="isi" class="col-sm-2 col-form-label">Isi <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input id="isi" type="hidden" name="isi"
                             value="{{ $blog->blog_description ?? old('isi') }}">
