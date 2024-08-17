@@ -102,12 +102,12 @@ $semua_tahun_ajaran = App\Models\TahunAjaran::all();
                                     </button>
                                     {{-- button cetak filter --}}
 
-                                    @if (auth()->user()->id_role != 2)
+                                    {{-- @if (auth()->user()->id_role != 2) --}}
                                         <button class="btn btn-success" onclick="handleCetak()" id="btnCetak">
                                             <i class="ri-printer-line align-middle me-1"></i>
                                             <span style="vertical-align: middle">Cetak</span>
                                         </button>
-                                    @endif
+                                    {{-- @endif --}}
 
                                 </div>
                             </div>
