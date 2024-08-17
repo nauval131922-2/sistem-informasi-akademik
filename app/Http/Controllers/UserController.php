@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\UsersImport;
 use Carbon\Carbon;
 use Dompdf\Dompdf;
 use App\Models\Guru;
@@ -17,6 +18,7 @@ use App\Models\MediaSosial;
 use App\Models\TahunAjaran;
 use App\Models\JenisKelamin;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\MataPelajaran;
 use App\Models\ProfilSekolah;
 use Illuminate\Support\Facades\Auth;
@@ -134,6 +136,7 @@ class UserController extends Controller
         $user->id_role = $id_role;
         $user->id_kelas = $request->kelas;
         $user->id_mapel = $request->mapel;
+        $user->nip = $request->nip;
 
         // simpan data gambar
         if ($request->hasFile('gambar')) {
@@ -196,6 +199,22 @@ class UserController extends Controller
             $siswa->nomor_kks = $request->nomor_kks;
             $siswa->nomor_pkh = $request->nomor_pkh;
             $siswa->id_diterima_di_kelas_for_siswa = $request->diterima_di_kelas;
+
+            $siswa->agama = $request->agama;
+            $siswa->status_dalam_keluarga = $request->status_dalam_keluarga;
+            $siswa->anak_ke = $request->anak_ke;
+            $siswa->nomor_telepon_rumah = $request->nomor_telepon_rumah;
+
+            $siswa->nomor_telepon_ayah = $request->nomor_telepon_ayah;
+            $siswa->nomor_telepon_ibu = $request->nomor_telepon_ibu;
+
+            $siswa->alamat_ayah = $request->alamat_ayah;
+            $siswa->alamat_ibu = $request->alamat_ibu;
+
+            $siswa->nama_wali = $request->nama_wali;
+            $siswa->id_pekerjaan_wali_for_siswa = $request->pekerjaan_wali;
+            $siswa->nomor_telepon_wali = $request->nomor_telepon_wali;
+            $siswa->alamat_wali = $request->alamat_wali;
 
             if ($request->hasFile('ijazah')) {
                 $judul_tanpa_spasi = str_replace(' ', '-', $request->nama);
@@ -349,6 +368,7 @@ class UserController extends Controller
         $user->id_role = $request->id_role;
         $user->id_kelas = $request->kelas;
         $user->id_mapel = $request->mapel;
+        $user->nip = $request->nip;
 
         // simpan data password jika password dan confirm password tidak kosong (oke)
         if ($request->password != null && $request->confirm_password != null) {
@@ -434,7 +454,7 @@ class UserController extends Controller
             $siswa->nomor_kip = $request->nomor_kip;
             $siswa->jenjang_sebelumnya = $request->jenjang_sebelumnya;
             $siswa->jenis_mutasi = $request->jenis_mutasi;
-            if ($siswa->jenis_mutasi == 'Mutasi Keluar'){
+            if ($siswa->jenis_mutasi == 'Mutasi Keluar') {
                 $user = User::find($id);
                 $user->id_kelas = null;
 
@@ -466,6 +486,22 @@ class UserController extends Controller
             $siswa->nomor_pkh = $request->nomor_pkh;
             $siswa->id_diterima_di_kelas_for_siswa = $request->diterima_di_kelas;
 
+            $siswa->agama = $request->agama;
+            $siswa->status_dalam_keluarga = $request->status_dalam_keluarga;
+            $siswa->anak_ke = $request->anak_ke;
+            $siswa->nomor_telepon_rumah = $request->nomor_telepon_rumah;
+
+            $siswa->nomor_telepon_ayah = $request->nomor_telepon_ayah;
+            $siswa->nomor_telepon_ibu = $request->nomor_telepon_ibu;
+
+            $siswa->alamat_ayah = $request->alamat_ayah;
+            $siswa->alamat_ibu = $request->alamat_ibu;
+
+            $siswa->nama_wali = $request->nama_wali;
+            $siswa->id_pekerjaan_wali_for_siswa = $request->pekerjaan_wali;
+            $siswa->nomor_telepon_wali = $request->nomor_telepon_wali;
+            $siswa->alamat_wali = $request->alamat_wali;
+
             if ($request->hasFile('ijazah')) {
 
                 if ($siswa->ijazah != null) {
@@ -495,7 +531,6 @@ class UserController extends Controller
             }
 
             $siswa->save();
-
         }
 
 
@@ -611,9 +646,10 @@ class UserController extends Controller
 
         $semua_semester = ['Gasal', 'Genap'];
 
-        return view('backend.user.cetak', compact('id_siswa', 'nama_file', 'nama_lengkap', 'nisn', 'kelas', 'nis_lokal', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'alamat', 'cita_cita', 'jumlah_saudara', 'foto', 'hobi', 'jarak_rumah', 'nomor_hp', 'tanggal_masuk', 'nomor_kk', 'nomor_kip', 'ayah_kandung', 'ibu_kandung', 'status_ayah', 'status_ibu', 'nik_ayah', 'nik_ibu', 'tempat_lahir_ayah', 'tempat_lahir_ibu', 'tanggal_lahir_ayah', 'tanggal_lahir_ibu', 'pendidikan_ayah', 'pendidikan_ibu', 'pekerjaan_ayah', 'pekerjaan_ibu', 'nomor_kks', 'nomor_pkh','jenjang_sebelumnya', 'jenis_mutasi','sekolah_pra', 'sekolah_mutasi', 'npsn_pra', 'npsn_mutasi', 'nism_pra', 'nism_mutasi', 'nomor_ijazah', 'tanggal_mutasi', 'semua_mata_pelajaran', 'semua_nilai','diterima_di_kelas', 'semua_kelas', 'semua_semester'));
-
+        return view('backend.user.cetak', compact('id_siswa', 'nama_file', 'nama_lengkap', 'nisn', 'kelas', 'nis_lokal', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'alamat', 'cita_cita', 'jumlah_saudara', 'foto', 'hobi', 'jarak_rumah', 'nomor_hp', 'tanggal_masuk', 'nomor_kk', 'nomor_kip', 'ayah_kandung', 'ibu_kandung', 'status_ayah', 'status_ibu', 'nik_ayah', 'nik_ibu', 'tempat_lahir_ayah', 'tempat_lahir_ibu', 'tanggal_lahir_ayah', 'tanggal_lahir_ibu', 'pendidikan_ayah', 'pendidikan_ibu', 'pekerjaan_ayah', 'pekerjaan_ibu', 'nomor_kks', 'nomor_pkh', 'jenjang_sebelumnya', 'jenis_mutasi', 'sekolah_pra', 'sekolah_mutasi', 'npsn_pra', 'npsn_mutasi', 'nism_pra', 'nism_mutasi', 'nomor_ijazah', 'tanggal_mutasi', 'semua_mata_pelajaran', 'semua_nilai', 'diterima_di_kelas', 'semua_kelas', 'semua_semester'));
     }
+
+
 
     public function naik()
     {
@@ -631,7 +667,8 @@ class UserController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Berhasil menaikkan kelas']);
     }
 
-    public function turun(){
+    public function turun()
+    {
         // jika ada user dengan role siswa yang id kelas 1, maka gagal turun
         if (User::where('id_role', '=', 5)->where('id_kelas', '=', 1)->count() > 0) {
             return response()->json(['status' => 'warning', 'message' => 'Gagal menurunkan kelas, kelas 1 tidak kosong']);
@@ -643,4 +680,146 @@ class UserController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Berhasil menaikkan kelas']);
     }
 
+    public function fileImportDataSiswa(Request $request)
+    {
+
+        // validator
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:xls,xlsx,csv,xlsm,xlsb,xltx,xltm'
+        ]);
+
+        // jika validasi gagal
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()->toArray()
+            ]);
+        }
+
+        // kondisi jika berhasil diimport
+        if (Excel::import(new UsersImport, $request->file('file')->store('temp'))) {
+            // redirect ke halaman awal
+            return response()->json(['status' => 'success', 'message' => 'Data berhasil diimport.']);
+        } else {
+            // redirect ke halaman awal
+            return response()->json(['status' => 'error2', 'message' => 'Data gagal diimport.']);
+        }
+    }
+
+    public function index_rapor(){
+        $semua_user = User::all();
+        $kelas = Auth::user()->id_kelas;
+        $title = 'Data Siswa Kelas ' . $kelas;
+        $semua_role = Jabatan::where('id', '!=', 2)->get();
+
+        $kelas = Kelas::all();
+
+        $mapel = MataPelajaran::all();
+
+        $tahun_ajaran_aktif = TahunAjaran::where('status', "Aktif")->first();
+        // nama tahun ajaran aktif
+
+        // jika tidak ada tahun ajaran aktif
+        if (!$tahun_ajaran_aktif) {
+            $tahun_ajaran_aktif_semester = '';
+            $tahun_ajaran_aktif_tahun = '';
+        } else {
+            $tahun_ajaran_aktif_semester = $tahun_ajaran_aktif->semester;
+            $tahun_ajaran_aktif_tahun = $tahun_ajaran_aktif->tahun;
+        }
+
+        return view('backend.rapor.index', compact('semua_user', 'title', 'semua_role', 'kelas', 'mapel', 'tahun_ajaran_aktif', 'tahun_ajaran_aktif_semester', 'tahun_ajaran_aktif_tahun'));
+    }
+
+    function fetch_rapor()
+    {
+        $kelas = Auth::user()->id_kelas;
+        $semua_siswa = Siswa::join('users', 'users.id', '=', 'siswas.id_user_for_siswa')->where('users.id_role', '=', '5')->where('users.id_kelas', '=', $kelas)->with('user')->get();
+
+        return response()->json([
+            'data' => $semua_siswa
+        ]);
+    }
+
+    function cetakRapor(Request $request)
+    {
+        $id_siswa = $request->id_siswa;
+
+        $foto = User::where('id', $id_siswa)->first()->profile_image ?? null;
+
+        $nama_lengkap = User::where('id', $id_siswa)->first()->name ?? null;
+        $nisn = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nisn ?? null;
+        $nis_lokal = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nis_lokal ?? null;
+        $nik = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nik ?? null;
+
+        $jenis_kelamin = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jenis_kelamin ?? null;
+        $tempat_lahir = Siswa::where('id_user_for_siswa', $id_siswa)->first()->tempat_lahir ?? null;
+        $tanggal_lahir = Carbon::parse(Siswa::where('id_user_for_siswa', $id_siswa)->first()->tanggal_lahir)->format('d-m-Y') ?? null;
+        $alamat = Siswa::where('id_user_for_siswa', $id_siswa)->first()->alamat ?? null;
+        $nomor_hp = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_hp ?? null;
+        $tanggal_masuk = Carbon::parse(Siswa::where('id_user_for_siswa', $id_siswa)->first()->tanggal_masuk)->format('d-m-Y') ?? null;
+        $kelas = Kelas::where('id', User::where('id', $id_siswa)->first()->id_kelas)->first()->id ?? null;
+        $diterima_di_kelas = Kelas::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_diterima_di_kelas_for_siswa)->first()->id ?? null;
+
+        $jumlah_saudara = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jumlah_saudara ?? null;
+        $cita_cita = Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_cita_cita_for_siswa ?? null;
+        $cita_cita = CitaCita::where('id', $cita_cita)->first()->cita_cita ?? null;
+        $hobi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_hobi_for_siswa ?? null;
+        $hobi = Hobi::where('id', $hobi)->first()->hobi ?? null;
+        $jarak_rumah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jarak_rumah ?? null;
+        $nomor_kk = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_kk ?? null;
+        $nomor_kip = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_kip ?? null;
+
+        $jenjang_sebelumnya = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jenjang_sebelumnya ?? null;
+        $jenis_mutasi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jenis_mutasi ?? null;
+
+        $sekolah_pra = Siswa::where('id_user_for_siswa', $id_siswa)->first()->sekolah_pra_sekolah ?? null;
+        $sekolah_mutasi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->sekolah_mutasi ?? null;
+
+        $npsn_pra = Siswa::where('id_user_for_siswa', $id_siswa)->first()->npsn_pra_sekolah ?? null;
+        $npsn_mutasi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->npsn_mutasi ?? null;
+
+        $nism_pra = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nism_pra_sekolah ?? null;
+        $nism_mutasi = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nism_mutasi ?? null;
+
+        $nomor_ijazah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_ijazah ?? null;
+        $tanggal_mutasi = Carbon::parse(Siswa::where('id_user_for_siswa', $id_siswa)->first()->tanggal_mutasi)->format('d-m-Y') ?? null;
+
+        $ayah_kandung = Siswa::where('id_user_for_siswa', $id_siswa)->first()->ayah_kandung ?? null;
+        $ibu_kandung = Siswa::where('id_user_for_siswa', $id_siswa)->first()->ibu_kandung ?? null;
+
+        $status_ayah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->status_ayah ?? null;
+        $status_ibu = Siswa::where('id_user_for_siswa', $id_siswa)->first()->status_ibu ?? null;
+
+        $nik_ayah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nik_ayah ?? null;
+        $nik_ibu = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nik_ibu ?? null;
+
+        $tempat_lahir_ayah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->tempat_lahir_ayah ?? null;
+        $tempat_lahir_ibu = Siswa::where('id_user_for_siswa', $id_siswa)->first()->tempat_lahir_ibu ?? null;
+
+        $tanggal_lahir_ayah = Carbon::parse(Siswa::where('id_user_for_siswa', $id_siswa)->first()->tanggal_lahir_ayah)->format('d-m-Y') ?? null;
+        $tanggal_lahir_ibu = Carbon::parse(Siswa::where('id_user_for_siswa', $id_siswa)->first()->tanggal_lahir_ibu)->format('d-m-Y') ?? null;
+
+        $pendidikan_ayah = Siswa::where('id_user_for_siswa', $id_siswa)->first()->pendidikan_ayah ?? null;
+        $pendidikan_ibu = Siswa::where('id_user_for_siswa', $id_siswa)->first()->pendidikan_ibu ?? null;
+
+        $pekerjaan_ayah = Pekerjaan::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_pekerjaan_ayah_for_siswa)->first()->pekerjaan ?? null;
+        $pekerjaan_ibu = Pekerjaan::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_pekerjaan_ibu_for_siswa)->first()->pekerjaan ?? null;
+
+        $nomor_kks = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_kks ?? null;
+        $nomor_pkh = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_pkh ?? null;
+
+        $semua_mata_pelajaran = MataPelajaran::all();
+
+        // get semua data nama kelas
+        $semua_kelas = Kelas::all();
+
+        $nama_file = 'Cetak Data Siswa' . '.pdf';
+
+        $semua_nilai = Nilai::where('id_siswa_for_nilai', $id_siswa)->get();
+
+        $semua_semester = ['Gasal', 'Genap'];
+
+        return view('backend.user.cetak', compact('id_siswa', 'nama_file', 'nama_lengkap', 'nisn', 'kelas', 'nis_lokal', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'alamat', 'cita_cita', 'jumlah_saudara', 'foto', 'hobi', 'jarak_rumah', 'nomor_hp', 'tanggal_masuk', 'nomor_kk', 'nomor_kip', 'ayah_kandung', 'ibu_kandung', 'status_ayah', 'status_ibu', 'nik_ayah', 'nik_ibu', 'tempat_lahir_ayah', 'tempat_lahir_ibu', 'tanggal_lahir_ayah', 'tanggal_lahir_ibu', 'pendidikan_ayah', 'pendidikan_ibu', 'pekerjaan_ayah', 'pekerjaan_ibu', 'nomor_kks', 'nomor_pkh', 'jenjang_sebelumnya', 'jenis_mutasi', 'sekolah_pra', 'sekolah_mutasi', 'npsn_pra', 'npsn_mutasi', 'nism_pra', 'nism_mutasi', 'nomor_ijazah', 'tanggal_mutasi', 'semua_mata_pelajaran', 'semua_nilai', 'diterima_di_kelas', 'semua_kelas', 'semua_semester'));
+    }
 }
