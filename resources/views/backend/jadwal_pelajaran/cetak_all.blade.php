@@ -14,15 +14,6 @@ $route = Route::current()->getName();
 </head>
 
 <style>
-    /* set all magins to 5px */
-    html {
-        margin: 25px;
-    }
-
-    body {
-        font-family: 'Times New Roman', Times, serif;
-    }
-
     h3 {
         text-align: center;
         margin-top: 0;
@@ -45,15 +36,86 @@ $route = Route::current()->getName();
         padding: 5px;
     }
 
-    /* table,
+    table,
     th,
     td {
         border: 1px solid black;
         border-collapse: collapse;
-    } */
+    }
+</style>
+
+<style>
+    .kop-surat-container {
+        margin-bottom: 20px;
+    }
+
+    .kop-surat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #000;
+        /* Garis tebal */
+    }
+
+    .kop-surat img {
+        max-width: 100px;
+    }
+
+    .kop-surat .info {
+        text-align: center;
+        flex-grow: 1;
+    }
+
+    .kop-surat .info h1 {
+        margin: 0;
+        font-size: 28px;
+    }
+
+    .kop-surat .info h2 {
+        margin: 0;
+        font-size: 20px;
+    }
+
+    .kop-surat .info h3 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .kop-surat .info p {
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .garis-tipis {
+        border-bottom: 1px solid #000;
+        /* Garis tipis */
+        margin-top: 2px;
+    }
+
+    .kop-surat img {
+        /* height: 100px;
+        width: auto; */
+    }
 </style>
 
 <body>
+
+    <div class="kop-surat-container">
+        <div class="kop-surat">
+            <img src="{{ asset('logo/lp.png') }}" alt="Logo Kiri">
+            <div class="info">
+                <h2>BADAN PELAKSANA PENDIDIKAN MA'ARIF NU</h2>
+                <h1>MI NU NURUL ULUM</h1>
+                <h3>Terakreditasi A</h3>
+                <p style="font-style: italic">Alamat: Jln. Raya Kudus-Colo Km. 09 Piji Dawe Kudus 59353</p>
+                <p style="font-style: italic">Email: minunurululum.pijidawe@gmail.com</p>
+                <p style="font-style: italic">NPSN: 60712327/NSM: 111233190131</p>
+            </div>
+            <img src="{{ asset('logo/madrasah.png') }}" alt="Logo Kanan">
+        </div>
+        <div class="garis-tipis"></div>
+    </div>
 
     @if (auth()->user()->id_role == 1 || auth()->user()->id_role == 2)
         @if ($kepemilikan_jadwal != null && $tipe_jadwal != 'Data Semua Jadwal' && $kelas != 'Semua Kelas')
@@ -273,5 +335,11 @@ $route = Route::current()->getName();
 
     </table>
 </body>
+
+<script type="text/javascript">
+    window.onload = function() {
+        window.print();
+    };
+</script>
 
 </html>
