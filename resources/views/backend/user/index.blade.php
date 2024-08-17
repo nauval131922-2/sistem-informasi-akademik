@@ -138,7 +138,7 @@ $jabatan = App\Models\Jabatan::all();
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="col-md-12">
-                                            <button class="btn btn-outline-warning" style="margin-right: 5px"
+                                            <button class="btn btn-outline-success" style="margin-right: 5px"
                                                 onclick="naikKelas()">
                                                 <i class="ri-arrow-up-line align-middle me-1"></i>
                                                 <span style="vertical-align: middle">Naik Kelas</span>
@@ -151,7 +151,33 @@ $jabatan = App\Models\Jabatan::all();
                                         </div>
                                     </div>
                                 </div>
+
                                 <hr style="margin: 1rem 0 1rem 0">
+
+                                <div class="row mb-3">
+                                    <div class="col-lg-12">
+                                        <h4 class="card-title">Upload File Excel Daftar Siswa</h4>
+                                        <p class="card-title-desc">Pilih file yang ingin anda unggah, <em>Pilih File…</em> dan
+                                            Upload. Download template file <em style="font-weight: bold">Excel</em>-nya <a
+                                                href="{{ asset('template/daftar-siswa.xlsx') }}">di sini</a>.</p>
+                                        <form id="formUploadData" method="POST" enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="input-group mb-2">
+                                                <input class="form-control" type="file" id="formFile" name="file"
+                                                    accept=".xls, .xlsx, .csv, .xlsm, .xlsb, .xltx, .xltm">
+                                                <button class="btn btn-primary" type="submit">
+                                                    <i class="ri-upload-2-line align-middle me-1"></i>
+                                                    <span style="vertical-align: middle">Upload</span>
+                                                </button>
+
+                                            </div>
+                                            <div class="mb-2">
+                                                <span class="text-danger error-text file_error"></span>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <hr style="margin: 0 0 1rem 0">
                             @endcan
 
                             <table id="datatable"
@@ -167,9 +193,9 @@ $jabatan = App\Models\Jabatan::all();
                                         <th>Role</th>
                                         <th>Kelas</th>
                                         <th>Mata Pelajaran</th>
-                                        @can('admin')
+                                        @canany(['admin', 'kepala_madrasah'])
                                             <th>Action</th>
-                                        @endcan
+                                        @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -261,6 +287,21 @@ $jabatan = App\Models\Jabatan::all();
                             value.id +
                             ')"><i class="ri-delete-bin-2-line align-middle me-1"></i><span style="vertical-align: middle">Hapus</span></button>';
 
+                        cetakButton =
+                            '<div class="dropdown">' +
+                            '<button class="btn btn-success" id="dropdownMenuLink" style="margin-top: -10px" data-bs-toggle="dropdown" aria-expanded="false">' +
+                            '<i class="ri-printer-line align-middle me-1"></i>' +
+                            '<span style="vertical-align: middle">Cetak</span>' +
+                            '</button>' +
+                            '<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">' +
+                            '<li><button class="dropdown-item" onclick="cetakData(' + value.id +
+                            ')">Riwayat Pendidikan Siswa</button></li>' +
+                            '<li><button class="dropdown-item" onclick="cetakRapor( ' + value.id +
+                            ' )">Rapor Semester</button></li>' +
+                            '</ul>' +
+                            '</div>';
+
+
                         table.row.add([
                             key + 1,
                             value.name,
@@ -277,6 +318,9 @@ $jabatan = App\Models\Jabatan::all();
                                     detailButton + deleteButton : value.id !=
                                     '{{ Auth::user()->id }}' && value.id_role != '2' ?
                                     editButton + deleteButton : editButton)
+                            @elseif (Auth::user()->id_role == 2)
+                                (value.id != '{{ Auth::user()->id }}' && value.id_role == '5' ?
+                                    cetakButton : '')
                             @else
                                 ''
                             @endif
@@ -289,6 +333,27 @@ $jabatan = App\Models\Jabatan::all();
                 }
             });
         }
+
+        function cetakData(id_siswa) {
+            var url = '/data-user/print?';
+
+            if (id_siswa) {
+                url += 'id_siswa=' + id_siswa;
+            }
+
+            window.open(url, '_blank');
+        }
+
+        function cetakRapor(id_siswa) {
+            var url = '/data-rapor/print?';
+
+            if (id_siswa) {
+                url += 'id_siswa=' + id_siswa;
+            }
+
+            window.open(url, '_blank');
+        }
+
 
 
 
@@ -484,5 +549,96 @@ $jabatan = App\Models\Jabatan::all();
                 });
             }
         }
+
+        $('#formUploadData').on('submit', function(e) {
+            e.preventDefault();
+
+            let formData = new FormData($('#formUploadData')[0]);
+
+            $.ajax({
+                url: '{{ route('file-import-data-siswa') }}',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function() {
+                    $(document).find('span.error-text').text('');
+                },
+                success: function(response) {
+                    if (response.status == 'success') {
+                        toastr.success(response.message, "", {
+                            closeButton: false,
+                            debug: false,
+                            newestOnTop: true,
+                            progressBar: false,
+                            positionClass: "toast-top-right",
+                            preventDuplicates: false,
+                            onclick: null,
+                            showDuration: "100",
+                            hideDuration: "100",
+                            timeOut: "1500",
+                            extendedTimeOut: "1000",
+                            showEasing: "swing",
+                            hideEasing: "linear",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut"
+                        });
+
+                        $('#formUploadData')[0].reset();
+
+                        filterData();
+
+                    } else if (response.status == 'warning') {
+                        toastr.warning(response.message, "", {
+                            closeButton: false,
+                            debug: false,
+                            newestOnTop: true,
+                            progressBar: false,
+                            positionClass: "toast-top-right",
+                            preventDuplicates: false,
+                            onclick: null,
+                            showDuration: "100",
+                            hideDuration: "100",
+                            timeOut: "1500",
+                            extendedTimeOut: "1000",
+                            showEasing: "swing",
+                            hideEasing: "linear",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut"
+                        });
+                    } else if (response.status == 'error') {
+                        $.each(response.message, function(prefix, val) {
+                            $('span.' + prefix + '_error').text(val[0]);
+                        });
+                    } else if (response.status == 'error2') {
+                        toastr.error(response.message, "", {
+                            closeButton: false,
+                            debug: false,
+                            newestOnTop: true,
+                            progressBar: false,
+                            positionClass: "toast-top-right",
+                            preventDuplicates: false,
+                            onclick: null,
+                            showDuration: "100",
+                            hideDuration: "100",
+                            timeOut: "1500",
+                            extendedTimeOut: "1000",
+                            showEasing: "swing",
+                            hideEasing: "linear",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut"
+                        });
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    toastr.error('Terjadi kesalahan. Silakan coba lagi.');
+                    console.error(xhr.responseText);
+                    console.error(status);
+                    console.error(error);
+                }
+            })
+
+        })
     </script>
 @endsection
