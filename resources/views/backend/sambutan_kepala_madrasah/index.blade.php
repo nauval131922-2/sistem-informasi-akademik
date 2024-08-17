@@ -16,33 +16,25 @@
 
                             <h4 class="card-title">Ubah {{ $title }}</h4>
                             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form berikut
-                                untuk mengubah data {{ $title }}.</p>
-                            {{-- <form action="{{ route('sambutan-kepala-madrasah-update', $sambutan->id) }}" method="POST"
-                                enctype="multipart/form-data"> --}}
+                                untuk mengubah data {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
                             <form enctype="multipart/form-data" id="formUbahData" method="POST">
                                 @csrf
                                 <div class="row mb-3">
-                                    <label for="judul" class="col-sm-2 col-form-label">Judul</label>
+                                    <label for="judul" class="col-sm-2 col-form-label">Judul <span class="text-danger">*</span></label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="judul" name="judul"
                                             value="" placeholder="Masukkan judul" required>
                                         <div class="mt-2">
-                                            {{-- @error('judul')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror --}}
                                             <span class="text-danger error-text judul_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="isi" class="col-sm-2 col-form-label">Isi</label>
+                                    <label for="isi" class="col-sm-2 col-form-label">Isi <span class="text-danger">*</span></label>
                                     <div class="col-sm-10">
                                         <input id="isi" type="hidden" name="isi" value="">
                                         <trix-editor input="isi"></trix-editor>
                                         <div class="mt-2">
-                                            {{-- @error('isi')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror --}}
                                             <span class="text-danger error-text isi_error"></span>
                                         </div>
                                     </div>
@@ -59,9 +51,6 @@
                                                 <span style="vertical-align: middle">Clear Image</span>
                                             </button>
                                             <div class="mt-2">
-                                                {{-- @error('gambar')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror --}}
                                                 <span class="text-danger error-text gambar_error"></span>
                                             </div>
                                         </div>
@@ -77,7 +66,6 @@
                                             name="gambarPreview">
                                     </div>
                                 </div>
-                                {{-- <input type="submit" value="Update" class="btn btn-info waves-effect waves-light"> --}}
                                 <button type="submit" class="btn btn-info waves-effect waves-light">
                                     <i class="ri-refresh-line align-middle me-1"></i>
                                     <span style="vertical-align: middle">Update</span>

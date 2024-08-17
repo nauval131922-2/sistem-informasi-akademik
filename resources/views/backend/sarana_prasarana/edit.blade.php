@@ -1,48 +1,16 @@
-{{-- @extends('backend.main')
-
-@section('title')
-    Dashboard | Ubah {{ $title }}
-@endsection --}}
-
-{{-- @section('content')
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-    <div class="page-content"> --}}
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            {{-- <div class="card">
-                <div class="card-body"> --}}
-
-            {{-- tambah tombol back to list --}}
-            {{-- <a href="{{ route('sarana-prasarana-index') }}" class="btn btn-light mb-3"
-                                style="
-										/* taruh di samping kanan */
-										float: right;
-										/* background-color lebih muda lagi */
-										/* background-color: rgb(37,43,59); */
-										border-color: rgb(37,43,59);
-										">
-                                <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                <span style="vertical-align: middle">Back to List</span>    
-                                    </a>
-
-                            <h4 class="card-title">Ubah {{ $title }}</h4> --}}
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                berikut untuk mengubah {{ $title }}.</p>
-            {{-- <form action="{{ route('sarana-prasarana-update', $sarana_prasarana->id) }}" method="POST"
-                enctype="multipart/form-data"> --}}
+                berikut untuk mengubah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
             <form enctype="multipart/form-data" id="formUbahData" method="POST">
                 @csrf
                 <div class="row mb-3">
-                    <label for="nama" class="col-sm-2 col-form-label">Nama</label>
+                    <label for="nama" class="col-sm-2 col-form-label">Nama <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="nama" name="nama"
                             value="{{ $sarana_prasarana->nama ?? old('nama') }}" placeholder="Masukkan nama" required>
                         <div class="mt-2">
-                            {{-- @error('nama')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
 
                             <span class="text-danger error-text nama_error"></span>
                         </div>
@@ -59,9 +27,6 @@
                                 <span style="vertical-align: middle">Clear Image</span>
                             </button>
                             <div class="mt-2">
-                                {{-- @error('gambar')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
                                 <span class="text-danger error-text gambar_error"></span>
                             </div>
                         </div>

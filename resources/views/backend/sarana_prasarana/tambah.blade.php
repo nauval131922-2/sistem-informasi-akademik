@@ -1,48 +1,16 @@
-{{-- @extends('backend.main')
-
-@section('title')
-    Dashboard | Tambah {{ $title }}
-@endsection --}}
-
-{{-- @section('content')
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-    <div class="page-content"> --}}
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            {{-- <div class="card">
-                        <div class="card-body"> --}}
-
-            {{-- tambah tombol back to list --}}
-            {{-- <a href="{{ route('sarana-prasarana-index') }}" class="btn btn-light mb-3"
-                                style="
-                    /* taruh di samping kanan */
-                    float: right;
-                    /* background-color lebih muda lagi */
-                    /* background-color: rgb(37,43,59); */
-                    border-color: rgb(37,43,59);
-                    ">
-                                <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                                <span style="vertical-align: middle">Back to List</span>    
-                </a>
-
-                            <h4 class="card-title">Tambah {{ $title }}</h4> --}}
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                berikut untuk menambah {{ $title }}.</p>
-            {{-- <form action="{{ route('sarana-prasarana-simpan') }}" method="POST" enctype="multipart/form-data"> --}}
+                berikut untuk menambah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
             <form enctype="multipart/form-data" id="formTambahData" method="POST">
                 @csrf
                 <div class="row mb-3">
-                    <label for="nama" class="col-sm-2 col-form-label">Nama</label>
+                    <label for="nama" class="col-sm-2 col-form-label">Nama <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="nama" name="nama"
                             value="{{ old('nama') }}" placeholder="Masukkan nama sarana prasarana" required>
                         <div class="mt-2">
-                            {{-- @error('nama')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
-
                             <span class="text-danger error-text nama_error"></span>
                         </div>
                     </div>
@@ -58,10 +26,6 @@
                                 <span style="vertical-align: middle">Clear Image</span>
                             </button>
                             <div class="mt-2">
-                                {{-- @error('gambar')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
-
                                 <span class="text-danger error-text gambar_error"></span>
                             </div>
                         </div>
@@ -75,7 +39,6 @@
                         <input type="hidden" value="" id="gambarPreview" name="gambarPreview">
                     </div>
                 </div>
-                {{-- <input type="submit" value="Simpan" class="btn btn-info waves-effect waves-light"> --}}
                 <button type="submit" class="btn btn-info waves-effect waves-light">
                     <i class="ri-save-3-line align-middle me-1"></i>
                     <span style="vertical-align: middle">Simpan</span>
@@ -85,10 +48,6 @@
         </div>
     </div>
 </div> <!-- end col -->
-{{-- </div>
-</div>
-</div>
-@endsection --}}
 
 <script>
     $('#gambar').change(function(e) {
