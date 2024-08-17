@@ -16,34 +16,86 @@
 
                             <h4 class="card-title">Ubah {{ $title }}</h4>
                             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form berikut
-                                untuk mengubah {{ $title }}.</p>
-                            {{-- <form action="{{ route('profil-sekolah-update', $profil_sekolah->id) }}" method="POST"
-                                enctype="multipart/form-data"> --}}
+                                untuk mengubah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
                             <form enctype="multipart/form-data" id="formUbahData" method="POST">
                                 @csrf
                                 <div class="row mb-3">
-                                    <label for="nama" class="col-sm-2 col-form-label">Nama</label>
+                                    <label for="nama" class="col-sm-2 col-form-label">Nama <span class="text-danger">*</span></label>
                                     <div class="col-sm-10">
                                         <input class="form-control" type="text" placeholder="Masukkan nama sekolah"
                                             id="nama" name="nama" value="" required>
                                         <div class="mt-2">
-                                            {{-- @error('nama')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror --}}
                                             <span class="text-danger error-text nama_error"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="alamat" class="col-sm-2 col-form-label">Alamat</label>
+                                    <label for="npsn" class="col-sm-2 col-form-label">NPSN</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" placeholder="Masukkan NPSN"
+                                            id="npsn" name="npsn" value="">
+                                        <div class="mt-2">
+                                            <span class="text-danger error-text npsn_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="alamat" class="col-sm-2 col-form-label">Alamat <span class="text-danger">*</span></label>
                                     <div class="col-sm-10">
                                         <input class="form-control" type="text" placeholder="Masukkan alamat sekolah"
                                             id="alamat" name="alamat" value="" required>
                                         <div class="mt-2">
-                                            {{-- @error('alamat')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror --}}
                                             <span class="text-danger error-text alamat_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="desa_kelurahan" class="col-sm-2 col-form-label">Desa/Kelurahan</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" placeholder="Masukkan desa/kelurahan sekolah"
+                                            id="desa_kelurahan" name="desa_kelurahan" value="">
+                                        <div class="mt-2">
+                                            <span class="text-danger error-text desa_kelurahan_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="kecamatan" class="col-sm-2 col-form-label">Kecamatan</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" placeholder="Masukkan kecamatan sekolah"
+                                            id="kecamatan" name="kecamatan" value="">
+                                        <div class="mt-2">
+                                            <span class="text-danger error-text kecamatan_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="kota_kabupaten" class="col-sm-2 col-form-label">Kota/Kabutapen</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" placeholder="Masukkan kota/kabupaten sekolah"
+                                            id="kota_kabupaten" name="kota_kabupaten" value="">
+                                        <div class="mt-2">
+                                            <span class="text-danger error-text kota_kabupaten_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="provinsi" class="col-sm-2 col-form-label">Provinsi</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" placeholder="Masukkan provinsi sekolah"
+                                            id="provinsi" name="provinsi" value="">
+                                        <div class="mt-2">
+                                            <span class="text-danger error-text provinsi_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="website" class="col-sm-2 col-form-label">Website</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" placeholder="Masukkan website sekolah"
+                                            id="website" name="website" value="">
+                                        <div class="mt-2">
+                                            <span class="text-danger error-text website_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -53,9 +105,6 @@
                                         <input class="form-control" type="text" placeholder="Masukkan nomor HP sekolah"
                                             id="nomor_hp" name="nomor_hp" value="">
                                         <div class="mt-2">
-                                            {{-- @error('nomor_hp')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror --}}
                                             <span class="text-danger error-text nomor_hp_error"></span>
                                         </div>
                                     </div>
@@ -66,9 +115,6 @@
                                         <input class="form-control" type="text" placeholder="Masukkan email sekolah"
                                             id="email" name="email" value="">
                                         <div class="mt-2">
-                                            {{-- @error('email')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror --}}
                                             <span class="text-danger error-text email_error"></span>
                                         </div>
                                     </div>
@@ -79,9 +125,6 @@
                                         <input type="text" placeholder="Masukkan link akun Twitter" class="form-control"
                                             id="twitter" name="twitter" value="">
                                         <div class="mt-2">
-                                            {{-- @error('twitter')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror --}}
                                             <span class="text-danger error-text twitter_error"></span>
                                         </div>
                                     </div>
@@ -92,9 +135,6 @@
                                         <input type="text" placeholder="Masukkan link akun Facebook" class="form-control"
                                             id="facebook" name="facebook" value="">
                                         <div class="mt-2">
-                                            {{-- @error('facebook')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror --}}
                                             <span class="text-danger error-text facebook_error"></span>
                                         </div>
                                     </div>
@@ -105,9 +145,6 @@
                                         <input type="text" placeholder="Masukkan link akun YouTube" class="form-control"
                                             id="youtube" name="youtube" value="">
                                         <div class="mt-2">
-                                            {{-- @error('youtube')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror --}}
                                             <span class="text-danger error-text youtube_error"></span>
                                         </div>
                                     </div>
@@ -118,9 +155,6 @@
                                         <input type="text" placeholder="Masukkan link akun Instagram"
                                             class="form-control" id="instagram" name="instagram" value="">
                                         <div class="mt-2">
-                                            {{-- @error('instagram')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror --}}
                                             <span class="text-danger error-text instagram_error"></span>
                                         </div>
                                     </div>
@@ -131,9 +165,6 @@
                                         <input id="visi" type="hidden" name="visi" value="">
                                         <trix-editor input="visi"></trix-editor>
                                         <div class="mt-2">
-                                            {{-- @error('visi')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror --}}
                                             <span class="text-danger error-text visi_error"></span>
                                         </div>
                                     </div>
@@ -144,9 +175,6 @@
                                         <input id="misi" type="hidden" name="misi" value="">
                                         <trix-editor input="misi"></trix-editor>
                                         <div class="mt-2">
-                                            {{-- @error('misi')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror --}}
                                             <span class="text-danger error-text misi_error"></span>
                                         </div>
                                     </div>
@@ -157,9 +185,6 @@
                                         <input id="tujuan" type="hidden" name="tujuan" value="">
                                         <trix-editor input="tujuan"></trix-editor>
                                         <div class="mt-2">
-                                            {{-- @error('tujuan')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror --}}
                                             <span class="text-danger error-text tujuan_error"></span>
                                         </div>
                                     </div>
@@ -176,9 +201,6 @@
                                                 <span style="vertical-align: middle">Clear Image</span>
                                             </button>
                                             <div class="mt-2">
-                                                {{-- @error('gambar')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror --}}
                                                 <span class="text-danger error-text gambar_error"></span>
                                             </div>
                                         </div>
@@ -195,7 +217,6 @@
                                             name="gambarPreview">
                                     </div>
                                 </div>
-                                {{-- <input type="submit" value="Update" class="btn btn-info waves-effect waves-light"> --}}
                                 <button type="submit" class="btn btn-info waves-effect waves-light">
                                     <i class="ri-refresh-line align-middle me-1"></i>
                                     <span style="vertical-align: middle">Update</span>

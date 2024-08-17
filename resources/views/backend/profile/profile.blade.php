@@ -19,7 +19,6 @@
                             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Berikut adalah
                                 {{ $title }}.</p>
 
-                            {{-- <form method="post" action="{{ route('update.profile') }}" enctype="multipart/form-data"> --}}
                             <form enctype="multipart/form-data" id="formUbahData" method="POST">
                                 @csrf
 
@@ -35,13 +34,21 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label for="name" class="col-sm-2 col-form-label">Name</label>
+                                    <div class="mt-2">
+                                        <small class="text-danger"
+                                            style="background:
+                                    #f8f9fa; padding: 5px; border-radius: 5px;
+                                    ">* Harus diisi</small>
+
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="row mb-3">
+                                    <label for="name" class="col-sm-2 col-form-label">Nama <span class="text-danger">*</span></label>
                                     <div class="col-sm-10">
                                         <input class="form-control" type="text" name="name" id="name"
                                             value="" placeholder="Masukkan nama lengkap anda" required>
-                                        {{-- @error('name')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror --}}
                                         <div class="mt-2">
                                             <span class="text-danger error-text name_error"></span>
                                         </div>
@@ -53,9 +60,6 @@
                                     <div class="col-sm-10">
                                         <input class="form-control" type="email" name="email" id="email"
                                             value="" placeholder="Masukkan email anda">
-                                        {{-- @error('email')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror --}}
                                         <div class="mt-2">
                                             <span class="text-danger error-text email_error"></span>
                                         </div>
@@ -63,13 +67,10 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label for="username" class="col-sm-2 col-form-label">Username</label>
+                                    <label for="username" class="col-sm-2 col-form-label">Username <span class="text-danger">*</span></label>
                                     <div class="col-sm-10">
                                         <input class="form-control" type="text" name="username" id="username"
                                             value="" placeholder="Masukkan username anda" required>
-                                        {{-- @error('username')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror --}}
                                         <div class="mt-2">
                                             <span class="text-danger error-text username_error"></span>
                                         </div>
@@ -82,9 +83,6 @@
                                     <div class="col-sm-10">
                                         <input class="form-control" type="password" name="oldpassword" id="oldpassword"
                                             placeholder="Masukkan password lama anda">
-                                        {{-- @error('oldpassword')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror --}}
                                         <div class="mt-2">
                                             <span class="text-danger error-text oldpassword_error"></span>
                                         </div>
@@ -102,14 +100,11 @@
                                             <small class="text-danger"
                                                 style="background:
                                         #f8f9fa; padding: 5px; border-radius: 5px;
-                                        ">*kosongi
+                                        ">Kosongi
                                                 jika tidak ingin mengubah password</small>
 
                                         </div>
 
-                                        {{-- @error('newpassword')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror --}}
                                         <div class="mt-2">
                                             <span class="text-danger error-text newpassword_error"></span>
                                         </div>
@@ -122,9 +117,6 @@
                                     <div class="col-sm-10">
                                         <input class="form-control" type="password" name="confirmpassword"
                                             id="confirmpassword" placeholder="Masukkan konfirmasi password baru anda">
-                                        {{-- @error('confirmpassword')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror --}}
                                         <span class="text-danger error-text confirmpassword_error"></span>
                                     </div>
                                 </div>
@@ -141,9 +133,6 @@
                                                 <span style="vertical-align: middle">Clear Image</span>
                                             </button>
                                             <div class="mt-2">
-                                                {{-- @error('gambar')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror --}}
                                                 <span class="text-danger error-text gambar_error"></span>
                                             </div>
                                         </div>
@@ -174,7 +163,6 @@
 
         });
 
-        // Route::get('/profile/fetch', 'fetch')->name('profile-fetch');
         function fetchData() {
 
             $.ajax({
@@ -188,7 +176,7 @@
                     $('#username').val(profile.username);
                     var profileImage = profile.profile_image ? '{{ asset('') }}' + profile.profile_image :
                         'https://ui-avatars.com/api/?background=random&name=' + encodeURIComponent(profile
-                        .name);
+                            .name);
                     profile.profile_image ? $('#gambarPreview').val(profileImage) : '';
                     profile.profile_image ? $('#showImage').attr('src', profileImage) : '';
 
@@ -200,7 +188,6 @@
             });
         }
 
-        // Route::post('/update/profile', 'UpdateProfile')->name('update.profile');
         $('#formUbahData').on('submit', function(e) {
             e.preventDefault();
 
