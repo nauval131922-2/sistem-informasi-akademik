@@ -4,13 +4,13 @@
 
 
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                berikut untuk menambah {{ $title }}.</p>
+                berikut untuk menambah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
             <form enctype="multipart/form-data" id="formTambahData" method="POST">
                 @csrf
 
                 @if ($id_role == '5')
                     <div class="row mb-3">
-                        <label for="nama" class="col-lg-1 col-form-label col-sm-2">Nama</label>
+                        <label for="nama" class="col-lg-1 col-form-label col-sm-2">Nama <span class="text-danger">*</span></label>
                         <div class="col-lg-11 col-sm-10">
                             <input class="form-control" type="text" placeholder="Masukkan nama" id="nama"
                                 name="nama" value="{{ old('nama') }}" required>
@@ -22,7 +22,7 @@
                     <div class="row mb-3">
                         <div class="col-lg-6">
                             <div class="row">
-                                <label for="username" class="col-sm-2 col-form-label">Username</label>
+                                <label for="username" class="col-sm-2 col-form-label">Username <span class="text-danger">*</span></label>
                                 <div class="col-sm-10">
                                     <input class="form-control" type="text" placeholder="Masukkkan username"
                                         id="username" name="username" value="{{ old('username') }}" required>
@@ -48,7 +48,7 @@
                     <div class="row mb-3">
                         <div class="col-lg-6">
                             <div class="row">
-                                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                                <label for="password" class="col-sm-2 col-form-label">Password <span class="text-danger">*</span></label>
                                 <div class="col-sm-10">
                                     <input class="form-control" type="password" placeholder="Masukkan password"
                                         id="password" name="password" required>
@@ -60,7 +60,7 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="row">
-                                <label for="confirm_password" class="col-sm-2 col-form-label">Confirm Password</label>
+                                <label for="confirm_password" class="col-sm-2 col-form-label">Confirm Password <span class="text-danger">*</span></label>
                                 <div class="col-sm-10">
                                     <input class="form-control" type="password" placeholder="Masukkan ulang password"
                                         id="confirm_password" name="confirm_password" required>
@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     <div class="row mb-3" id="kelass">
-                        <label for="kelas" class="col-lg-1 col-form-label col-sm-2">Kelas</label>
+                        <label for="kelas" class="col-lg-1 col-form-label col-sm-2">Kelas <span class="text-danger">*</span></label>
                         <div class="col-lg-11 col-sm-10">
                             <select class="form-select" id="kelas" name="kelas" required>
                                 <option value="">Pilih Kelas</option>
@@ -92,7 +92,7 @@
                     </div>
                 @else
                     <div class="row mb-3">
-                        <label for="nama" class="col-sm-2 col-form-label">Nama</label>
+                        <label for="nama" class="col-sm-2 col-form-label">Nama <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
                             <input class="form-control" type="text" placeholder="Masukkan nama" id="nama"
                                 name="nama" value="{{ old('nama') }}" required>
@@ -102,7 +102,7 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="username" class="col-sm-2 col-form-label">Username</label>
+                        <label for="username" class="col-sm-2 col-form-label">Username <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
                             <input class="form-control" type="text" placeholder="Masukkkan username"
                                 id="username" name="username" value="{{ old('username') }}" required>
@@ -123,7 +123,7 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="password" class="col-sm-2 col-form-label">Password</label>
+                        <label for="password" class="col-sm-2 col-form-label">Password <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
                             <input class="form-control" type="password" placeholder="Masukkan password"
                                 id="password" name="password" required>
@@ -133,7 +133,7 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="confirm_password" class="col-sm-2 col-form-label">Confirm Password</label>
+                        <label for="confirm_password" class="col-sm-2 col-form-label">Confirm Password <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
                             <input class="form-control" type="password" placeholder="Masukkan ulang password"
                                 id="confirm_password" name="confirm_password" required>
@@ -144,7 +144,7 @@
                     </div>
                     @if ($id_role == '3')
                         <div class="row mb-3" id="kelass">
-                            <label for="kelas" class="col-sm-2 col-form-label">Kelas</label>
+                            <label for="kelas" class="col-sm-2 col-form-label">Kelas <span class="text-danger">*</span></label>
                             <div class="col-sm-10">
                                 <select class="form-select" id="kelas" name="kelas" required>
                                     <option value="">Pilih Kelas</option>
@@ -182,7 +182,7 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="row">
-                                <label for="nis_lokal" class="col-sm-2 col-form-label">NIS Lokal</label>
+                                <label for="nis_lokal" class="col-sm-2 col-form-label">NIS Lokal <span class="text-danger">*</span></label>
                                 <div class="col-sm-10">
                                     <input class="form-control" type="text" placeholder="Masukkkan NIS Lokal"
                                         id="nis_lokal" name="nis_lokal" value="{{ old('nis_lokal') }}" required>
@@ -228,6 +228,39 @@
                                     </select>
                                     <div class="mt-2">
                                         <span class="text-danger error-text jenis_kelamin_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="agama" class="col-sm-2 col-form-label">Agama</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" placeholder="Masukkkan agama"
+                                        id="agama" name="agama" value="{{ old('agama') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text agama_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="status_dalam_keluarga" class="col-sm-2 col-form-label">Status dalam Keluarga</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" placeholder="Masukkkan status_dalam_keluarga"
+                                        id="status_dalam_keluarga" name="status_dalam_keluarga" value="{{ old('status_dalam_keluarga') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text status_dalam_keluarga_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="anak_ke" class="col-sm-2 col-form-label">Anak ke</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" placeholder="Masukkkan anak_ke"
+                                        id="anak_ke" name="anak_ke" value="{{ old('anak_ke') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text anak_ke_error"></span>
                                     </div>
                                 </div>
                             </div>
@@ -530,7 +563,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <div class="col-lg-6">
 
@@ -638,6 +671,26 @@
                                     </select>
                                     <div class="mt-2">
                                         <span class="text-danger error-text pekerjaan_ayah_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="nomor_telepon_ayah" class="col-sm-2 col-form-label">No. Telepon</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" placeholder="Masukkkan No. Telepon"
+                                        id="nomor_telepon_ayah" name="nomor_telepon_ayah"
+                                        value="{{ old('nomor_telepon_ayah') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text nomor_telepon_ayah_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="alamat_ayah" class="col-sm-2 col-form-label">Alamat</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" placeholder="Masukkan alamat_ayah" id="alamat_ayah" name="alamat_ayah" rows="3">{{ old('alamat_ayah') }}</textarea>
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text alamat_ayah_error"></span>
                                     </div>
                                 </div>
                             </div>
@@ -763,6 +816,26 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
+                                <label for="nomor_telepon_ibu" class="col-sm-2 col-form-label">No. Telepon</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" placeholder="Masukkkan No. Telepon"
+                                        id="nomor_telepon_ibu" name="nomor_telepon_ibu"
+                                        value="{{ old('nomor_telepon_ibu') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text nomor_telepon_ibu_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="alamat_ibu" class="col-sm-2 col-form-label">Alamat</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" placeholder="Masukkan alamat_ibu" id="alamat_ibu" name="alamat_ibu" rows="3">{{ old('alamat_ibu') }}</textarea>
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text alamat_ibu_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
                                 <label for="no_pkh" class="col-sm-2 col-form-label">No. PKH</label>
                                 <div class="col-sm-10">
                                     <input class="form-control" type="text" placeholder="Masukkkan nomor PKH"
@@ -774,13 +847,73 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+
+                            <label class="col-form-label">DATA WALI</label>
+                            <hr style="margin-top: -5px;">
+
+                            <div class="row mb-3">
+                                <label for="nama_wali" class="col-sm-2 col-form-label">Nama Wali</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" placeholder="Masukkkan nama wali"
+                                        id="nama_wali" name="nama_wali" value="{{ old('nama_wali') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text nama_wali_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="pekerjaan_wali" class="col-sm-2 col-form-label">Pekerjaan</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select" id="pekerjaan_wali" name="pekerjaan_wali">
+                                        <option value="">Pilih pekerjaan</option>
+                                        @foreach ($semua_pekerjaan as $pekerjaan_wali)
+                                            @if (old('pekerjaan_wali') == $pekerjaan_wali->id)
+                                                <option value="{{ $pekerjaan_wali->id }}" selected>
+                                                    {{ $pekerjaan_wali->pekerjaan }}
+                                                </option>
+                                            @else
+                                                <option value="{{ $pekerjaan_wali->id }}">
+                                                    {{ $pekerjaan_wali->pekerjaan }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text pekerjaan_wali_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="nomor_telepon_wali" class="col-sm-2 col-form-label">No. Telepon</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" placeholder="Masukkkan No. Telepon"
+                                        id="nomor_telepon_wali" name="nomor_telepon_wali"
+                                        value="{{ old('nomor_telepon_wali') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text nomor_telepon_wali_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="alamat_wali" class="col-sm-2 col-form-label">Alamat</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" placeholder="Masukkan alamat_wali" id="alamat_wali" name="alamat_wali" rows="3">{{ old('alamat_wali') }}</textarea>
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text alamat_wali_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endif
 
                 @if ($id_role == '4')
                     <div class="row mb-3" id="mapell">
-                        <label for="mapel" class="col-sm-2 col-form-label">Mata Pelajaran</label>
+                        <label for="mapel" class="col-sm-2 col-form-label">Mata Pelajaran <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
-                            <select class="form-select" id="mapel" name="mapel">
+                            <select class="form-select" id="mapel" name="mapel" required>
                                 <option value="">Pilih Mata Pelajaran</option>
                                 @foreach ($semua_mapel as $mapel)
                                     @if (old('mapel') == $mapel->id)
