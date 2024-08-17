@@ -503,14 +503,70 @@ class JadwalPelajaranController extends Controller
             }
         }
 
-        $dompdf = new Dompdf();
+        // $dompdf = new Dompdf();
 
-        $dompdf->setPaper('A4', 'portrait');
+        // $dompdf->setPaper('A4', 'portrait');
 
-        $dompdf->loadHtml(view('backend.jadwal_pelajaran.cetak_all', compact('semua_jadwal', 'tahun_ajaran', 'logo', 'sekolah', 'nama_file', 'kelas', 'tipe_jadwal', 'kepemilikan_jadwal')));
+        // $dompdf->loadHtml(view('backend.jadwal_pelajaran.cetak_all', compact('semua_jadwal', 'tahun_ajaran', 'logo', 'sekolah', 'nama_file', 'kelas', 'tipe_jadwal', 'kepemilikan_jadwal')));
 
-        $dompdf->render();
+        return view('backend.jadwal_pelajaran.cetak_all', compact('semua_jadwal', 'tahun_ajaran', 'logo', 'sekolah', 'nama_file', 'kelas', 'tipe_jadwal', 'kepemilikan_jadwal'));
 
-        $dompdf->stream($nama_file, ['Attachment' => 0]);
+        // $dompdf->render();
+
+        // $dompdf->stream($nama_file, ['Attachment' => 0]);
+    }
+
+    public function getGuruInfoTambah($guruId)
+    {
+        $guru = User::find($guruId);
+
+        if ($guru) {
+            if ($guru->id_role == 4) {
+                return response()->json([
+                    'id_role' => $guru->id_role,
+                    'mapel' => MataPelajaran::where('id', $guru->id_mapel)->first()->mata_pelajaran,
+                    'id_mapel' => $guru->id_mapel
+                ]);
+            } else {
+                $semua_mapel = MataPelajaran::all();
+                return response()->json([
+                    'id_role' => $guru->id_role,
+                    'semua_mapel' => $semua_mapel
+                ]);
+            }
+        } else {
+            return response()->json(['error' => 'Guru not found'], 404);
+        }
+    }
+
+    public function getGuruInfo($id, Request $request)
+    {
+        $guru = JadwalPelajaran::find($id);
+        $guru = $guru->id_guru_for_jadwal;
+
+        $id_role = User::find($guru)->id_role;
+
+        $id = $request->id;
+
+        $id_mapel = User::find($guru)->id_mapel;
+
+        if ($guru) {
+            if ($id_role == 4) {
+                return response()->json([
+                    'id_role' => $id_role,
+                    'mapel' => MataPelajaran::where('id', $id_mapel)->first()->mata_pelajaran,
+                    'id_mapel' => $id_mapel
+                ]);
+            } else {
+                $semua_mapel = MataPelajaran::all();
+                return response()->json([
+                    'id_role' => $id_role,
+                    'semua_mapel' => $semua_mapel,
+                    'selected_mapel_id' => JadwalPelajaran::find($id)->id_mapel_for_jadwal
+                ]);
+            }
+        } else {
+            return response()->json(['error' => 'Guru not found'], 404);
+        }
     }
 }
