@@ -6,12 +6,12 @@
             <div class="row">
                 <div class="col-auto me-auto">
                     <p class="card-title-desc mb-0">Lengkapi form
-                        berikut untuk mengubah {{ $title }}.</p>
+                        berikut untuk mengubah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
                     </p>
 
                 </div>
 
-                <div class="col-auto mb-2">
+                {{-- <div class="col-auto mb-2">
                     <div class="dropdown">
                         @if ($id_role == '5')
                             <button class="btn btn-success" onclick="cetakData()" id="btnCetak"
@@ -20,6 +20,25 @@
                                 <span style="vertical-align: middle">Cetak</span>
                             </button>
                         @endif
+                    </div>
+                </div> --}}
+
+                <div class="col-auto mb-2">
+                    <div class="dropdown">
+                        @if ($id_role == '5')
+                            <button class="btn btn-success" id="dropdownMenuLink" style="margin-top: -10px"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="ri-printer-line align-middle me-1"></i>
+                                <span style="vertical-align: middle">Cetak</span>
+                            </button>
+                        @endif
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><button class="dropdown-item" onclick="cetakData()" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModalScrollable">Riwayat Pendidikan Siswa</button></li>
+                            <li><button class="dropdown-item" onclick="cetakRapor()" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModalScrollable">Rapor Semester</button></li>
+                        </ul>
                     </div>
                 </div>
 
@@ -32,7 +51,8 @@
 
                 @if ($id_role == '5')
                     <div class="row mb-3">
-                        <label for="nama" class="col-lg-1 col-form-label col-sm-2">Nama</label>
+                        <label for="nama" class="col-lg-1 col-form-label col-sm-2">Nama <span
+                                class="text-danger">*</span></label>
                         <div class="col-lg-11 col-sm-10">
                             <input class="form-control" type="text" placeholder="Masukkan nama" id="nama"
                                 name="nama" value="{{ $user->name ?? old('nama') }}" required>
@@ -44,7 +64,8 @@
                     <div class="row mb-3">
                         <div class="col-lg-6">
                             <div class="row">
-                                <label for="username" class="col-sm-2 col-form-label">Username</label>
+                                <label for="username" class="col-sm-2 col-form-label">Username <span
+                                        class="text-danger">*</span></label>
                                 <div class="col-sm-10">
                                     <input class="form-control" type="text" placeholder="Masukkkan username"
                                         id="username" name="username" value="{{ $user->username ?? old('username') }}"
@@ -95,7 +116,8 @@
                         </div>
                     </div>
                     <div class="row mb-3" id="kelass">
-                        <label for="kelas" class="col-lg-1 col-form-label col-sm-2">Kelas</label>
+                        <label for="kelas" class="col-lg-1 col-form-label col-sm-2">Kelas <span
+                                class="text-danger">*</span></label>
                         <div class="col-lg-11 col-sm-10">
                             <select class="form-select" id="kelas" name="kelas" required>
                                 <option value="">Pilih Kelas</option>
@@ -115,7 +137,8 @@
                     </div>
                 @else
                     <div class="row mb-3">
-                        <label for="nama" class="col-sm-2 col-form-label">Nama</label>
+                        <label for="nama" class="col-sm-2 col-form-label">Nama <span
+                                class="text-danger">*</span></label>
                         <div class="col-sm-10">
                             <input class="form-control" type="text" placeholder="Masukkan nama" id="nama"
                                 name="nama" value="{{ $user->name ?? old('nama') }}" required>
@@ -124,8 +147,24 @@
                             </div>
                         </div>
                     </div>
+
+                    @if ($id_role == '2')
+                        <div class="row mb-3">
+                            <label for="nip" class="col-sm-2 col-form-label">NIP <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" placeholder="Masukkan NIP" id="nip"
+                                    name="nip" value="{{ $user->nip ?? old('nip') }}" required>
+                                <div class="mt-2">
+                                    <span class="text-danger error-text nip_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="row mb-3">
-                        <label for="username" class="col-sm-2 col-form-label">Username</label>
+                        <label for="username" class="col-sm-2 col-form-label">Username <span
+                                class="text-danger">*</span></label>
                         <div class="col-sm-10">
                             <input class="form-control" type="text" placeholder="Masukkkan username"
                                 id="username" name="username" value="{{ $user->username ?? old('username') }}"
@@ -140,7 +179,7 @@
                         <label for="email" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
                             <input class="form-control" type="text" placeholder="Masukkkan email" id="email"
-                                name="email" value="{{ $user->email ?? old('email') }}" required>
+                                name="email" value="{{ $user->email ?? old('email') }}">
                             <div class="mt-2">
                                 <span class="text-danger error-text email_error"></span>
                             </div>
@@ -168,7 +207,8 @@
                     </div>
                     @if ($id_role == '3')
                         <div class="row mb-3" id="kelass">
-                            <label for="kelas" class="col-sm-2 col-form-label">Kelas</label>
+                            <label for="kelas" class="col-sm-2 col-form-label">Kelas <span
+                                    class="text-danger">*</span></label>
                             <div class="col-sm-10">
                                 <select class="form-select" id="kelas" name="kelas" required>
                                     <option value="">Pilih Kelas</option>
@@ -206,7 +246,8 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="row">
-                                <label for="nis_lokal" class="col-sm-2 col-form-label">NIS Lokal</label>
+                                <label for="nis_lokal" class="col-sm-2 col-form-label">NIS Lokal <span
+                                        class="text-danger">*</span></label>
                                 <div class="col-sm-10">
                                     <input class="form-control" type="text" placeholder="Masukkkan NIS Lokal"
                                         id="nis_lokal" name="nis_lokal"
@@ -241,18 +282,56 @@
                                     <select class="form-select" id="jenis_kelamin" name="jenis_kelamin">
                                         <option value="">Pilih Jenis Kelamin</option>
                                         @foreach ($semua_jenis_kelamin as $jenis_kelamin)
-                                            @if ($siswa->jenis_kelamin == $jenis_kelamin ?? old('jenis_kelamin') == $jenis_kelamin)
-                                                <option value="{{ $jenis_kelamin }}" selected>
-                                                    {{ $jenis_kelamin }}
+                                            @if (
+                                                (isset($siswa->jenis_kelamin) && $siswa->jenis_kelamin == $jenis_kelamin) ||
+                                                    (!isset($siswa->jenis_kelamin) && old('jenis_kelamin') == $jenis_kelamin))
+                                                <option value="{{ $jenis_kelamin }}" selected>{{ $jenis_kelamin }}
                                                 </option>
                                             @else
-                                                <option value="{{ $jenis_kelamin }}">{{ $jenis_kelamin }}
-                                                </option>
+                                                <option value="{{ $jenis_kelamin }}">{{ $jenis_kelamin }}</option>
                                             @endif
                                         @endforeach
+
                                     </select>
                                     <div class="mt-2">
                                         <span class="text-danger error-text jenis_kelamin_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="agama" class="col-sm-2 col-form-label">Agama</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" placeholder="Masukkkan agama"
+                                        id="agama" name="agama" value="{{ $siswa->agama ?? old('agama') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text agama_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="status_dalam_keluarga" class="col-sm-2 col-form-label">Status dalam
+                                    Keluarga</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text"
+                                        placeholder="Masukkkan status_dalam_keluarga" id="status_dalam_keluarga"
+                                        name="status_dalam_keluarga"
+                                        value="{{ $siswa->status_dalam_keluarga ?? old('status_dalam_keluarga') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text status_dalam_keluarga_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="anak_ke" class="col-sm-2 col-form-label">Anak ke</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" placeholder="Masukkkan anak_ke"
+                                        id="anak_ke" name="anak_ke"
+                                        value="{{ $siswa->anak_ke ?? old('anak_ke') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text anak_ke_error"></span>
                                     </div>
                                 </div>
                             </div>
@@ -311,18 +390,22 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="diterima_di_kelas" class="col-sm-2 col-form-label">Diterima di kelas</label>
+                                <label for="diterima_di_kelas" class="col-sm-2 col-form-label">Diterima di
+                                    kelas</label>
                                 <div class="col-sm-10">
                                     <select class="form-select" id="diterima_di_kelas" name="diterima_di_kelas">
                                         <option value="">Pilih diterima di kelas</option>
                                         @foreach ($semua_kelas as $kelas)
-                                            @if ($siswa->id_diterima_di_kelas_for_siswa == $kelas->id ?? old('diterima_di_kelas') == $kelas->id)
+                                            @if (
+                                                (isset($siswa->id_diterima_di_kelas_for_siswa) && $siswa->id_diterima_di_kelas_for_siswa == $kelas->id) ||
+                                                    (old('diterima_di_kelas') == $kelas->id && !isset($siswa->id_diterima_di_kelas_for_siswa)))
                                                 <option value="{{ $kelas->id }}" selected>{{ $kelas->nama }}
                                                 </option>
                                             @else
                                                 <option value="{{ $kelas->id }}">{{ $kelas->nama }}</option>
                                             @endif
                                         @endforeach
+
                                     </select>
                                     <div class="mt-2">
                                         <span class="text-danger error-text kelas_error"></span>
@@ -349,15 +432,17 @@
                                     <select class="form-select" id="cita_cita" name="cita_cita">
                                         <option value="">Pilih Cita-cita</option>
                                         @foreach ($semua_cita_cita as $cita_cita)
-                                            @if ($siswa->id_cita_cita_for_siswa == $cita_cita->id ?? old('cita_cita') == $cita_cita->id)
+                                            @if (
+                                                (isset($siswa->id_cita_cita_for_siswa) && $siswa->id_cita_cita_for_siswa == $cita_cita->id) ||
+                                                    (!isset($siswa->id_cita_cita_for_siswa) && old('cita_cita') == $cita_cita->id))
                                                 <option value="{{ $cita_cita->id }}" selected>
-                                                    {{ $cita_cita->cita_cita }}
-                                                </option>
+                                                    {{ $cita_cita->cita_cita }}</option>
                                             @else
                                                 <option value="{{ $cita_cita->id }}">{{ $cita_cita->cita_cita }}
                                                 </option>
                                             @endif
                                         @endforeach
+
                                     </select>
                                     <div class="mt-2">
                                         <span class="text-danger error-text cita_cita_error"></span>
@@ -370,13 +455,16 @@
                                     <select class="form-select" id="hobi" name="hobi">
                                         <option value="">Pilih Hobi</option>
                                         @foreach ($semua_hobi as $hobi)
-                                            @if ($siswa->id_hobi_for_siswa == $hobi->id ?? old('hobi') == $hobi->id)
+                                            @if (
+                                                (isset($siswa->id_hobi_for_siswa) && $siswa->id_hobi_for_siswa == $hobi->id) ||
+                                                    (!isset($siswa->id_hobi_for_siswa) && old('hobi') == $hobi->id))
                                                 <option value="{{ $hobi->id }}" selected>{{ $hobi->hobi }}
                                                 </option>
                                             @else
                                                 <option value="{{ $hobi->id }}">{{ $hobi->hobi }}</option>
                                             @endif
                                         @endforeach
+
                                     </select>
                                     <div class="mt-2">
                                         <span class="text-danger error-text hobi_error"></span>
@@ -435,15 +523,17 @@
                                     <select class="form-select" id="jenjang_sebelumnya" name="jenjang_sebelumnya">
                                         <option value="">Pilih jenjang sebelumnya</option>
                                         @foreach ($semua_jenjang_sebelumnya as $jenjang_sebelumnya)
-                                            @if ($siswa->jenjang_sebelumnya == $jenjang_sebelumnya ?? old('jenjang_sebelumnya') == $jenjang_sebelumnya)
+                                            @if (
+                                                (isset($siswa->jenjang_sebelumnya) && $siswa->jenjang_sebelumnya == $jenjang_sebelumnya) ||
+                                                    (!isset($siswa->jenjang_sebelumnya) && old('jenjang_sebelumnya') == $jenjang_sebelumnya))
                                                 <option value="{{ $jenjang_sebelumnya }}" selected>
-                                                    {{ $jenjang_sebelumnya }}
-                                                </option>
+                                                    {{ $jenjang_sebelumnya }}</option>
                                             @else
                                                 <option value="{{ $jenjang_sebelumnya }}">{{ $jenjang_sebelumnya }}
                                                 </option>
                                             @endif
                                         @endforeach
+
                                     </select>
                                     <div class="mt-2">
                                         <span class="text-danger error-text jenjang_sebelumnya_error"></span>
@@ -506,13 +596,16 @@
                                     <select class="form-select" id="jenis_mutasi" name="jenis_mutasi">
                                         <option value="">Pilih jenis mutasi</option>
                                         @foreach ($semua_jenis_mutasi as $jenis_mutasi)
-                                            @if ($siswa->jenis_mutasi == $jenis_mutasi ?? old('jenis_mutasi') == $jenis_mutasi)
+                                            @if (
+                                                (isset($siswa->jenis_mutasi) && $siswa->jenis_mutasi == $jenis_mutasi) ||
+                                                    (!isset($siswa->jenis_mutasi) && old('jenis_mutasi') == $jenis_mutasi))
                                                 <option value="{{ $jenis_mutasi }}" selected>{{ $jenis_mutasi }}
                                                 </option>
                                             @else
                                                 <option value="{{ $jenis_mutasi }}">{{ $jenis_mutasi }}</option>
                                             @endif
                                         @endforeach
+
                                     </select>
                                     <div class="mt-2">
                                         <span class="text-danger error-text jenis_mutasi_error"></span>
@@ -588,13 +681,16 @@
                                     <select class="form-select" id="status_ayah" name="status_ayah">
                                         <option value="">Pilih status</option>
                                         @foreach ($semua_status as $status_ayah)
-                                            @if ($siswa->status_ayah == $status_ayah ?? old('status_ayah') == $status_ayah)
+                                            @if (
+                                                (isset($siswa->status_ayah) && $siswa->status_ayah == $status_ayah) ||
+                                                    (!isset($siswa->status_ayah) && old('status_ayah') == $status_ayah))
                                                 <option value="{{ $status_ayah }}" selected>{{ $status_ayah }}
                                                 </option>
                                             @else
                                                 <option value="{{ $status_ayah }}">{{ $status_ayah }}</option>
                                             @endif
                                         @endforeach
+
                                     </select>
                                     <div class="mt-2">
                                         <span class="text-danger error-text status_ayah_error"></span>
@@ -641,15 +737,17 @@
                                     <select class="form-select" id="pendidikan_ayah" name="pendidikan_ayah">
                                         <option value="">Pilih pendidikan terakhir</option>
                                         @foreach ($semua_pendidikan_terakhir as $pendidikan_ayah)
-                                            @if ($siswa->pendidikan_ayah == $pendidikan_ayah ?? old('pendidikan_ayah') == $pendidikan_ayah)
+                                            @if (
+                                                (isset($siswa->pendidikan_ayah) && $siswa->pendidikan_ayah == $pendidikan_ayah) ||
+                                                    (!isset($siswa->pendidikan_ayah) && old('pendidikan_ayah') == $pendidikan_ayah))
                                                 <option value="{{ $pendidikan_ayah }}" selected>
-                                                    {{ $pendidikan_ayah }}
-                                                </option>
-                                            @else
-                                                <option value="{{ $pendidikan_ayah }}">
                                                     {{ $pendidikan_ayah }}</option>
+                                            @else
+                                                <option value="{{ $pendidikan_ayah }}">{{ $pendidikan_ayah }}
+                                                </option>
                                             @endif
                                         @endforeach
+
                                     </select>
                                     <div class="mt-2">
                                         <span class="text-danger error-text pendidikan_ayah_error"></span>
@@ -662,7 +760,9 @@
                                     <select class="form-select" id="pekerjaan_ayah" name="pekerjaan_ayah">
                                         <option value="">Pilih pekerjaan</option>
                                         @foreach ($semua_pekerjaan as $pekerjaan_ayah)
-                                            @if ($siswa->id_pekerjaan_ayah_for_siswa == $pekerjaan_ayah->id ?? old('pekerjaan_ayah') == $pekerjaan_ayah->id)
+                                            @if (
+                                                $siswa->id_pekerjaan_ayah_for_siswa ??
+                                                    (null == $pekerjaan_ayah->id ?? old('pekerjaan_ayah') == $pekerjaan_ayah->id))
                                                 <option value="{{ $pekerjaan_ayah->id }}" selected>
                                                     {{ $pekerjaan_ayah->pekerjaan }}
                                                 </option>
@@ -677,6 +777,29 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row mb-3">
+                                <label for="nomor_telepon_ayah" class="col-sm-2 col-form-label">No. Telepon</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" placeholder="Masukkkan No. Telepon"
+                                        id="nomor_telepon_ayah" name="nomor_telepon_ayah"
+                                        value="{{ $siswa->nomor_telepon_ayah ?? old('nomor_telepon_ayah') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text nomor_telepon_ayah_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="alamat_ayah" class="col-sm-2 col-form-label">Alamat</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" placeholder="Masukkan alamat_ayah" id="alamat_ayah" name="alamat_ayah"
+                                        rows="3">{{ $siswa->alamat_ayah ?? old('alamat_ayah') }}</textarea>
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text alamat_ayah_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row mb-3">
                                 <label for="no_kks" class="col-sm-2 col-form-label">No. KKS</label>
                                 <div class="col-sm-10">
@@ -712,13 +835,16 @@
                                     <select class="form-select" id="status_ibu" name="status_ibu">
                                         <option value="">Pilih status</option>
                                         @foreach ($semua_status as $status_ibu)
-                                            @if ($siswa->status_ibu == $status_ibu ?? old('status_ibu') == $status_ibu)
+                                            @if (
+                                                (isset($siswa->status_ibu) && $siswa->status_ibu == $status_ibu) ||
+                                                    (!isset($siswa->status_ibu) && old('status_ibu') == $status_ibu))
                                                 <option value="{{ $status_ibu }}" selected>{{ $status_ibu }}
                                                 </option>
                                             @else
                                                 <option value="{{ $status_ibu }}">{{ $status_ibu }}</option>
                                             @endif
                                         @endforeach
+
                                     </select>
                                     <div class="mt-2">
                                         <span class="text-danger error-text status_ibu_error"></span>
@@ -765,15 +891,16 @@
                                     <select class="form-select" id="pendidikan_ibu" name="pendidikan_ibu">
                                         <option value="">Pilih pendidikan terakhir</option>
                                         @foreach ($semua_pendidikan_terakhir as $pendidikan_ibu)
-                                            @if ($siswa->pendidikan_ibu == $pendidikan_ibu ?? old('pendidikan_ibu') == $pendidikan_ibu)
-                                                <option value="{{ $pendidikan_ibu }}" selected>
-                                                    {{ $pendidikan_ibu }}
+                                            @if (
+                                                (isset($siswa->pendidikan_ibu) && $siswa->pendidikan_ibu == $pendidikan_ibu) ||
+                                                    (!isset($siswa->pendidikan_ibu) && old('pendidikan_ibu') == $pendidikan_ibu))
+                                                <option value="{{ $pendidikan_ibu }}" selected>{{ $pendidikan_ibu }}
                                                 </option>
                                             @else
-                                                <option value="{{ $pendidikan_ibu }}">
-                                                    {{ $pendidikan_ibu }}</option>
+                                                <option value="{{ $pendidikan_ibu }}">{{ $pendidikan_ibu }}</option>
                                             @endif
                                         @endforeach
+
                                     </select>
                                     <div class="mt-2">
                                         <span class="text-danger error-text pendidikan_ibu_error"></span>
@@ -786,21 +913,45 @@
                                     <select class="form-select" id="pekerjaan_ibu" name="pekerjaan_ibu">
                                         <option value="">Pilih pekerjaan</option>
                                         @foreach ($semua_pekerjaan as $pekerjaan_ibu)
-                                            @if ($siswa->id_pekerjaan_ibu_for_siswa == $pekerjaan_ibu->id ?? old('pekerjaan_ibu') == $pekerjaan_ibu->id)
+                                            @if (
+                                                (isset($siswa->id_pekerjaan_ibu_for_siswa) && $siswa->id_pekerjaan_ibu_for_siswa == $pekerjaan_ibu->id) ||
+                                                    (!isset($siswa->id_pekerjaan_ibu_for_siswa) && old('pekerjaan_ibu') == $pekerjaan_ibu->id))
                                                 <option value="{{ $pekerjaan_ibu->id }}" selected>
-                                                    {{ $pekerjaan_ibu->pekerjaan }}
-                                                </option>
+                                                    {{ $pekerjaan_ibu->pekerjaan }}</option>
                                             @else
                                                 <option value="{{ $pekerjaan_ibu->id }}">
                                                     {{ $pekerjaan_ibu->pekerjaan }}</option>
                                             @endif
                                         @endforeach
+
                                     </select>
                                     <div class="mt-2">
                                         <span class="text-danger error-text pekerjaan_ibu_error"></span>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row mb-3">
+                                <label for="nomor_telepon_ibu" class="col-sm-2 col-form-label">No. Telepon</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" placeholder="Masukkkan No. Telepon"
+                                        id="nomor_telepon_ibu" name="nomor_telepon_ibu"
+                                        value="{{ $siswa->nomor_telepon_ibu ?? old('nomor_telepon_ibu') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text nomor_telepon_ibu_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="alamat_ibu" class="col-sm-2 col-form-label">Alamat</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" placeholder="Masukkan alamat_ibu" id="alamat_ibu" name="alamat_ibu" rows="3">{{ $siswa->alamat_ibu ?? old('alamat_ibu') }}</textarea>
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text alamat_ibu_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row mb-3">
                                 <label for="no_pkh" class="col-sm-2 col-form-label">No. PKH</label>
                                 <div class="col-sm-10">
@@ -814,13 +965,79 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+
+                            <label class="col-form-label">DATA WALI</label>
+                            <hr style="margin-top: -5px;">
+
+                            <div class="row mb-3">
+                                <label for="nama_wali" class="col-sm-2 col-form-label">Nama Wali</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" placeholder="Masukkkan nama wali"
+                                        id="nama_wali" name="nama_wali"
+                                        value="{{ $siswa->nama_wali ?? old('nama_wali') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text nama_wali_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="pekerjaan_wali" class="col-sm-2 col-form-label">Pekerjaan</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select" id="pekerjaan_wali" name="pekerjaan_wali">
+                                        <option value="">Pilih pekerjaan</option>
+                                        @foreach ($semua_pekerjaan as $pekerjaan_wali)
+                                            @if (
+                                                $siswa->id_pekerjaan_wali_for_siswa ??
+                                                    (null == $pekerjaan_wali->id ?? old('pekerjaan_wali') == $pekerjaan_wali->id))
+                                                <option value="{{ $pekerjaan_wali->id }}" selected>
+                                                    {{ $pekerjaan_wali->pekerjaan }}
+                                                </option>
+                                            @else
+                                                <option value="{{ $pekerjaan_wali->id }}">
+                                                    {{ $pekerjaan_wali->pekerjaan }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text pekerjaan_wali_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="nomor_telepon_wali" class="col-sm-2 col-form-label">No. Telepon</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" type="text" placeholder="Masukkkan No. Telepon"
+                                        id="nomor_telepon_wali" name="nomor_telepon_wali"
+                                        value="{{ $siswa->nomor_telepon_wali ?? old('nomor_telepon_wali') }}">
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text nomor_telepon_wali_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="alamat_wali" class="col-sm-2 col-form-label">Alamat</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" placeholder="Masukkan alamat_wali" id="alamat_wali" name="alamat_wali"
+                                        rows="3">{{ $siswa->alamat_wali ?? old('alamat_wali') }}</textarea>
+                                    <div class="mt-2">
+                                        <span class="text-danger error-text alamat_wali_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 @endif
 
                 @if ($id_role == '4')
                     <div class="row mb-3" id="mapell">
-                        <label for="mapel" class="col-sm-2 col-form-label">Mata Pelajaran</label>
+                        <label for="mapel" class="col-sm-2 col-form-label">Mata Pelajaran <span
+                                class="text-danger">*</span></label>
                         <div class="col-sm-10">
-                            <select class="form-select" id="mapel" name="mapel">
+                            <select class="form-select" id="mapel" name="mapel" required>
                                 <option value="">Pilih Mata Pelajaran</option>
                                 @foreach ($semua_mapel as $mapel)
                                     @if ($user->id_mapel == $mapel->id ?? old('mapel') == $mapel->id)
@@ -864,10 +1081,14 @@
                             <div class="row mb-3">
                                 <label for="showIjazah" class="col-lg-2 col-sm-2 col-form-label"></label>
                                 <div class="col-lg-10 col-sm-10">
-                                    <img src="@if ($siswa->ijazah) {{ asset($siswa->ijazah) }}@endif" alt="" class="img-thumbnail" width="200"
-                                        id="showIjazah">
-                                    <input type="hidden" value="{{ $siswa->ijazah }}" id="ijazahPreview" name="ijazahPreview">
+                                    @if ($siswa->ijazah ?? null)
+                                        <img src="{{ asset($siswa->ijazah) }}" alt="" class="img-thumbnail"
+                                            width="200" id="showIjazah">
+                                    @endif
+                                    <input type="hidden" value="{{ $siswa->ijazah ?? null }}" id="ijazahPreview"
+                                        name="ijazahPreview">
                                 </div>
+
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -890,9 +1111,10 @@
 
                                 <label for="showImage" class="col-lg-2 col-sm-2 col-form-label"></label>
                                 <div class="col-lg-10 col-sm-10">
-                                    <img src="@if ($user->profile_image) {{ asset($user->profile_image) }}@endif" alt="" class="img-thumbnail" width="200"
-                                        id="showImage">
-                                    <input type="hidden" value="{{ $user->profile_image }}" id="gambarPreview" name="gambarPreview">
+                                    <img src="@if ($user->profile_image) {{ asset($user->profile_image) }} @endif"
+                                        alt="" class="img-thumbnail" width="200" id="showImage">
+                                    <input type="hidden" value="{{ $user->profile_image }}" id="gambarPreview"
+                                        name="gambarPreview">
                                 </div>
                             </div>
                         </div>
@@ -921,8 +1143,10 @@
                     <div class="row mb-3">
                         <label for="showImage" class="col-lg-2 col-sm-2 col-form-label"></label>
                         <div class="col-lg-10 col-sm-10">
-                            <img src="@if ($user->profile_image) {{ asset($user->profile_image) }}@endif" alt="" class="img-thumbnail" width="200" id="showImage">
-                            <input type="hidden" value="{{ $user->profile_image }}" id="gambarPreview" name="gambarPreview">
+                            <img src="@if ($user->profile_image) {{ asset($user->profile_image) }} @endif"
+                                alt="" class="img-thumbnail" width="200" id="showImage">
+                            <input type="hidden" value="{{ $user->profile_image }}" id="gambarPreview"
+                                name="gambarPreview">
                         </div>
                     </div>
                 @endif
@@ -985,6 +1209,17 @@
     function cetakData() {
         var id_siswa = {{ $user->id }};
         var url = '/data-user/print?';
+
+        if (id_siswa) {
+            url += 'id_siswa=' + id_siswa
+        }
+
+        window.open(url, '_blank');
+    }
+
+    function cetakRapor() {
+        var id_siswa = {{ $user->id }};
+        var url = '/data-rapor/print?';
 
         if (id_siswa) {
             url += 'id_siswa=' + id_siswa
