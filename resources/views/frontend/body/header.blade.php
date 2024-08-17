@@ -2,9 +2,27 @@
     $route = Route::current()->getName();
 @endphp
 
+<style>
+    .logo {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo-image {
+        margin-right: 10px;
+        height: 50px;
+    }
+</style>
+
 <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
-        <h1 class="logo mr-auto"><a href="{{ route('home') }}"><span>MI </span>NU Nurul Ulum</a></h1>
+        {{-- <h1 class="logo mr-auto"><a href="{{ route('home') }}"><span>MI </span>NU Nurul Ulum</a></h1> --}}
+
+        <h1 class="logo mr-auto">
+            <img src="{{ asset('logo/madrasah.png') }}" alt="Logo" class="logo-image">
+            <a href="{{ route('home') }}"><span>MI </span>NU Nurul Ulum</a>
+        </h1>
+
 
         <nav class="nav-menu d-none d-lg-block">
             <ul>
@@ -41,8 +59,7 @@
             <a href="#" class="instagram"><i class="icofont-instagram"></i></a>
             <a href="#" class="linkedin"><i class="icofont-linkedin"></i></i></a> --}}
             @if (Auth::check())
-                <a href="{{ route('dashboard') }}" class="login" data-toggle="tooltip"
-                    title="Dashboard">
+                <a href="{{ route('dashboard') }}" class="login" data-toggle="tooltip" title="Dashboard">
                     {{-- <i class="ri-dashboard-line align-middle"></i> --}}
                     {{-- gunakan icon dari icofont --}}
                     <i class="icofont-dashboard-web"></i>
