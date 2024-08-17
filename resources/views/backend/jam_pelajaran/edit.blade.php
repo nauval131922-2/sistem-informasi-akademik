@@ -3,11 +3,11 @@
     <div class="row">
         <div class="col-lg-12">
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                berikut untuk mengubah {{ $title }}.</p>
+                berikut untuk mengubah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
             <form enctype="multipart/form-data" id="formUbahData" method="POST">
                 @csrf
                 <div class="row mb-3">
-                    <label for="jam_ke" class="col-sm-2 col-form-label">Jam ke</label>
+                    <label for="jam_ke" class="col-sm-2 col-form-label">Jam ke <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input class="form-control" type="number" placeholder="Masukkan Jam ke" id="jam_ke"
                             name="jam_ke" value="{{ $jam_pelajaran->jam_ke ?? old('jam_ke') }}" required>
@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="jam_mulai" class="col-sm-2 col-form-label">Jam Mulai</label>
+                    <label for="jam_mulai" class="col-sm-2 col-form-label">Jam Mulai <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input class="form-control" type="time" placeholder="Masukkan Jam Mulai" id="jam_mulai"
                             name="jam_mulai" value="{{ $jam_pelajaran->jam_mulai ?? old('jam_mulai') }}" required>
@@ -29,7 +29,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="jam_selesai" class="col-sm-2 col-form-label">Jam Selesai</label>
+                    <label for="jam_selesai" class="col-sm-2 col-form-label">Jam Selesai <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input class="form-control" type="time" placeholder="Masukkan Jam Selesai" id="jam_selesai"
                             name="jam_selesai" value="{{ $jam_pelajaran->jam_selesai ?? old('jam_selesai') }}" required>

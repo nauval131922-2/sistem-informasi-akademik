@@ -4,11 +4,11 @@
 
 
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                berikut untuk mengubah {{ $title }}.</p>
+                berikut untuk mengubah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
             <form method="POST" id="formUbahData">
                 @csrf
                 <div class="row mb-3">
-                    <label for="mata_pelajaran" class="col-sm-2 col-form-label">Mata Pelajaran</label>
+                    <label for="mata_pelajaran" class="col-sm-2 col-form-label">Mata Pelajaran <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input class="form-control" type="text" placeholder="Masukkan nama mata pelajaran"
                             id="mata_pelajaran" name="mata_pelajaran"
@@ -22,7 +22,7 @@
                     <label for="nilai_batas_kelulusan" class="col-sm-2 col-form-label">Nilai batas kelulusan</label>
                     <div class="col-sm-10">
                         <input class="form-control" type="number" placeholder="Masukkan nilai batas kelulusan"
-                            id="nilai_batas_kelulusan" name="nilai_batas_kelulusan" value="{{ $mata_pelajaran->nilai_batas_kelulusan ?? old('nilai_batas_kelulusan') }}" required>
+                            id="nilai_batas_kelulusan" name="nilai_batas_kelulusan" value="{{ $mata_pelajaran->nilai_batas_kelulusan ?? old('nilai_batas_kelulusan') }}">
                         <div class="mt-2">
                             <span class="text-danger error-text nilai_batas_kelulusan_error"></span>
                         </div>

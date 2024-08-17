@@ -1,4 +1,3 @@
-
 <?php
 $route = Route::current()->getName();
 ?>
@@ -9,18 +8,18 @@ $route = Route::current()->getName();
 
             @if ($route == 'jadwal-pelajaran-tambah')
                 <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                    berikut untuk menambah {{ $title }}.</p>
+                    berikut untuk menambah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
             @endif
             @if ($route == 'jadwal-ekstra-tambah')
                 <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                    berikut untuk menambah {{ $title }}.</p>
+                    berikut untuk menambah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
             @endif
 
             <form enctype="multipart/form-data" id="formTambahData" method="POST">
                 @csrf
 
                 <div class="row mb-3">
-                    <label for="kelas" class="col-sm-2 col-form-label">Kelas</label>
+                    <label for="kelas" class="col-sm-2 col-form-label">Kelas <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <select class="form-select" id="kelas" name="kelas" required>
                             <option value="">Pilih Kelas</option>
@@ -39,7 +38,7 @@ $route = Route::current()->getName();
                 </div>
 
                 <div class="row mb-3">
-                    <label for="hari" class="col-sm-2 col-form-label">Hari</label>
+                    <label for="hari" class="col-sm-2 col-form-label">Hari <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <select class="form-select" name="hari" class="form-control" id="hari" required>
                             <option value="">Pilih Hari</option>
@@ -57,7 +56,7 @@ $route = Route::current()->getName();
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <label for="guru" class="col-sm-2 col-form-label">Guru</label>
+                    <label for="guru" class="col-sm-2 col-form-label">Guru <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <select class="form-select" id="guru" name="guru" required>
                             <option value="">Pilih Guru</option>
@@ -76,31 +75,12 @@ $route = Route::current()->getName();
                 </div>
                 @if ($route == 'jadwal-pelajaran-tambah')
                     <input type="hidden" name="tipe_jadwal" value="Pelajaran">
-                    <div class="row mb-3">
-                        <label for="mapel" class="col-sm-2 col-form-label">Mata Pelajaran</label>
-                        <div class="col-sm-10">
-                            <select class="form-select" id="mapel" name="mapel" required>
-                                <option value="">Pilih Mata Pelajaran</option>
-                                @foreach ($semua_mapel as $mapel)
-                                    @if (old('mapel') == $mapel->id)
-                                        <option value="{{ $mapel->id }}" selected>
-                                            {{ $mapel->mata_pelajaran }}</option>
-                                    @else
-                                        <option value="{{ $mapel->id }}">{{ $mapel->mata_pelajaran }}
-                                        </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            <div class="mt-2">
-                                <span class="text-danger error-text mapel_error"></span>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="mapel-container"></div>
                 @endif
                 @if ($route == 'jadwal-ekstra-tambah')
                     <input type="hidden" name="tipe_jadwal" value="Ekstrakurikuler">
                     <div class="row mb-3">
-                        <label for="ekstra" class="col-sm-2 col-form-label">Ekstrakurikuler</label>
+                        <label for="ekstra" class="col-sm-2 col-form-label">Ekstrakurikuler <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
                             <select class="form-select" id="ekstra" name="ekstra" required>
                                 <option value="">Pilih Ekstrakurikuler</option>
@@ -121,7 +101,7 @@ $route = Route::current()->getName();
                 @endif
 
                 <div class="row mb-3">
-                    <label for="jam_ke" class="col-sm-2 col-form-label">Jam ke</label>
+                    <label for="jam_ke" class="col-sm-2 col-form-label">Jam ke <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <select class="form-select" id="jam_ke" name="jam_ke" required>
                             <option value="">Pilih Jam ke</option>
@@ -156,6 +136,66 @@ $route = Route::current()->getName();
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $('#guru').change(function() {
+            var guruId = $(this).val();
+
+            if (guruId) {
+                $.ajax({
+                    url: '/getGuruInfoTambah/' +
+                    guruId, // Ganti dengan URL yang sesuai untuk mendapatkan data guru
+                    type: 'GET',
+                    success: function(response) {
+                        $('#mapel-container').html('');
+
+                        if (response.id_role == 4) {
+                            $('#mapel-container').html(`
+                                <input type="hidden" name="mapel" value="${response.id_mapel}">
+                                <div class="row mb-3">
+                                    <label for="mapell" class="col-md-2 col-form-label">Mata Pelajaran <span class="text-danger">*</span></label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" name="mapell" id="mapell"
+                                            placeholder="Masukkan mata pelajaran" value="${response.mapel}"
+                                            required disabled>
+                                        <div class="mt-2">
+                                            <span class="text-danger error-text mapell_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        } else {
+                            var mapelOptions =
+                                '<option value="">Pilih Mata Pelajaran</option>';
+                            response.semua_mapel.forEach(function(mapel) {
+                                mapelOptions += `
+                                    <option value="${mapel.id}">${mapel.mata_pelajaran}</option>
+                                `;
+                            });
+
+                            $('#mapel-container').html(`
+                                <input type="hidden" name="tipe_jadwal" value="Pelajaran">
+                                <div class="row mb-3">
+                                    <label for="mapel" class="col-sm-2 col-form-label">Mata Pelajaran <span class="text-danger">*</span></label>
+                                    <div class="col-sm-10">
+                                        <select class="form-select" id="mapel" name="mapel" required>
+                                            ${mapelOptions}
+                                        </select>
+                                        <div class="mt-2">
+                                            <span class="text-danger error-text mapel_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        }
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            } else {
+                $('#mapel-container').html('');
             }
         });
     });

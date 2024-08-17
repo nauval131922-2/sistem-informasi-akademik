@@ -16,11 +16,11 @@
 
                             <h4 class="card-title">Ubah {{ $title }}</h4>
                             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form berikut
-                                untuk mengubah data {{ $title }}.</p>
+                                untuk mengubah data {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
                             <form enctype="multipart/form-data" id="formUbahData" method="POST">
                                 @csrf
                                 <div class="row mb-3">
-                                    <label for="judul" class="col-sm-2 col-form-label">Judul</label>
+                                    <label for="judul" class="col-sm-2 col-form-label">Judul <span class="text-danger">*</span></label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="judul" name="judul"
                                             value="" placeholder="Masukkan judul" required>
@@ -33,7 +33,7 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="isi" class="col-sm-2 col-form-label">Isi</label>
+                                    <label for="isi" class="col-sm-2 col-form-label">Isi <span class="text-danger">*</span></label>
                                     <div class="col-sm-10">
                                         <input id="isi" type="hidden" name="isi" value="">
                                         <trix-editor input="isi"></trix-editor>

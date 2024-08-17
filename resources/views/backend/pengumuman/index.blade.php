@@ -1,72 +1,34 @@
-{{-- @extends('backend.main')
-
-@section('title')
-    Dashboard | Ubah {{ $title }}
-@endsection --}}
 
 <?php
 
 $route = Route::currentRouteName();
 ?>
 
-{{-- @section('content')
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
-
-{{-- <div class="page-content"> --}}
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            {{-- <div class="card">
-                        <div class="card-body"> --}}
-
-            {{-- tombol back --}}
-            {{-- <a href="{{ route('dashboard') }}" class="btn btn-light mb-3"
-                                style="
-                    /* taruh di samping kanan */
-                    float: right;
-                    /* background-color lebih muda lagi */
-                    /* background-color: rgb(37,43,59); */
-                    border-color: rgb(37,43,59);
-                    ">
-                    <i class="ri-arrow-go-back-line align-middle me-1"></i>
-                    <span style="vertical-align: middle">Back to Home</span>    
-                </a> --}}
-
-            {{-- <h4 class="card-title">Ubah {{ $title }}</h4> --}}
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                berikut untuk mengubah {{ $title }}.</p>
-            {{-- @if ($route == 'pengumuman-index')
-                <form action="{{ route('pengumuman-update', $pengumuman->id) }}" method="POST"
-                    enctype="multipart/form-data">
-                @elseif ($route == 'pengumuman-guru-wali-index')
-                    <form action="{{ route('pengumuman-for-siswa-update', $pengumuman->id) }}" method="POST"
-                        enctype="multipart/form-data">
-            @endif --}}
+                berikut untuk mengubah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
+
             <form enctype="multipart/form-data" id="formUbahData" method="POST">
                 @csrf
                 <div class="row mb-3">
-                    <label for="judul" class="col-sm-2 col-form-label">Judul</label>
+                    <label for="judul" class="col-sm-2 col-form-label">Judul <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="judul" name="judul"
                             value="{{ $pengumuman->judul ?? old('judul') }}" required placeholder="Masukkan judul">
                         <div class="mt-2">
-                            {{-- @error('judul')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text judul_error"></span>
                         </div>
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <label for="isi" class="col-sm-2 col-form-label">Isi</label>
+                    <label for="isi" class="col-sm-2 col-form-label">Isi <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input id="isi" type="hidden" name="isi"
                             value="{{ $pengumuman->isi ?? old('isi') }}">
                         <trix-editor input="isi"></trix-editor>
                         <div class="mt-2">
-                            {{-- @error('isi')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror --}}
                             <span class="text-danger error-text isi_error"></span>
                         </div>
                     </div>
@@ -82,9 +44,6 @@ $route = Route::currentRouteName();
                                 <span style="vertical-align: middle">Clear Image</span>
                             </button>
                             <div class="mt-2">
-                                {{-- @error('gambar')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror --}}
                                 <span class="text-danger error-text gambar_error"></span>
                             </div>
                         </div>
@@ -100,7 +59,6 @@ $route = Route::currentRouteName();
                         <input type="hidden" value="{{ $pengumuman->gambar }}" id="gambarPreview" name="gambarPreview">
                     </div>
                 </div>
-                {{-- <input type="submit" value="Update" class="btn btn-info waves-effect waves-light"> --}}
                 <button type="submit" class="btn btn-info waves-effect waves-light">
                     <i class="ri-refresh-line align-middle me-1"></i>
                     <span style="vertical-align: middle">Update</span>
@@ -110,10 +68,6 @@ $route = Route::currentRouteName();
         </div>
     </div>
 </div> <!-- end col -->
-{{-- </div>
-</div>
-</div>
-@endsection --}}
 
 <script>
     $(document).ready(function() {

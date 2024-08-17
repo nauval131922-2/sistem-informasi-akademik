@@ -7,13 +7,13 @@ $route = Route::currentRouteName();
         <div class="col-lg-121">
 
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                berikut untuk menambah {{ $title }}.</p>
+                berikut untuk menambah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
             <form enctype="multipart/form-data" id="formTambahData" method="POST">
                 @csrf
 
                 @if ($route == 'nilai-ulangan-harian-tambah')
                     <div class="row mb-3">
-                        <label for="kompetensi_dasar" class="col-md-2 col-form-label">Kompetensi Dasar</label>
+                        <label for="kompetensi_dasar" class="col-md-2 col-form-label">Kompetensi Dasar <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <select class="form-select" id="kompetensi_dasar" name="kompetensi_dasar" required>
                                 <option value="">Pilih Kompetensi Dasar</option>
@@ -32,7 +32,7 @@ $route = Route::currentRouteName();
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="judul" class="col-md-2 col-form-label">Judul</label>
+                        <label for="judul" class="col-md-2 col-form-label">Judul <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <select class="form-select" id="judul" name="judul" required>
                                 <option value="">Pilih Judul</option>
@@ -52,7 +52,7 @@ $route = Route::currentRouteName();
                     </div>
                 @elseif ($route == 'nilai-ujian-tambah')
                     <div class="row mb-3">
-                        <label for="judul" class="col-md-2 col-form-label">Judul</label>
+                        <label for="judul" class="col-md-2 col-form-label">Judul <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <select class="form-select" id="judul" name="judul" required>
                                 <option value="">Pilih Judul</option>
@@ -72,7 +72,7 @@ $route = Route::currentRouteName();
                     </div>
                 @else
                     <div class="row mb-3">
-                        <label for="judul" class="col-md-2 col-form-label">Judul</label>
+                        <label for="judul" class="col-md-2 col-form-label">Judul <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <input class="form-control" type="text" name="judul" id="judul"
                                 placeholder="Masukkan judul {{ $title }}" value="{{ old('judul') }}" required>
@@ -86,7 +86,7 @@ $route = Route::currentRouteName();
 
                 @if (Auth::user()->id_role == '1')
                     <div class="row mb-3">
-                        <label for="guru" class="col-md-2 col-form-label">Guru</label>
+                        <label for="guru" class="col-md-2 col-form-label">Guru <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <select class="form-select" id="guru" name="guru" required>
                                 <option value="">Pilih Guru</option>
@@ -110,7 +110,7 @@ $route = Route::currentRouteName();
 
                 @if (Auth::user()->id_role == '1' || Auth::user()->id_role == '2' || Auth::user()->id_role == '3')
                     <div class="row mb-3">
-                        <label for="mapel" class="col-md-2 col-form-label">Mata Pelajaran</label>
+                        <label for="mapel" class="col-md-2 col-form-label">Mata Pelajaran <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <select class="form-select" id="mapel" name="mapel" required>
                                 <option value="">Pilih Mata Pelajaran</option>
@@ -132,7 +132,7 @@ $route = Route::currentRouteName();
                 @elseif (Auth::user()->id_role == '4')
                     {{-- dsiable form mapel, buat textbox saja, jangan pake select --}}
                     <div class="row mb-3">
-                        <label for="mapell" class="col-md-2 col-form-label">Mata Pelajaran</label>
+                        <label for="mapell" class="col-md-2 col-form-label">Mata Pelajaran <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <input class="form-control" type="text" name="mapell" id="mapell"
                                 placeholder="Masukkan mata pelajaran" value="{{ $semua_mapel->mata_pelajaran }}"
@@ -152,7 +152,7 @@ $route = Route::currentRouteName();
                     <input type="hidden" name="kelas" value="{{ Auth::user()->kelas->id }}">
                 @else
                     <div class="row mb-3">
-                        <label for="kelass" class="col-md-2 col-form-label">Kelas</label>
+                        <label for="kelass" class="col-md-2 col-form-label">Kelas <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <select class="form-select" id="kelass" name="kelas" required>
                                 <option value="">Pilih Kelas</option>
@@ -187,7 +187,7 @@ $route = Route::currentRouteName();
                         @foreach ($semua_siswa as $index => $siswa)
                             <div class="row mb-3">
                                 <label for="nilai{{ $index + 1 }}"
-                                    class="col-md-2 col-form-label">{{ $siswa->name }}</label>
+                                    class="col-md-2 col-form-label">{{ $siswa->name }} <span class="text-danger">*</span></label>
                                 <input type="hidden" name="siswa{{ $index + 1 }}" value="{{ $siswa->id }}"
                                     required id="siswa{{ $index + 1 }}">
                                 <div class="col-md-10">
@@ -255,7 +255,7 @@ $route = Route::currentRouteName();
                             siswa_html += '<div class="row mb-3">';
                             siswa_html += '<label for="nilai' + (index + 1) +
                                 '" class="col-md-2 col-form-label">' + siswa.name +
-                                '</label>';
+                                ' <span class="text-danger">*</span></label>';
                             siswa_html += '<input type="hidden" name="siswa' + (index + 1) +
                                 '" value="' + siswa.id + '" required id="siswa' + (index +
                                     1) +

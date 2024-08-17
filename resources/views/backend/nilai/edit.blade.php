@@ -7,7 +7,7 @@ $route = Route::currentRouteName();
     <div class="row">
         <div class="col-lg-12">
             <p class="card-title-desc" style="border-bottom: 1px solid rgb(161,179,191)">Lengkapi form
-                berikut untuk mengubah {{ $title }}.</p>
+                berikut untuk mengubah {{ $title }}. <small class="text-danger">* Harus diisi</small></p>
             <form enctype="multipart/form-data" id="formUbahData" method="POST">
                 @csrf
 
@@ -24,7 +24,7 @@ $route = Route::currentRouteName();
 
 
                     <div class="row mb-3">
-                        <label for="kompetensi_dasar" class="col-md-2 col-form-label">Kompetensi Dasar</label>
+                        <label for="kompetensi_dasar" class="col-md-2 col-form-label">Kompetensi Dasar <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <select class="form-select" id="kompetensi_dasar" name="kompetensi_dasar" required>
                                 <option value="">Pilih Kompetensi Dasar</option>
@@ -47,7 +47,7 @@ $route = Route::currentRouteName();
                     <input type="hidden" name="old_judul" id="old_judul" value="{{ $nilai->judul }}">
 
                     <div class="row mb-3">
-                        <label for="judul" class="col-md-2 col-form-label">Judul</label>
+                        <label for="judul" class="col-md-2 col-form-label">Judul <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <select class="form-select" id="judul" name="judul" required>
                                 <option value="">Pilih Judul</option>
@@ -70,7 +70,7 @@ $route = Route::currentRouteName();
                     <input type="hidden" name="old_judul" id="old_judul" value="{{ $nilai->judul }}">
 
                     <div class="row mb-3">
-                        <label for="judul" class="col-md-2 col-form-label">Judul</label>
+                        <label for="judul" class="col-md-2 col-form-label">Judul <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <select class="form-select" id="judul" name="judul" required>
                                 <option value="">Pilih Judul</option>
@@ -93,7 +93,7 @@ $route = Route::currentRouteName();
                     <input type="hidden" name="old_judul" id="old_judul" value="{{ $nilai->judul }}">
 
                     <div class="row mb-3">
-                        <label for="judul" class="col-md-2 col-form-label">Judul</label>
+                        <label for="judul" class="col-md-2 col-form-label">Judul <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <input class="form-control" type="text" name="judul" id="judul"
                                 placeholder="Ubah judul {{ $title }}"
@@ -110,7 +110,7 @@ $route = Route::currentRouteName();
                     <input type="hidden" name="old_guru" id="old_guru" value="{{ $nilai->id_guru_for_nilai }}">
 
                     <div class="row mb-3">
-                        <label for="guru" class="col-sm-2 col-form-label">Guru</label>
+                        <label for="guru" class="col-sm-2 col-form-label">Guru <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
                             <select class="form-select" id="guru" name="guru" required>
                                 <option value="">Pilih Guru</option>
@@ -140,7 +140,7 @@ $route = Route::currentRouteName();
 
                 @if (Auth::user()->id_role == '1' || Auth::user()->id_role == '2' || Auth::user()->id_role == '3')
                     <div class="row mb-3">
-                        <label for="mapel" class="col-sm-2 col-form-label">Mata Pelajaran</label>
+                        <label for="mapel" class="col-sm-2 col-form-label">Mata Pelajaran <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
                             <select class="form-select" id="mapel" name="mapel" required>
                                 <option value="">Pilih Mata Pelajaran</option>
@@ -162,7 +162,7 @@ $route = Route::currentRouteName();
                 @elseif (Auth::user()->id_role == '4')
                     {{-- dsiable form mapel, buat textbox saja, jangan pake select --}}
                     <div class="row mb-3">
-                        <label for="mapell" class="col-md-2 col-form-label">Mata Pelajaran</label>
+                        <label for="mapell" class="col-md-2 col-form-label">Mata Pelajaran <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <input class="form-control" type="text" name="mapell" id="mapell"
                                 placeholder="Masukkan mata pelajaran" value="{{ $semua_mapel->mata_pelajaran }}"
@@ -182,7 +182,7 @@ $route = Route::currentRouteName();
 
                 {{-- kelas --}}
                 <div class="row mb-3">
-                    <label for="kelas" class="col-sm-2 col-form-label">Kelas</label>
+                    <label for="kelas" class="col-sm-2 col-form-label">Kelas <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <select class="form-select" id="kelass" name="kelas" required>
                             <option value="">Pilih Kelas</option>
@@ -219,7 +219,7 @@ $route = Route::currentRouteName();
                     <input type="hidden" name="siswa" id="siswa" value="{{ $nilai->id_siswa_for_nilai }}">
 
                     <div class="row mb-3">
-                        <label for="nilai" class="col-md-2 col-form-label">{{ $nama_siswa }}</label>
+                        <label for="nilai" class="col-md-2 col-form-label">{{ $nama_siswa }} <span class="text-danger">*</span></label>
                         <div class="col-md-10">
                             <input class="form-control" type="text" name="nilai" id="nilai"
                                 placeholder="Ubah nilai" value="{{ old('nilai') ?? $nilai->nilai }}" required>
