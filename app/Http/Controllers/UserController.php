@@ -13,6 +13,7 @@ use App\Models\Siswa;
 use App\Models\Jabatan;
 use App\Models\MediaSosial;
 use App\Models\TahunAjaran;
+use App\Models\PrestasiSiswa;
 use App\Models\JenisKelamin;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -576,7 +577,7 @@ class UserController extends Controller
         $nomor_hp = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_hp;
         $tanggal_masuk = Carbon::parse(Siswa::where('id_user_for_siswa', $id_siswa)->first()->tanggal_masuk)->format('d-m-Y');
         $kelas = Kelas::where('id', User::where('id', $id_siswa)->first()->id_kelas)->first()->id;
-        $diterima_di_kelas = Kelas::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_diterima_di_kelas_for_siswa)->first()->id;
+        $diterima_di_kelas = Kelas::where('id', Siswa::where('id_user_for_siswa', $id_siswa)->first()->id_diterima_di_kelas_for_siswa)->first()->id ?? null;
 
         $jumlah_saudara = Siswa::where('id_user_for_siswa', $id_siswa)->first()->jumlah_saudara;
         $cita_cita = Siswa::where('id_user_for_siswa', $id_siswa)->first()->cita_cita;
@@ -797,6 +798,8 @@ class UserController extends Controller
         $nomor_kks = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_kks ?? null;
         $nomor_pkh = Siswa::where('id_user_for_siswa', $id_siswa)->first()->nomor_pkh ?? null;
 
+        $semua_prestasi_siswa = PrestasiSiswa::where('id_user_for_prestasi_siswa', $id_siswa)->get() ?? null;
+
         $semua_mata_pelajaran = MataPelajaran::all();
 
         // get semua data nama kelas
@@ -808,6 +811,6 @@ class UserController extends Controller
 
         $semua_semester = ['Gasal', 'Genap'];
 
-        return view('backend.user.cetak', compact('id_siswa', 'nama_file', 'nama_lengkap', 'nisn', 'kelas', 'nis_lokal', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'alamat', 'cita_cita', 'jumlah_saudara', 'foto', 'hobi', 'jarak_rumah', 'nomor_hp', 'tanggal_masuk', 'nomor_kk', 'nomor_kip', 'ayah_kandung', 'ibu_kandung', 'status_ayah', 'status_ibu', 'nik_ayah', 'nik_ibu', 'tempat_lahir_ayah', 'tempat_lahir_ibu', 'tanggal_lahir_ayah', 'tanggal_lahir_ibu', 'pendidikan_ayah', 'pendidikan_ibu', 'pekerjaan_ayah', 'pekerjaan_ibu', 'nomor_kks', 'nomor_pkh', 'jenjang_sebelumnya', 'jenis_mutasi', 'sekolah_pra', 'sekolah_mutasi', 'npsn_pra', 'npsn_mutasi', 'nism_pra', 'nism_mutasi', 'nomor_ijazah', 'tanggal_mutasi', 'semua_mata_pelajaran', 'semua_nilai', 'diterima_di_kelas', 'semua_kelas', 'semua_semester'));
+        return view('backend.user.cetak', compact('id_siswa', 'nama_file', 'nama_lengkap', 'nisn', 'kelas', 'nis_lokal', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'alamat', 'cita_cita', 'jumlah_saudara', 'foto', 'hobi', 'jarak_rumah', 'nomor_hp', 'tanggal_masuk', 'nomor_kk', 'nomor_kip', 'ayah_kandung', 'ibu_kandung', 'status_ayah', 'status_ibu', 'nik_ayah', 'nik_ibu', 'tempat_lahir_ayah', 'tempat_lahir_ibu', 'tanggal_lahir_ayah', 'tanggal_lahir_ibu', 'pendidikan_ayah', 'pendidikan_ibu', 'pekerjaan_ayah', 'pekerjaan_ibu', 'nomor_kks', 'nomor_pkh', 'jenjang_sebelumnya', 'jenis_mutasi', 'sekolah_pra', 'sekolah_mutasi', 'npsn_pra', 'npsn_mutasi', 'nism_pra', 'nism_mutasi', 'nomor_ijazah', 'tanggal_mutasi', 'semua_mata_pelajaran', 'semua_nilai', 'diterima_di_kelas', 'semua_kelas', 'semua_semester', 'semua_prestasi_siswa'));
     }
 }
