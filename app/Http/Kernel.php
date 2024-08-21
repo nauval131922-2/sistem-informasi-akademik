@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AdminOrGuruWaliKelas;
 use App\Http\Middleware\KepalaMadrasahOrSiswa;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use App\Http\Middleware\AdminOrGuruWaliKelasOrGuruMapel;
@@ -83,5 +84,6 @@ class Kernel extends HttpKernel
         'admin_or_kepala_madrasah_or_guru_wali_kelas_or_guru_mata_pelajaran' => AdminOrKepalaMadrasahOrGuruWaliKelasOrGuruMataPelajaran::class,
         'admin_or_guru_wali_kelas_or_guru_mata_pelajaran_or_siswa' => AdminOrGuruWaliKelasOrGuruMataPelajaranOrSiswa::class,
         'admin_or_kepala_madrasah_or_guru_wali' => AdminOrKepalaMadrasahOrGuruWali::class,
+        'admin_or_guru_wali' => AdminOrGuruWaliKelas::class,
     ];
 }
