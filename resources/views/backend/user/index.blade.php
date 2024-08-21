@@ -289,7 +289,7 @@ $jabatan = App\Models\Jabatan::all();
 
                         cetakButton =
                             '<div class="dropdown">' +
-                            '<button class="btn btn-success" id="dropdownMenuLink" style="margin-top: -10px" data-bs-toggle="dropdown" aria-expanded="false">' +
+                            '<button class="btn btn-success btn-sm" id="dropdownMenuLink" style="margin-top: -10px" data-bs-toggle="dropdown" aria-expanded="false">' +
                             '<i class="ri-printer-line align-middle me-1"></i>' +
                             '<span style="vertical-align: middle">Cetak</span>' +
                             '</button>' +

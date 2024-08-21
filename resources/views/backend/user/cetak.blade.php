@@ -1639,8 +1639,13 @@ use Carbon\Carbon;
                         <td>4.</td>
                         <td>Tempat, Tanggal Lahir</td>
                         <td>:</td>
-                        <td>{{ $siswa_siswa->tempat_lahir }},
-                            {{ Carbon::parse($siswa_siswa->tanggal_lahir)->translatedFormat('d F Y') }}</td>
+                        <td>
+                            {{ $siswa_siswa->tempat_lahir }},
+                            @if ($siswa_siswa->tanggal_lahir)
+                                {{ Carbon::parse($siswa_siswa->tanggal_lahir)->translatedFormat('d F Y') }}
+                            @endif
+                        </td>
+
                     </tr>
                     <tr>
                         <td>5.</td>
@@ -1700,7 +1705,11 @@ use Carbon\Carbon;
                         <td></td>
                         <td>b. Pada Tanggal</td>
                         <td>:</td>
-                        <td>{{ Carbon::parse($siswa_siswa->tanggal_masuk)->translatedFormat('d F Y') }}</td>
+                        <td>
+                            @if ($siswa_siswa->tanggal_masuk)
+                                {{ Carbon::parse($siswa_siswa->tanggal_masuk)->translatedFormat('d F Y') }}
+                            @endif
+                        </td>
                     </tr>
                     <tr>
                         <td>13.</td>
@@ -1849,7 +1858,7 @@ use Carbon\Carbon;
                     <td>{{ $siswa_siswa->nis_lokal }}</td>
                     <td>Kelas/Semester</td>
                     <td>:</td>
-                    <td>{{ $siswa_user->id_kelas }}/Semster {{ $tahun_ajaran->semester }}</td>
+                    <td>{{ $siswa_user->id_kelas }}/Semester {{ $tahun_ajaran->semester }}</td>
                 </tr>
                 <tr>
                     <td>NISN</td>
@@ -1863,49 +1872,6 @@ use Carbon\Carbon;
             <div style="border-top: 2px solid black"></div>
             <br>
             <h1 style="text-align: center; font-size: 18px">CAPAIAN HASIL BELAJAR</h1>
-            {{-- <div style="font-weight: bold">
-                <table width="100%">
-                    <tr>
-                        <td width="3%">A.</td>
-                        <td>SIKAP</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>1. Sikap Spiritual</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <table class="table-sikap" width="100%">
-                                <tr style="text-align: center">
-                                    <td width="20%">Predikat</td>
-                                    <td width="80%">Deskripsi</td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center">asd</td>
-                                    <td>asd</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr style="height: 10px"></tr>
-                    <tr>
-                        <td></td>
-                        <td>2. Sikap Sosial</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <table class="table-sikap" >
-                                <tr>
-                                    <td>Predikat</td>
-                                    <td>Deskripsi</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </div> --}}
             <table id="rapor" width="100%">
                 <tr style="text-align: center; font-weight: bold;">
                     <td rowspan="2">No.</td>
@@ -1965,8 +1931,8 @@ use Carbon\Carbon;
                             $tahun_ajaran =
                                 \App\Models\TahunAjaran::where(
                                     'id',
-                                    $nilai->where('id_kelas_for_nilai', $siswa_user->id_kelas)->first()->id_tahun_ajaran_for_nilai ??
-                                        null,
+                                    $nilai->where('id_kelas_for_nilai', $siswa_user->id_kelas)->first()
+                                        ->id_tahun_ajaran_for_nilai ?? null,
                                 )
                                     ->where('semester', $tahun_ajaran_aktif->semester)
                                     ->first()->id ?? null;
@@ -2254,7 +2220,9 @@ use Carbon\Carbon;
                                         $rata_rata_ph_kd_5) /
                                     $total_nilai_rata_ph_yang_tidak_null;
                                 $rata_rata_ph =
-                                    floor($rata_rata_ph) == $rata_rata_ph ? $rata_rata_ph : number_format($rata_rata_ph, 2);
+                                    floor($rata_rata_ph) == $rata_rata_ph
+                                        ? $rata_rata_ph
+                                        : number_format($rata_rata_ph, 2);
                             }
 
                             $nilai = \App\Models\Nilai::where('id_siswa_for_nilai', $id_siswa);
@@ -2323,7 +2291,83 @@ use Carbon\Carbon;
                         <td>{{ $nilai_rapor }}</td>
                     </tr>
                 @endforeach
+
+
             </table>
+            <br>
+            <div>
+                <p style="font-weight: bold; text-decoration: underline; margin: 0; padding: 0;">Daftar singkatan:</p>
+                <ul style="margin-top: 0">
+                    <li>KD: Kompetensi Dasar</li>
+                    <li>PH: Penilaian Harian</li>
+                    <li>RT2: Rata-rata</li>
+                    <li>PTS: Penilaian Tengah Semester</li>
+                    <li>PAS: Penilaian Akhir Semester</li>
+                    <li>NA: Nilai Akhir</li>
+                </ul>
+
+                <br>
+
+                <p style="font-weight: bold; text-decoration: underline; margin: 0; padding: 0;">Keterangan:</p>
+                <ul style="margin-top: 0">
+                    <li>Dalam 1 semester ada 5 KD</li>
+                    <li>Setiap KD terdiri dari 3 PH</li>
+                    <li>NA didapat dari 60% Rata-rata PH + 40% PAS</li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="page page-4" style="line-height: 1.2">
+
+            <?php
+            $tahun_ajaran = TahunAjaran::where('status', 'aktif')->first(); ?>
+
+            <div style="border-top: 2px solid black; margin-top:30px"></div>
+            <table style="margin: 5px 0" width="100%">
+                <tr>
+                    <td width="10%">Nama</td>
+                    <td width="5%">:</td>
+                    <td width="20%">{{ $siswa_user->name }}</td>
+                    <td width="15%" rowspan="3"></td>
+                    <td width="20%">Madrasah</td>
+                    <td width="5%">:</td>
+                    <td width="40%">{{ $profil_madrasah->nama }}</td>
+                </tr>
+                <tr>
+                    <td>NIS</td>
+                    <td>:</td>
+                    <td>{{ $siswa_siswa->nis_lokal }}</td>
+                    <td>Kelas/Semester</td>
+                    <td>:</td>
+                    <td>{{ $siswa_user->id_kelas }}/Semester {{ $tahun_ajaran->semester }}</td>
+                </tr>
+                <tr>
+                    <td>NISN</td>
+                    <td>:</td>
+                    <td>{{ $siswa_siswa->nisn }}</td>
+                    <td>Tahun Pelajaran</td>
+                    <td>:</td>
+                    <td>{{ $tahun_ajaran->tahun }}</td>
+                </tr>
+            </table>
+            <div style="border-top: 2px solid black"></div>
+            <br>
+            <h1 style="text-align: center; font-size: 18px">PRESTASI SISWA</h1>
+            <table id="rapor" width="100%">
+                <tr style="text-align: center; font-weight: bold;">
+                    <td width="5%">No.</td>
+                    <td>Prestasi</td>
+                </tr>
+
+                @foreach ($semua_prestasi_siswa as $prestasi_siswa)
+                    <tr>
+                        <td style="text-align: center">{{ $loop->iteration }}.</td>
+                        <td style="padding-left: 10px">{{ $prestasi_siswa->prestasi_siswa }}</td>
+                    </tr>
+                @endforeach
+            </table>
+            <br>
+
         </div>
     @endif
 

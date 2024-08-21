@@ -29,12 +29,12 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label for="mata_pelajaran" class="col-sm-2 col-form-label">Prestasi Siswa <span class="text-danger">*</span></label>
+                    <label for="prestasi_siswa" class="col-sm-2 col-form-label">Prestasi Siswa <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
-                        <input class="form-control" type="text" placeholder="Masukkan nama mata pelajaran"
-                            id="mata_pelajaran" name="mata_pelajaran" value="{{ old('mata_pelajaran') }}" required>
+                        <input class="form-control" type="text" placeholder="Masukkan prestasi siswa"
+                            id="prestasi_siswa" name="prestasi_siswa" value="{{ old('prestasi_siswa') }}" required>
                         <div class="mt-2">
-                            <span class="text-danger error-text mata_pelajaran_error"></span>
+                            <span class="text-danger error-text prestasi_siswa_error"></span>
                         </div>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
         let formData = new FormData($('#formTambahData')[0]);
 
         $.ajax({
-            url: '{{ route('mata-pelajaran-simpan') }}',
+            url: '{{ route('prestasi-siswa-simpan') }}',
             type: 'POST',
             data: formData,
             contentType: false,

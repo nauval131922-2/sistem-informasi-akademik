@@ -318,7 +318,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         });
 
         // prestasi siswa
-        Route::middleware('admin')->group(function () {
+        Route::middleware('admin_or_guru_wali')->group(function () {
             Route::controller(PrestasiSiswaController::class)->group(function () {
                 Route::get('/prestasi-siswa/tambah', 'tambah')->name('prestasi-siswa-tambah');
                 Route::post('/prestasi-siswa/simpan', 'simpan')->name('prestasi-siswa-simpan');
@@ -327,7 +327,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
                 Route::get('/prestasi-siswa/hapus/{id}', 'hapus')->name('prestasi-siswa-hapus');
             });
         });
-        Route::middleware('kepala_madrasah_or_admin')->group(function () {
+        Route::middleware('admin_or_kepala_madrasah_or_guru_wali')->group(function () {
             Route::controller(PrestasiSiswaController::class)->group(function () {
                 Route::get('/prestasi-siswa', 'index')->name('prestasi-siswa');
                 Route::get('/prestasi-siswa/fetch', 'fetch')->name('prestasi-siswa-fetch');
