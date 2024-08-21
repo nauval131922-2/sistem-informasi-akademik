@@ -82,12 +82,14 @@ $route = Route::current()->getName();
                     </a>
                 </li>
 
-                <li>
-                    <a href="{{ route('prestasi-siswa') }}" class="waves-effect">
-                        <i class="ri-file-list-line align-middle"></i>
-                        <span style="vertical-align: middle">Prestasi Siswa</span>
-                    </a>
-                </li>
+                @canany(['admin', 'kepala_madrasah', 'guru_wali'])
+                    <li>
+                        <a href="{{ route('prestasi-siswa') }}" class="waves-effect">
+                            <i class="ri-file-list-line align-middle"></i>
+                            <span style="vertical-align: middle">Prestasi Siswa</span>
+                        </a>
+                    </li>
+                @endcanany
 
                 @can('guru_wali')
                     <li>
