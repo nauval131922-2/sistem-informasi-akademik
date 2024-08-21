@@ -25,7 +25,7 @@
 
                                 </div>
 
-                                @can('admin')
+                                @canany(['admin', 'guru_wali'])
                                     <div class="col-auto mb-2">
                                         <button class="btn btn-primary" role="button" data-bs-toggle="modal"
                                             data-bs-target="#exampleModalScrollable" id="btnTambahData" onclick="tambahData()">
@@ -33,7 +33,7 @@
                                             <span style="vertical-align: middle">Tambah</span>
                                         </button>
                                     </div>
-                                @endcan
+                                @endcanany
 
                             </div>
 
@@ -48,9 +48,9 @@
                                         <th>#</th>
                                         <th>Siswa</th>
                                         <th>Prestasi Siswa</th>
-                                        @can('admin')
+                                        @canany(['admin', 'guru_wali'])
                                             <th>Action</th>
-                                        @endcan
+                                        @endcanany
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -123,8 +123,8 @@
 
                         table.row.add([
                             (key + 1),
-                            value.mata_pelajaran,
-                            value.nilai_batas_kelulusan,
+                            value.siswa.name,
+                            value.prestasi_siswa,
                             @if (Auth::user()->id_role == 1)
                                 editButton + deleteButton
                             @else
