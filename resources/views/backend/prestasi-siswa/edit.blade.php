@@ -8,23 +8,32 @@
             <form method="POST" id="formUbahData">
                 @csrf
                 <div class="row mb-3">
-                    <label for="mata_pelajaran" class="col-sm-2 col-form-label">Mata Pelajaran <span class="text-danger">*</span></label>
-                    <div class="col-sm-10">
-                        <input class="form-control" type="text" placeholder="Masukkan nama mata pelajaran"
-                            id="mata_pelajaran" name="mata_pelajaran"
-                            value="{{ $mata_pelajaran->mata_pelajaran ?? old('mata_pelajaran') }}" required>
+                    <label for="siswa" class="col-md-2 col-form-label">Siswa <span class="text-danger">*</span></label>
+                    <div class="col-md-10">
+                        <select class="form-select" id="siswa" name="siswa" required>
+                            <option value="">Pilih siswa</option>
+                            @foreach ($semua_siswa as $siswa)
+                                @if ($prestasi_siswa->id_user_for_prestasi_siswa == $siswa->id ?? old('siswa') == $siswa->id)
+                                    <option value="{{ $siswa->id }}" selected>{{ $siswa->name }}
+                                    </option>
+                                @else
+                                    <option value="{{ $siswa->id }}">{{ $siswa->name }}</option>
+                                @endif
+                            @endforeach
+                        </select>
                         <div class="mt-2">
-                            <span class="text-danger error-text mata_pelajaran_error"></span>
+                            <span class="text-danger error-text siswa_error"></span>
                         </div>
                     </div>
                 </div>
+
                 <div class="row mb-3">
-                    <label for="nilai_batas_kelulusan" class="col-sm-2 col-form-label">Nilai batas kelulusan</label>
+                    <label for="prestasi_siswa" class="col-sm-2 col-form-label">Prestasi Siswa <span class="text-danger">*</span></label>
                     <div class="col-sm-10">
-                        <input class="form-control" type="number" placeholder="Masukkan nilai batas kelulusan"
-                            id="nilai_batas_kelulusan" name="nilai_batas_kelulusan" value="{{ $mata_pelajaran->nilai_batas_kelulusan ?? old('nilai_batas_kelulusan') }}">
+                        <input class="form-control" type="text" placeholder="Masukkan prestasi siswa"
+                            id="prestasi_siswa" name="prestasi_siswa" value="{{ $prestasi_siswa->prestasi_siswa ?? old('prestasi_siswa') }}" required>
                         <div class="mt-2">
-                            <span class="text-danger error-text nilai_batas_kelulusan_error"></span>
+                            <span class="text-danger error-text prestasi_siswa_error"></span>
                         </div>
                     </div>
                 </div>
@@ -68,11 +77,11 @@
     $('#formUbahData').on('submit', function(e) {
         e.preventDefault();
 
-        var id = {{ $mata_pelajaran->id }};
+        var id = {{ $prestasi_siswa->id }};
         let formData = new FormData($('#formUbahData')[0]);
 
         $.ajax({
-            url: '/mata-pelajaran/update/' + id,
+            url: '/prestasi-siswa/update/' + id,
             type: 'POST',
             data: formData,
             contentType: false,

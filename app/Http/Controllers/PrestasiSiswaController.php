@@ -23,7 +23,6 @@ class PrestasiSiswaController extends Controller
         if (Auth::user()->id_role == 1 || Auth::user()->id_role == 2) {
             $semua_prestasi_siswa = PrestasiSiswa::with('siswa')->get();
         } elseif (Auth::user()->id_role == 3) {
-            // Assuming the User model has a relationship to the Siswa model
             $id_kelas = Auth::user()->id_kelas;
 
             $semua_prestasi_siswa = PrestasiSiswa::with('siswa')
@@ -90,16 +89,24 @@ class PrestasiSiswaController extends Controller
     {
         $prestasi_siswa = PrestasiSiswa::find($id);
 
+         // jika yang login admin
+         if (Auth::user()->id_role == 1) {
+            $semua_siswa = User::where('id_role', '5')->get();
+        } elseif (Auth::user()->id_role == 3) {
+            $semua_siswa = User::where('id_role', '5')->where('id_kelas', Auth::user()->id_kelas)->get();
+        }
+
         $title = 'Data Prestasi Siswa';
 
-        return view('backend.prestasi-siswa.edit', compact('prestasi_siswa', 'title'));
+        return view('backend.prestasi-siswa.edit', compact('prestasi_siswa', 'title', 'semua_siswa'));
     }
 
     public function update(Request $request, $id)
     {
         // validator
         $validator = Validator::make($request->all(), [
-            'prestasi_siswa' => 'required|unique:prestasi_siswas,prestasi_siswa,' . $id
+            'siswa' => 'required',
+            'prestasi_siswa' => 'required',
         ]);
 
         // jika validasi gagal
@@ -112,8 +119,8 @@ class PrestasiSiswaController extends Controller
 
         // update ke database
         $prestasi_siswa = PrestasiSiswa::find($id);
+        $prestasi_siswa->id_user_for_prestasi_siswa = $request->siswa;
         $prestasi_siswa->prestasi_siswa = $request->prestasi_siswa;
-        $prestasi_siswa->nilai_batas_kelulusan = $request->nilai_batas_kelulusan;
 
         // jika berhasil diubah
         if ($prestasi_siswa->save()) {
